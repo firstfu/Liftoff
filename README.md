@@ -6,7 +6,7 @@ macOS 26 的經典「啟動台」替代品：格線、資料夾、搜尋、翻�
 
 > **Free and open source (GPLv3).** Every line of code is here — read it, build it yourself, or check what the permissions are used for.
 >
-> **Public beta.** I'm building this on my own — please open an [Issue](../../issues/new/choose) with bugs or ideas.
+> **Solo project.** I build this on my own — please open an [Issue](../../issues/new/choose) with bugs or ideas.
 
 ## Features
 
@@ -42,7 +42,7 @@ macOS 26 or later.
 
 1. Download `Liftoff.zip` from [Releases](../../releases/latest) and unzip it.
 2. Move `Liftoff.app` to `/Applications`.
-3. Open it. macOS will block it the first time, because this beta isn't notarized by Apple yet:
+3. Open it. macOS will block it the first time, because it isn't notarized by Apple yet:
    - Open **System Settings → Privacy & Security**, scroll down, click **Open Anyway** next to *"Liftoff" was blocked to protect your Mac.*
 4. Grant the permissions it asks for: **Accessibility** (list and switch windows) and **Screen Recording** (window thumbnails, local only).
 
@@ -91,7 +91,7 @@ Liftoff **完全不連網**。縮圖只在你的 Mac 上擷取與顯示，不會
 
 1. 從 [Releases](../../releases/latest) 下載 `Liftoff.zip` 並解壓縮
 2. 把 `Liftoff.app` 拖進「應用程式」資料夾
-3. 打開它。第一次會被系統擋下（測試版還沒經過 Apple 公證）：
+3. 打開它。第一次會被系統擋下（還沒經過 Apple 公證）：
    到 **系統設定 → 隱私權與安全性**，往下捲，找到「已阻擋『Liftoff』以保護你的Mac。」這行，按旁邊的 **強制打開**
 4. 依提示開啟 **輔助使用**（列出與切換視窗）與 **螢幕錄製**（視窗縮圖，只在本機處理）
 

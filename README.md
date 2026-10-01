@@ -38,6 +38,14 @@ Two features use undocumented macOS APIs, both loaded dynamically with a fallbac
 
 macOS 26 or later.
 
+## Install
+
+1. Download `Liftoff.zip` from [Releases](../../releases/latest) and unzip it.
+2. Move `Liftoff.app` to `/Applications`.
+3. Open it. macOS will block it the first time, because this beta isn't notarized by Apple yet:
+   - Open **System Settings → Privacy & Security**, scroll down, click **Open Anyway** next to *"Liftoff" was blocked to protect your Mac.*
+4. Grant the permissions it asks for: **Accessibility** (list and switch windows) and **Screen Recording** (window thumbnails, local only).
+
 ## Build from source
 
 Requires Xcode 26 and [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`).
@@ -78,6 +86,14 @@ Liftoff **完全不連網**。縮圖只在你的 Mac 上擷取與顯示，不會
 ### 私有 API 說明
 
 視窗列舉／切換（SkyLight、HIServices）與捏合手勢（MultitouchSupport）用到未公開的 macOS API，皆以動態載入並有 fallback：符號消失時該功能自動停用，不會 crash。
+
+### 安裝
+
+1. 從 [Releases](../../releases/latest) 下載 `Liftoff.zip` 並解壓縮
+2. 把 `Liftoff.app` 拖進「應用程式」資料夾
+3. 打開它。第一次會被系統擋下（測試版還沒經過 Apple 公證）：
+   到 **系統設定 → 隱私權與安全性**，往下捲，找到「已阻擋『Liftoff』以保護你的Mac。」這行，按旁邊的 **強制打開**
+4. 依提示開啟 **輔助使用**（列出與切換視窗）與 **螢幕錄製**（視窗縮圖，只在本機處理）
 
 ### 系統需求與建置
 

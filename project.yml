@@ -1,0 +1,73 @@
+# Liftoff XcodeGen 專案設定：產生 Liftoff.xcodeproj（macOS 26+、Swift 6、預設 MainActor 隔離）
+name: Liftoff
+options:
+  bundleIdPrefix: com.firstfu
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  developmentLanguage: zh-Hant
+configFiles:
+  Debug: Config/Signing.xcconfig
+  Release: Config/Signing.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+targets:
+  Liftoff:
+    type: application
+    platform: macOS
+    sources:
+      - path: Liftoff
+    info:
+      path: Liftoff/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Liftoff
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        CFBundleDevelopmentRegion: zh-Hant
+        CFBundleAllowMixedLocalizations: true
+        LSApplicationCategoryType: public.app-category.productivity
+        LSMinimumSystemVersion: "26.0"
+        NSHumanReadableCopyright: "© 2026 firstfu"
+        CFBundleURLTypes:
+          - CFBundleURLName: com.firstfu.Liftoff
+            CFBundleURLSchemes: [liftoff]
+    entitlements:
+      path: Liftoff/Resources/Liftoff.entitlements
+      properties: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.firstfu.Liftoff
+        PRODUCT_NAME: Liftoff
+        ENABLE_HARDENED_RUNTIME: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_OPTIMIZATION_LEVEL_Release: -O
+  LiftoffTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: LiftoffTests
+    dependencies:
+      - target: Liftoff
+    settings:
+      base:
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Liftoff.app/Contents/MacOS/Liftoff
+        BUNDLE_LOADER: $(TEST_HOST)
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Liftoff:
+    build:
+      targets:
+        Liftoff: all
+    test:
+      targets:
+        - LiftoffTests
+    run:
+      config: Debug

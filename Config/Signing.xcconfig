@@ -1,0 +1,12 @@
+// Signing.xcconfig：簽章設定。
+// 預設 ad-hoc 簽章（"-"），任何人 clone 下來不需 Apple 帳號就能建置。
+// 想用自己的憑證（例如讓「輔助使用」「螢幕錄製」權限在重建後保留），
+// 在同目錄建立 Signing.local.xcconfig（已被 .gitignore 排除），覆寫下列三項：
+//   CODE_SIGN_IDENTITY = Apple Development
+//   DEVELOPMENT_TEAM = <你的 Team ID>
+//   CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = -
+CODE_SIGN_STYLE = Manual
+DEVELOPMENT_TEAM =
+
+#include? "Signing.local.xcconfig"

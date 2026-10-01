@@ -1,0 +1,26 @@
+name: Feature request / 功能建議
+description: Tell me what you'd want Liftoff to do / 告訴我你希望 Liftoff 做到什麼
+labels: [feature]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do? / 你想做到什麼？
+      description: Describe the situation, not just the feature. / 描述你遇到的情境，而不只是功能名稱。
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: How do you handle it today? / 你現在怎麼處理？
+      description: Another app, a shortcut, or you just live with it? / 用別的 App、快捷鍵，還是忍著？
+  - type: dropdown
+    id: value
+    attributes:
+      label: How much would this matter to you? / 這對你有多重要？
+      options:
+        - Nice to have / 有更好
+        - I'd use it every day / 我每天都會用到
+        - I'd pay for this / 這個我願意付費
+    validations:
+      required: true

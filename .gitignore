@@ -1,0 +1,13 @@
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+.DS_Store
+*.trace
+dist/
+Config/Signing.local.xcconfig
+
+# 本機私有（不公開）：內部文件與 AI 工作指示
+docs/
+CLAUDE.md
+CLAUDE.local.md

@@ -1,0 +1,35 @@
+name: Bug report / 問題回報
+description: Something doesn't work / 有東西不正常
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / 發生了什麼？
+      description: What you did, what you expected, what you saw. A screenshot or screen recording helps a lot. / 你做了什麼、預期什麼、實際看到什麼；附截圖或錄影最有幫助。
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version / macOS 版本
+      placeholder: "26.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: trigger
+    attributes:
+      label: How did you open Liftoff? / 你怎麼開啟 Liftoff 的？
+      options:
+        - Hotkey / 快速鍵
+        - Trackpad pinch / 觸控板捏合
+        - Hot corner / 熱角
+        - Dock icon / 點 Dock 圖示
+        - liftoff:// URL
+  - type: checkboxes
+    id: setup
+    attributes:
+      label: Setup / 環境
+      options:
+        - label: Multiple displays / 多螢幕
+        - label: Migrated from the old Launchpad / 匯入過舊的啟動台排列

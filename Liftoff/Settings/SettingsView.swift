@@ -53,11 +53,9 @@ private struct GeneralSettings: View {
                 }
                 Toggle("再次打開時回到上次的頁面", isOn: $settings.remembersPage)
             }
-            if !settings.showsDockIcon && !settings.showsMenuBarIcon {
-                Section {
-                    Label("Dock 與選單列圖示都關閉時，請在啟動台內按 ⌘, 打開設定。", systemImage: "info.circle")
-                        .foregroundStyle(.secondary)
-                }
+            Section {
+                Label("Dock 與選單列圖示至少保留一個，避免找不到啟動台的入口。", systemImage: "info.circle")
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

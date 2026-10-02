@@ -121,8 +121,19 @@ final class AppSettings {
 
     // MARK: 一般
 
-    var showsDockIcon: Bool { didSet { defaults.set(showsDockIcon, forKey: Key.showsDockIcon) } }
-    var showsMenuBarIcon: Bool { didSet { defaults.set(showsMenuBarIcon, forKey: Key.showsMenuBarIcon) } }
+    /// Dock 與選單列圖示至少要留一個，否則使用者找不到入口：關掉其中一個時若另一個也是關的，自動把另一個打開。
+    var showsDockIcon: Bool {
+        didSet {
+            defaults.set(showsDockIcon, forKey: Key.showsDockIcon)
+            if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
+        }
+    }
+    var showsMenuBarIcon: Bool {
+        didSet {
+            defaults.set(showsMenuBarIcon, forKey: Key.showsMenuBarIcon)
+            if !showsMenuBarIcon && !showsDockIcon { showsDockIcon = true }
+        }
+    }
     /// 隱藏的 App（識別鍵）
     var hiddenApps: Set<String> { didSet { defaults.set(Array(hiddenApps).sorted(), forKey: Key.hiddenApps) } }
     /// 額外掃描的資料夾（外接硬碟、自訂位置）
@@ -199,6 +210,8 @@ final class AppSettings {
         showsMenuBarIcon = defaults.bool(forKey: Key.showsMenuBarIcon)
         hiddenApps = Set(defaults.stringArray(forKey: Key.hiddenApps) ?? [])
         extraDirectories = defaults.stringArray(forKey: Key.extraDirectories) ?? []
+        // 舊版本可能已存成兩個都關；補上不變式
+        if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
     }
 
     /// 還原外觀相關設定為預設值。

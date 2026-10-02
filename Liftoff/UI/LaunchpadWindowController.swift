@@ -147,6 +147,10 @@ final class LaunchpadWindowController {
     let renderer: GridRenderer
     private var hideGeneration = 0
     private var observers: [NSObjectProtocol] = []
+    /// 拖進 Dock 的系統拖曳來源（常駐一個即可，拖曳不會重疊）
+    private let dockSource = DockDragSource()
+    /// 這次拖曳的 Dock 感應區（以 DragSession 識別，每次拖曳只算一次）
+    private var dockZone: (session: ObjectIdentifier, zone: DockZone?)?
 
     private(set) var isVisible = false
     /// 最近一次開始顯示的時間（效能量測用）
@@ -196,10 +200,13 @@ final class LaunchpadWindowController {
 
         panel.mouseHandler = { [weak self, weak model] event in
             guard let self, let model else { return false }
+            if event.type == .leftMouseDragged, self.handOffToDockIfNeeded(event) { return true }
             // NSHostingView 是翻轉座標（左上為原點），與 SwiftUI 根座標一致
             let point = self.hostingView.convert(event.locationInWindow, from: nil)
             return model.handleMouse(event, at: point, in: self.hostingView)
         }
+
+        dockSource.onEnd = { [weak self] in self?.restoreLevel() }
 
         observers.append(NotificationCenter.default.addObserver(
             forName: NSWindow.didResignKeyNotification, object: panel, queue: .main
@@ -251,10 +258,7 @@ final class LaunchpadWindowController {
             steps.append("\(name) \(String(format: "%.1f", milliseconds(since: mark)))")
             mark = .now
         }
-        let level = settings.coversDock
-            ? Int(CGWindowLevelForKey(.mainMenuWindow)) + 2
-            : Int(CGWindowLevelForKey(.dockWindow)) - 1
-        panel.level = NSWindow.Level(rawValue: level)
+        restoreLevel()
         layout(for: screen)
         step("layout")
         applyBackground(for: screen)
@@ -278,6 +282,72 @@ final class LaunchpadWindowController {
         step("order")
         if !interactive { acquireKeyboardFocus() }
         Log.perf.debug("show：\(steps.joined(separator: "、"), privacy: .public)")
+    }
+
+    /// 依覆蓋設定套用視窗層級：覆蓋模式高於選單列，否則低於 Dock。
+    private func restoreLevel() {
+        let level = settings.coversDock
+            ? Int(CGWindowLevelForKey(.mainMenuWindow)) + 2
+            : Int(CGWindowLevelForKey(.dockWindow)) - 1
+        if panel.level.rawValue != level { panel.level = NSWindow.Level(rawValue: level) }
+    }
+
+    // MARK: - 拖進 Dock
+
+    /// 拖曳中游標進入 Dock 感應區：把格線內的拖曳交接成系統拖曳，讓 Dock 能接收（放開即加入 Dock）。
+    ///
+    /// 交接時版面還原成拖曳前（拖進 Dock 是「加一個捷徑」，啟動台裡的位置不該被改動），
+    /// 浮動圖示換成系統拖曳圖片、從同一個位置接手。之後的滑鼠事件由 AppKit 的拖曳迴圈處理，不會再進到這裡。
+    /// - Parameter event: 目前的 leftMouseDragged 事件（系統拖曳必須由滑鼠事件啟動）
+    /// - Returns: 是否已交接（true 時這個事件不再交給 model）
+    private func handOffToDockIfNeeded(_ event: NSEvent) -> Bool {
+        // 自我測試的合成事件不能啟動真的系統拖曳；只拖得動 App（資料夾在 Dock 沒有對應的東西）
+        guard !panel.acceptsSyntheticMouseOnly, let drag = model.drag, case .app(let id) = drag.item,
+              let screen = panel.screen else { return false }
+        let key = ObjectIdentifier(drag)
+        if dockZone?.session != key {
+            dockZone = (key, DockZone.current(on: screen, coversDock: settings.coversDock))
+        }
+        let location = panel.convertPoint(toScreen: event.locationInWindow)
+        guard let zone = dockZone?.zone, zone.rect.contains(location), let entry = model.catalog.entry(id) else { return false }
+
+        // 拖曳圖片：與浮動圖示同大小、同位置（根座標即 hostingView 座標）。用這個事件的位置算，
+        // 不用 drag.iconCenter——交接判斷在 model 更新之前，那還是上一個事件的位置
+        let size = model.metrics.iconSize * 1.12
+        let point = hostingView.convert(event.locationInWindow, from: nil)
+        let center = CGPoint(x: point.x - drag.grabOffset.width, y: point.y - drag.grabOffset.height)
+        let frame = CGRect(x: center.x - size / 2, y: center.y - size / 2, width: size, height: size)
+        let image = model.icons.icon(for: id).cgImage.map { NSImage(cgImage: $0, size: frame.size) }
+            ?? NSWorkspace.shared.icon(forFile: entry.path)
+        model.cancelDrag()
+
+        // 蓋住 Dock 時先降到 Dock 之下，Dock 才看得到、也才收得到放下
+        if settings.coversDock {
+            panel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.dockWindow)) - 1)
+        }
+        // 用字串寫 file URL，不用 NSURL 當 writer：實測 NSURL 寫法第一次拖曳就跳出「已防止 Liftoff 修改 App」
+        // （系統替拖曳的檔案發讀寫授權時，對別家簽章的 .app 觸發「App 管理」檢查）；字串寫法重複測試未再出現。
+        // 舊式 NSFilenamesPboardType 不能用：放進 NSPasteboardItem 後開始拖曳就丟 NSGenericException
+        let pasteboardItem = NSPasteboardItem()
+        pasteboardItem.setString(entry.url.absoluteString, forType: .fileURL)
+        let item = NSDraggingItem(pasteboardWriter: pasteboardItem)
+        item.setDraggingFrame(frame, contents: image)
+        let session = hostingView.beginDraggingSession(with: [item], event: event, source: dockSource)
+        // 沒放進 Dock 時不必飛回原處：版面已還原，圖示本來就在原位
+        session.animatesToStartingPositionsOnCancelOrFail = false
+        // 自動隱藏的 Dock 只在拖曳中「進入」邊緣時滑出，而它看的是事件序列（warp 游標不算）。
+        // 交接當下已貼邊（快速甩到底）時補送一個往內退幾 pt 的拖曳事件，使用者接著往外拖就會叫出 Dock。
+        // 要等 Dock 收到拖曳開始（約數十 ms）之後才送，太早送 Dock 不認；拖曳迴圈期間主執行緒被佔住，所以從背景執行緒送。
+        // 送事件需要輔助使用權限（視窗預覽本來就要）；沒有權限時只是不起作用，Dock 要使用者自己往回再推一次
+        if zone.needsReveal, let back = zone.pulledBack(location, in: screen.frame),
+           let primary = NSScreen.screens.first?.frame {
+            let target = CGPoint(x: back.x, y: primary.maxY - back.y)
+            DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.1) {
+                CGEvent(mouseEventSource: nil, mouseType: .leftMouseDragged, mouseCursorPosition: target, mouseButton: .left)?
+                    .post(tap: .cgSessionEventTap)
+            }
+        }
+        return true
     }
 
     /// 取得鍵盤焦點：延後約一幀才做。makeKey 與輸入框開始編輯合計要 5–40ms（等輸入法服務等系統成本），

@@ -210,7 +210,7 @@ enum SelfTest {
         model.searchText = "sa"
         controller.forceLayout()
         let searchLatency = milliseconds(since: searchStart)
-        let results = model.searchResults.prefix(8).compactMap { coordinator.catalog.entry($0)?.name }
+        let results = model.searchResults.prefix(8).compactMap { $0.appID.flatMap { coordinator.catalog.entry($0)?.name } }
         try? await Task.sleep(for: .milliseconds(300))
         capture("search")
         model.searchText = ""

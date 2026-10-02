@@ -151,6 +151,9 @@ final class LaunchpadWindowController {
     private let dockSource = DockDragSource()
     /// 這次拖曳的 Dock 感應區（以 DragSession 識別，每次拖曳只算一次）
     private var dockZone: (session: ObjectIdentifier, zone: DockZone?)?
+    /// 交接給 Dock 的系統拖曳進行中：啟動台已收起（淡出），但視窗要等拖曳結束才 orderOut——
+    /// 拖曳中把來源視窗移除可能讓系統拖曳中斷
+    private var isDraggingToDock = false
 
     private(set) var isVisible = false
     /// 最近一次開始顯示的時間（效能量測用）
@@ -206,7 +209,7 @@ final class LaunchpadWindowController {
             return model.handleMouse(event, at: point, in: self.hostingView)
         }
 
-        dockSource.onEnd = { [weak self] in self?.restoreLevel() }
+        dockSource.onEnd = { [weak self] in self?.dockDragEnded() }
 
         observers.append(NotificationCenter.default.addObserver(
             forName: NSWindow.didResignKeyNotification, object: panel, queue: .main
@@ -333,8 +336,12 @@ final class LaunchpadWindowController {
         let item = NSDraggingItem(pasteboardWriter: pasteboardItem)
         item.setDraggingFrame(frame, contents: image)
         let session = hostingView.beginDraggingSession(with: [item], event: event, source: dockSource)
-        // 沒放進 Dock 時不必飛回原處：版面已還原，圖示本來就在原位
+        // 啟動台已收起，拖曳圖片沒有原處可飛回
         session.animatesToStartingPositionsOnCancelOrFail = false
+        // 交接後收起啟動台，讓使用者看得到整排 Dock；視窗先淡出、滑鼠事件穿透，拖曳結束後才移除（見 dockDragEnded）
+        isDraggingToDock = true
+        panel.ignoresMouseEvents = true
+        hide(reason: .user)
         // 自動隱藏的 Dock 只在拖曳中「進入」邊緣時滑出，而它看的是事件序列（warp 游標不算）。
         // 交接當下已貼邊（快速甩到底）時補送一個往內退幾 pt 的拖曳事件，使用者接著往外拖就會叫出 Dock。
         // 要等 Dock 收到拖曳開始（約數十 ms）之後才送，太早送 Dock 不認；拖曳迴圈期間主執行緒被佔住，所以從背景執行緒送。
@@ -373,15 +380,28 @@ final class LaunchpadWindowController {
         let duration = reason == .launched || reason == .switchedWindow ? 0.16 : 0.2
         animateOut(duration: duration)
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
-            guard let self, self.hideGeneration == generation, !self.isVisible else { return }
-            self.panel.orderOut(nil)
-            self.container.layer?.removeAllAnimations()
-            self.contentView.layer?.removeAllAnimations()
-            // 看不見之後才清掉搜尋、資料夾等暫態，並預先確認桌布是否換過
-            self.model.resetTransientState()
-            self.refreshBackgroundIfNeeded()
+            guard let self, self.hideGeneration == generation, !self.isVisible, !self.isDraggingToDock else { return }
+            self.finishHide()
         }
         onHide?(reason)
+    }
+
+    /// 收起動畫結束後：移除視窗，看不見之後才清掉搜尋、資料夾等暫態，並預先確認桌布是否換過。
+    private func finishHide() {
+        panel.orderOut(nil)
+        container.layer?.removeAllAnimations()
+        contentView.layer?.removeAllAnimations()
+        model.resetTransientState()
+        refreshBackgroundIfNeeded()
+    }
+
+    /// 拖進 Dock 的系統拖曳結束（不論有沒有放進 Dock）：恢復視窗層級與滑鼠事件，補做收起的收尾。
+    /// 拖曳期間使用者又打開了啟動台（isVisible）時就不移除視窗。
+    private func dockDragEnded() {
+        isDraggingToDock = false
+        panel.ignoresMouseEvents = false
+        restoreLevel()
+        if !isVisible { finishHide() }
     }
 
     // MARK: - 版面

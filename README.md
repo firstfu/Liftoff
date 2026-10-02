@@ -14,6 +14,8 @@ macOS 26 的經典「啟動台」替代品：格線、資料夾、搜尋、翻�
 - Open with a hotkey (⌃⌘L by default), a trackpad thumb-and-three-finger pinch, a hot corner, or `open liftoff://toggle`
 - Import your existing Launchpad layout
 - Hover an app (or press Space on it) to preview its running windows; click a thumbnail to switch
+- Search also matches the titles of open windows (including minimized and other-desktop ones) — pick one to jump straight to it
+- Drag an app to the Dock to add it there
 - Background: blurred wallpaper (lowest power), live blur, or your own image; adjustable icon size, label size and colors
 - Multi-display aware; hide apps, uninstall apps, back up and restore your layout
 
@@ -76,6 +78,8 @@ Tests: replace `build` with `test` in the `xcodebuild` command. `scripts/install
 - 快速鍵（預設 ⌃⌘L）、觸控板拇指＋三指捏合、熱角、`open liftoff://toggle` 都能開啟
 - 可匯入既有的啟動台排列
 - 游標停在執行中的 App 上（或按空白鍵）預覽它的視窗縮圖，點縮圖直接切換
+- 搜尋也比對已開啟視窗的標題（含最小化、其他桌面的視窗），選了直接跳到那個視窗
+- 把 App 拖到 Dock 即可加入 Dock
 - 背景可選模糊桌布（最省電）、即時模糊、自選圖片；圖示與字級大小、顏色可調
 - 支援多螢幕；可隱藏／解除安裝 App、備份與還原排列
 

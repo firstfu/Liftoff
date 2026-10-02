@@ -227,6 +227,13 @@ extension LaunchpadModel {
             })
             menu.addItem(.separator())
             menu.addItem(ClosureMenuItem(String(localized: "解散資料夾")) { [weak self] in self?.dissolveFolder(folder.id) })
+        case .window(let window):
+            menu.addItem(ClosureMenuItem(String(localized: "切換到此視窗")) { [weak self] in self?.switchToWindow(window) })
+            if let app = running.application(for: window.appID), let entry = catalog.entry(window.appID) {
+                menu.addItem(ClosureMenuItem(String(localized: "顯示所有視窗")) { [weak self] in
+                    self?.preview.showNow(appID: window.appID, app: app, name: entry.name, anchor: hit.iconFrame)
+                })
+            }
         }
         return menu
     }

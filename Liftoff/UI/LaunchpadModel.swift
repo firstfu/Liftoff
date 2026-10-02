@@ -87,7 +87,8 @@ final class LaunchpadModel {
     var searchText = "" {
         didSet { if searchText != oldValue { searchChanged() } }
     }
-    private(set) var searchResults: [String] = []
+    /// 搜尋結果：App 與標題相符的執行中視窗，依相關度混排
+    private(set) var searchResults: [LayoutItem] = []
     /// 要求搜尋框取得焦點（每次 +1 觸發）
     var focusRequest = 0
 
@@ -118,6 +119,12 @@ final class LaunchpadModel {
     @ObservationIgnored var hoveredID: String?
 
     @ObservationIgnored private var searchIndex: SearchIndex?
+    /// 執行中視窗的標題索引：每次打開時在背景拍一次快照，收起後釋放
+    @ObservationIgnored private var windowIndex: WindowSearchIndex?
+    /// 快照世代：快照還在背景跑時又收起/重開，舊的結果不能蓋掉新的
+    @ObservationIgnored private var windowSnapshotGeneration = 0
+    /// 快照正在背景拍攝中（避免每個按鍵都再拍一次）
+    @ObservationIgnored private var isCapturingWindows = false
     @ObservationIgnored private var mergeTask: Task<Void, Never>?
     @ObservationIgnored private var thumbnailPurgeTask: Task<Void, Never>?
     @ObservationIgnored private var mergeCandidate: String?
@@ -161,12 +168,13 @@ final class LaunchpadModel {
 
     /// 畫面上顯示的頁面：搜尋時是搜尋結果分頁，否則是版面。
     var displayPages: [[LayoutItem]] {
-        if isSearching { return searchResults.map { LayoutItem.app($0) }.chunked(into: capacity) }
+        if isSearching { return searchResults.chunked(into: capacity) }
         return layoutStore.layout.pages
     }
 
     /// 所有格子（身分固定）：資料夾 + 每個可見 App 各一格。
     /// 搜尋、拖曳、翻頁都只改變格子的「位置與可見度」，不建立或銷毀 view——這是打字搜尋與清除搜尋能在一幀內完成的關鍵。
+    /// 例外是搜尋到的視窗：只在搜尋中、有相符時才多出幾格（數量少，建立成本可忽略）。
     var cellItems: [LayoutItem] {
         let layout = layoutStore.layout
         var items: [LayoutItem] = []
@@ -176,6 +184,9 @@ final class LaunchpadModel {
         let inLayout = Set(layout.allAppIDs)
         for entry in catalog.entries where inLayout.contains(entry.id) {
             items.append(.app(entry.id))
+        }
+        if isSearching {
+            for item in searchResults { if case .window = item { items.append(item) } }
         }
         return items
     }
@@ -194,6 +205,7 @@ final class LaunchpadModel {
         switch item {
         case .app(let id): catalog.entry(id)?.name ?? (id as NSString).lastPathComponent
         case .folder(let folder): folder.name
+        case .window(let hit): hit.title
         }
     }
 
@@ -233,6 +245,7 @@ final class LaunchpadModel {
     func prepareForShow() {
         isShown = true
         thumbnailPurgeTask?.cancel()
+        isCapturingWindows = false
         // 正常情況下 resetTransientState 已在上次收起後做完；這裡只補做「可能被改過」的部分（例如收起期間 App 清單變動使頁數變少）
         let pageCount = displayPages.count
         if pager.page >= pageCount { pager.go(to: pageCount - 1, pageCount: pageCount, animated: false) }
@@ -264,6 +277,10 @@ final class LaunchpadModel {
     /// 啟動台已收起。
     func didHide() {
         isShown = false
+        // 視窗快照只在顯示期間有意義（視窗隨時會開關），收起就釋放
+        windowSnapshotGeneration += 1
+        windowIndex = nil
+        isCapturingWindows = false
         preview.hide()
         if drag != nil { cancelDrag() }
         mergeTask?.cancel()
@@ -292,12 +309,76 @@ final class LaunchpadModel {
         preview.hide()
         if isSearching {
             if searchIndex == nil { rebuildSearchIndex() }
-            searchResults = searchIndex?.search(searchText, boost: usage.boosts()) ?? []
+            if windowIndex == nil, !isCapturingWindows { refreshWindowSnapshot() }
+            searchResults = mergedResults(for: searchText)
             selection = searchResults.isEmpty ? nil : ItemPosition(page: 0, index: 0)
             pager.go(to: 0, pageCount: max(1, displayPages.count), animated: false)
         } else {
             searchResults = []
             selection = nil
+        }
+    }
+
+    /// App 與視窗結果依分數混排：App 分數已含使用頻率加權，視窗分數已打折（同樣相符時 App 在前）。
+    private func mergedResults(for query: String) -> [LayoutItem] {
+        let apps = searchIndex?.scored(query, boost: usage.boosts()) ?? []
+        let windows = windowIndex?.search(query).prefix(Self.maxWindowResults) ?? []
+        guard !windows.isEmpty else { return apps.map { .app($0.id) } }
+        var merged: [(item: LayoutItem, score: Double)] = apps.map { (.app($0.id), $0.score) }
+        merged += windows.map { (.window($0.hit), $0.score) }
+        // 兩邊各自已排好序：穩定合併，同分時 App 在前
+        var result: [LayoutItem] = []
+        result.reserveCapacity(merged.count)
+        var a = 0, w = apps.count
+        while a < apps.count || w < merged.count {
+            if w >= merged.count || (a < apps.count && merged[a].score >= merged[w].score) {
+                result.append(merged[a].item); a += 1
+            } else {
+                result.append(merged[w].item); w += 1
+            }
+        }
+        return result
+    }
+
+    /// 搜尋結果最多列出幾個視窗（避免一個常見字把整頁塞滿視窗）
+    private static let maxWindowResults = 12
+
+    /// 在背景拍下執行中 App 的視窗標題：每次打開後「開始搜尋時」拍一次，主執行緒只組 pid 對照表。
+    /// 不在 show() 時拍：實測背景的 CGWindowList 會和 orderFront 搶 WindowServer，打開的同步時間從 ~3ms 變 5–50ms。
+    /// 視窗比對至少要 2 個字，第一個字打下去到第二個字之間就足夠在背景拍完（~5ms）。
+    private func refreshWindowSnapshot() {
+        windowSnapshotGeneration += 1
+        let generation = windowSnapshotGeneration
+        // 收起動畫期間（searchText 還沒清掉）也可能走到這裡，那時拍的快照用不到
+        guard isShown else { return }
+        let ownPID = ProcessInfo.processInfo.processIdentifier
+        let hidden = settings.hiddenApps
+        var apps: [pid_t: (id: String, name: String)] = [:]
+        // 使用者在啟動台隱藏的 App，它的視窗也不列（與 App 搜尋一致）
+        for (pid, id) in running.idsByPID where pid != ownPID && !hidden.contains(id) {
+            apps[pid] = (id, catalog.entry(id)?.name ?? id)
+        }
+        guard !apps.isEmpty else { return }
+        isCapturingWindows = true
+        Task.detached(priority: .userInitiated) { [apps] in
+            let start = ContinuousClock.now
+            let hits = WindowSnapshot.capture(apps: apps)
+            Log.perf.debug("視窗快照：\(apps.count) 個 App、\(hits.count) 個視窗，\(milliseconds(since: start), format: .fixed(precision: 2))ms")
+            await MainActor.run { [weak self] in
+                guard let self, self.windowSnapshotGeneration == generation else { return }
+                self.isCapturingWindows = false
+                guard self.isShown else { return }
+                let index = WindowSearchIndex(hits: hits)
+                self.windowIndex = index
+                // 快照比使用者打字慢到時，把視窗結果補進目前的結果。只換結果、不走 searchChanged：
+                // 那會關資料夾、收預覽、把選取與頁碼歸零，打斷使用者在這段時間做的事
+                guard self.isSearching, !index.search(self.searchText).isEmpty else { return }
+                self.searchResults = self.mergedResults(for: self.searchText)
+                if let selection = self.selection,
+                   !self.displayPages.indices.contains(selection.page) || !self.displayPages[selection.page].indices.contains(selection.index) {
+                    self.selection = ItemPosition(page: 0, index: 0)
+                }
+            }
         }
     }
 
@@ -308,6 +389,30 @@ final class LaunchpadModel {
         switch item {
         case .app(let id): launch(id)
         case .folder(let folder): openFolder(folder.id)
+        case .window(let hit): switchToWindow(hit)
+        }
+    }
+
+    /// 切換到搜尋到的視窗：先收起啟動台，再在背景針對那個 App 取得視窗元素（AX，可取消最小化、可跨桌面）後前置。
+    /// 視窗已經關掉時退回啟用整個 App。
+    func switchToWindow(_ hit: WindowHit) {
+        if suppressLaunches {
+            lastLaunchRequest = LayoutItem.window(hit).id
+            return
+        }
+        usage.recordLaunch(hit.appID)
+        requestDismiss?(.switchedWindow)
+        Task.detached(priority: .userInitiated) {
+            let window = WindowEnumerator.windows(for: hit.pid, includeOtherSpaces: true).first { $0.id == hit.windowID }
+            await MainActor.run { [weak self] in
+                if let window {
+                    WindowActions.focus(window)
+                } else if let entry = self?.catalog.entry(hit.appID) {
+                    // 視窗已經關掉：改為帶出整個 App。不用 NSRunningApplication.activate()——
+                    // 協作式啟用會拒絕背景 agent 搶焦點，openApplication 對執行中的 App 就是帶到前景
+                    AppActions.open(entry)
+                }
+            }
         }
     }
 
@@ -526,7 +631,7 @@ final class LaunchpadModel {
         if let selection, pages.indices.contains(selection.page), pages[selection.page].indices.contains(selection.index) {
             activate(pages[selection.page][selection.index])
         } else if isSearching, let first = searchResults.first {
-            launch(first)
+            activate(first)
         }
     }
 

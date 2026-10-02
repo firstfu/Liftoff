@@ -90,6 +90,8 @@ extension SelfTest {
                             inFolders.append(Candidate(appID: id, name: model.title(for: .app(id)), pid: app.processIdentifier, page: pageIndex, index: offset, folderID: folder.id))
                         }
                     }
+                case .window:
+                    break
                 }
             }
         }

@@ -4,12 +4,13 @@
 //
 //  App 搜尋：支援完整名稱、字首、單字字首縮寫（vsc → Visual Studio Code）、中文名稱的拼音與拼音首字母、
 //  子字串與模糊子序列比對。所有正規化在建索引時一次做完，查詢只做字串比對，170 個 App 查詢 < 0.2ms。
+//  另有 WindowSearchIndex：執行中視窗的標題，規則較嚴（標題長，模糊比對幾乎什麼都對得上）。
 //
 
 import Foundation
 
 nonisolated struct SearchIndex: Sendable {
-    private struct Key: Sendable {
+    struct Key: Sendable {
         /// 正規化後的完整字串（小寫、去重音、全形轉半形）
         let text: String
         /// 去掉空白與符號的連寫版本（"visual studio code" → "visualstudiocode"）
@@ -47,6 +48,15 @@ nonisolated struct SearchIndex: Sendable {
     ///   - boost: 依使用頻率給的加權（App 識別鍵 → 0…1），分數相同時常用的排前面
     /// - Returns: 相符 App 的識別鍵，最相關的在前
     func search(_ query: String, boost: [String: Double] = [:]) -> [String] {
+        scored(query, boost: boost).map(\.id)
+    }
+
+    /// 查詢並回傳分數（與視窗結果合併排序用）。
+    /// - Parameters:
+    ///   - query: 使用者輸入
+    ///   - boost: 依使用頻率給的加權
+    /// - Returns: (App 識別鍵, 分數)，分數高的在前
+    func scored(_ query: String, boost: [String: Double] = [:]) -> [(id: String, score: Double)] {
         let q = Self.normalize(query)
         guard !q.isEmpty else { return [] }
         let qCompact = q.filter { !$0.isWhitespace }
@@ -63,12 +73,12 @@ nonisolated struct SearchIndex: Sendable {
             }
         }
         scored.sort { $0.score > $1.score }
-        return scored.map(\.id)
+        return scored
     }
 
     // MARK: - 計分
 
-    private static func score(_ q: String, compactQuery: String, key: Key) -> Double {
+    static func score(_ q: String, compactQuery: String, key: Key) -> Double {
         if key.text == q || key.compact == compactQuery { return 1000 }
         if key.text.hasPrefix(q) { return 900 - Double(min(key.text.count - q.count, 50)) }
         if key.compact.hasPrefix(compactQuery) { return 860 - Double(min(key.compact.count - compactQuery.count, 50)) }
@@ -107,7 +117,7 @@ nonisolated struct SearchIndex: Sendable {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private static func makeKey(_ raw: String, weight: Double) -> Key {
+    static func makeKey(_ raw: String, weight: Double) -> Key {
         let text = normalize(raw)
         let words = splitWords(raw).map(normalize).filter { !$0.isEmpty }
         return Key(
@@ -137,5 +147,40 @@ nonisolated struct SearchIndex: Sendable {
         }
         if !current.isEmpty { words.append(current) }
         return words
+    }
+}
+
+/// 執行中視窗標題的搜尋索引：每次打開啟動台拍一次快照後建立，正規化只做一次。
+nonisolated struct WindowSearchIndex: Sendable {
+    /// 只收「子字串」等級以上的相符：子字串依出現位置得 500–600 分，模糊子序列最高 400 分——
+    /// 視窗標題很長，模糊子序列幾乎任何查詢都對得上，所以不收
+    static let minimumScore: Double = 500
+    /// 視窗分數打折：同樣相符程度時 App 排在視窗前面
+    static let weight: Double = 0.9
+
+    private let hits: [WindowHit]
+    private let keys: [SearchIndex.Key]
+
+    init(hits: [WindowHit]) {
+        self.hits = hits
+        keys = hits.map { SearchIndex.makeKey($0.title, weight: Self.weight) }
+    }
+
+    var isEmpty: Bool { hits.isEmpty }
+
+    /// 查詢視窗標題。
+    /// - Parameter query: 使用者輸入（至少 2 個字元才查，避免一個字母就列出一堆視窗）
+    /// - Returns: (視窗, 已打折的分數)，分數高的在前；同分時維持快照順序（越前面的視窗越近期使用）
+    func search(_ query: String) -> [(hit: WindowHit, score: Double)] {
+        let q = SearchIndex.normalize(query)
+        let compact = q.filter { !$0.isWhitespace }
+        guard compact.count >= 2 else { return [] }
+        var result: [(index: Int, score: Double)] = []
+        for (index, key) in keys.enumerated() {
+            let raw = SearchIndex.score(q, compactQuery: compact, key: key)
+            if raw >= Self.minimumScore { result.append((index, raw * key.weight)) }
+        }
+        result.sort { $0.score != $1.score ? $0.score > $1.score : $0.index < $1.index }
+        return result.map { (hits[$0.index], $0.score) }
     }
 }

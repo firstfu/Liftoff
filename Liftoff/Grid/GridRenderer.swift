@@ -79,6 +79,8 @@ final class GridRenderer {
     private var lastMetrics: GridMetrics?
     private var lastFolderMetrics: GridMetrics?
     private var wasSearching = false
+    /// 搜尋期間顯示過的視窗標題（搜尋結束時從名稱圖快取丟掉）
+    private var windowLabelTexts = Set<String>()
     private var shownFolderID: UUID?
     private var lastPageX: CGFloat?
     private var lastFolderPageX: CGFloat?
@@ -162,6 +164,7 @@ final class GridRenderer {
         var alive = Set<String>()
         for item in items {
             alive.insert(item.id)
+            if case .window(let hit) = item { windowLabelTexts.insert(hit.title) }
             let cell: CellLayer
             if let existing = cells[item.id] {
                 cell = existing
@@ -201,7 +204,7 @@ final class GridRenderer {
                 isPressed: pressed == item.id,
                 isDragged: draggedID == item.id,
                 isMergeTarget: mergeTarget == item.id,
-                isRunning: item.appID.map(running.contains) ?? false
+                isRunning: item.appID.map(running.contains) ?? (item.windowHit != nil)
             )
             if state != cell.state || metricsChanged {
                 cell.apply(state, labelsDark: labelsDark, animated: model.isShown)
@@ -212,6 +215,11 @@ final class GridRenderer {
             cells.removeValue(forKey: id)
         }
         CATransaction.commit()
+        // 搜尋結束：丟掉這次搜尋為視窗標題算的名稱圖（與 App 同名的極少數會在下次需要時重算，無妨）
+        if !searching, !windowLabelTexts.isEmpty {
+            labels.discard(windowLabelTexts)
+            windowLabelTexts.removeAll()
+        }
 
         syncFolder(metrics: metrics, running: running, draggedID: draggedID, style: style)
         prepareDragLayer(drag, metrics: metrics, items: items)
@@ -225,6 +233,9 @@ final class GridRenderer {
             layer.showApp(model.icons.icon(for: id).cgImage ?? model.icons.placeholder)
         case .folder(let folder):
             layer.showFolder(folder.apps.prefix(9).map { model.icons.icon(for: $0).cgImage ?? model.icons.placeholder })
+        case .window(let hit):
+            // 搜尋到的視窗：所屬 App 的圖示，名稱位置顯示視窗標題
+            layer.showApp(model.icons.icon(for: hit.appID).cgImage ?? model.icons.placeholder)
         }
     }
 

@@ -53,6 +53,14 @@ final class LabelStore {
         return nil
     }
 
+    /// 丟掉指定文字的名稱圖（搜尋到的視窗標題：內容一直在變，留著只會讓快取無限增長）。
+    /// - Parameter texts: 要丟掉的文字（深淺兩種都丟）
+    func discard(_ texts: Set<String>) {
+        guard !texts.isEmpty else { return }
+        images = images.filter { !texts.contains($0.key.text) }
+        pending = pending.filter { !texts.contains($0.text) }
+    }
+
     /// 同一輪 run loop 內的請求合併成一批，在背景並行渲染。
     private func scheduleRender() {
         guard !renderScheduled else { return }

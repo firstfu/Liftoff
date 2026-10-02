@@ -34,6 +34,7 @@ nonisolated enum SkyLight {
     private typealias SetFrontProcessFn = @convention(c) (UnsafeMutablePointer<ProcessSerialNumber>, CGWindowID, UInt32) -> CGError
     private typealias PostEventRecordFn = @convention(c) (UnsafeMutablePointer<ProcessSerialNumber>, UnsafeMutablePointer<UInt8>) -> CGError
     private typealias CopySpacesFn = @convention(c) (Int32, Int32, CFArray) -> Unmanaged<CFArray>?
+    private typealias CopyDisplaySpacesFn = @convention(c) (Int32) -> Unmanaged<CFArray>?
 
     /// dlopen handle 只在首次存取時初始化一次，之後唯讀，因此標 unsafe 是安全的。
     nonisolated(unsafe) private static let handle: UnsafeMutableRawPointer? =
@@ -49,6 +50,7 @@ nonisolated enum SkyLight {
     private static let setFrontProcessFn = symbol("_SLPSSetFrontProcessWithOptions", as: SetFrontProcessFn.self)
     private static let postEventRecordFn = symbol("SLPSPostEventRecordTo", as: PostEventRecordFn.self)
     private static let copySpacesFn = symbol("SLSCopySpacesForWindows", as: CopySpacesFn.self)
+    private static let copyDisplaySpacesFn = symbol("SLSCopyManagedDisplaySpaces", as: CopyDisplaySpacesFn.self)
 
     /// 與 WindowServer 的連線 ID；整個 process 共用同一條，取一次即可。
     private static let connectionID: Int32? = mainConnectionFn?()
@@ -84,6 +86,17 @@ nonisolated enum SkyLight {
         guard let copySpacesFn, let connectionID else { return nil }
         // mask 7：目前、其他、全螢幕等所有類型的 Space
         return copySpacesFn(connectionID, 7, [windowID] as CFArray)?.takeRetainedValue() as? [Int] ?? []
+    }
+
+    /// 各螢幕「目前顯示中」的桌面（Space）ID。
+    /// 用途：視窗屬於目前桌面卻不在畫面上，只可能是最小化或被 App 收起（關掉後仍留在 WindowServer 的幽靈視窗），
+    /// 需要再用 AX 確認；真正在其他桌面的視窗則不必。
+    /// - Returns: 目前桌面 ID 集合；私有 API 不可用或格式不符時為 nil（呼叫端應改用較保守的判斷）
+    static func currentSpaceIDs() -> Set<Int>? {
+        guard let copyDisplaySpacesFn, let connectionID,
+              let displays = copyDisplaySpacesFn(connectionID)?.takeRetainedValue() as? [[String: Any]] else { return nil }
+        let ids = displays.compactMap { ($0["Current Space"] as? [String: Any])?["ManagedSpaceID"] as? Int }
+        return ids.isEmpty ? nil : Set(ids)
     }
 
     /// 將指定 process 帶到最前並把指定視窗設為 key window。

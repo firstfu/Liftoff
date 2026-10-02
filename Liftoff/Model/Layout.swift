@@ -26,16 +26,29 @@ nonisolated struct FolderData: Codable, Hashable, Sendable, Identifiable {
     }
 }
 
-/// 頁面上的一格：App 或資料夾。
+/// 搜尋到的視窗（標題符合查詢的執行中視窗）。只存在於搜尋結果，不會寫進版面。
+nonisolated struct WindowHit: Codable, Hashable, Sendable {
+    /// CGWindowID
+    let windowID: UInt32
+    let pid: Int32
+    /// 所屬 App 的識別鍵（取圖示用）
+    let appID: String
+    let title: String
+}
+
+/// 頁面上的一格：App、資料夾，或（只在搜尋結果中）某個執行中的視窗。
 nonisolated enum LayoutItem: Codable, Hashable, Sendable, Identifiable {
     case app(String)
     case folder(FolderData)
+    /// 搜尋結果專用：版面不會含有這種項目（reconcile 時會被移除）
+    case window(WindowHit)
 
     /// SwiftUI 識別用；App 直接用 App 識別鍵（bundle ID 或路徑，不會以 "folder:" 開頭）
     var id: String {
         switch self {
         case .app(let id): id
         case .folder(let folder): Self.folderKey(folder.id)
+        case .window(let hit): "window:\(hit.windowID)"
         }
     }
 
@@ -45,6 +58,10 @@ nonisolated enum LayoutItem: Codable, Hashable, Sendable, Identifiable {
 
     var folder: FolderData? {
         if case .folder(let folder) = self { folder } else { nil }
+    }
+
+    var windowHit: WindowHit? {
+        if case .window(let hit) = self { hit } else { nil }
     }
 
     static func folderKey(_ id: UUID) -> String { "folder:" + id.uuidString }
@@ -71,6 +88,7 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
                 switch item {
                 case .app(let id): result.append(id)
                 case .folder(let folder): result.append(contentsOf: folder.apps)
+                case .window: break
                 }
             }
         }
@@ -221,6 +239,8 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
             folder.apps.append(appID)
             pages[position.page][position.index] = .folder(folder)
             return folder.id
+        case .window:
+            return nil
         }
     }
 
@@ -277,6 +297,8 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
                     case 1: return .app(folder.apps[0])
                     default: return .folder(folder)
                     }
+                case .window:
+                    return nil
                 }
             }
         }

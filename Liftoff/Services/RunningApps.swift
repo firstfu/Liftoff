@@ -40,9 +40,14 @@ final class RunningApps {
             if map[id] == nil { map[id] = app }
         }
         byID = map
+        idsByPID = Dictionary(map.map { ($0.value.processIdentifier, $0.key) }, uniquingKeysWith: { first, _ in first })
         let newIDs = Set(map.keys)
         if newIDs != ids { ids = newIDs }
     }
+
+    /// 執行中 App 的 pid → 識別鍵（搜尋視窗標題時用來認領視窗；只含 App 清單裡的 App，不含背景程序）。
+    /// 在 refresh 時就算好：搜尋時現算要逐一讀 NSRunningApplication 的屬性，實測主執行緒約 2ms。
+    @ObservationIgnored private(set) var idsByPID: [pid_t: String] = [:]
 
     func application(for id: String) -> NSRunningApplication? {
         guard let app = byID[id], !app.isTerminated else { return nil }

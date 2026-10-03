@@ -118,7 +118,7 @@ Tests: replace `build` with `test` in the `xcodebuild` command. `scripts/install
 
 ## Contributing
 
-Free and open source, built by one person — [issues](https://github.com/firstfu/Liftoff/issues/new/choose) and pull requests are very welcome. The easiest ways to help: fix a translation, add a missing app to [`AppCategories.json`](Liftoff/Resources/AppCategories.json), or report a bug with your macOS version.
+Free and open source, built by one person — [issues](https://github.com/firstfu/Liftoff/issues/new/choose) and pull requests are very welcome. The easiest ways to help: fix a translation, add a missing app to [`AppCategories.json`](Liftoff/Resources/AppCategories.json), or report a bug with your macOS version. New here? Start with the [good first issues](https://github.com/firstfu/Liftoff/labels/good%20first%20issue), and use [Discussions](https://github.com/firstfu/Liftoff/discussions) for questions and ideas.
 
 ## License
 

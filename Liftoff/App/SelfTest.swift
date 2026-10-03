@@ -466,9 +466,14 @@ enum SelfTest {
         let swipedTo = model.pager.page
         scroll(dx: 0, dy: 5, phase: 0, continuous: false)          // 滑鼠滾輪往上 = 上一頁
         try? await Task.sleep(for: .milliseconds(500))
-        results["scrollPaging"] = swipedTo == 1 && model.pager.page == 0 && midOffset < -300
-            ? "ok（跟手位移 \(Int(midOffset))pt → 第 2 頁，滾輪 → 第 1 頁）"
-            : "失敗：跟手=\(midOffset)、撥動後頁=\(swipedTo)、滾輪後頁=\(model.pager.page)"
+        // 只有一頁時撥不到第 2 頁（使用者整理成單頁版面很常見）：不是缺陷，標成略過，免得把環境當成回歸
+        if store.layout.pages.count < 2 {
+            results["scrollPaging"] = "skipped（版面只有 1 頁）"
+        } else {
+            results["scrollPaging"] = swipedTo == 1 && model.pager.page == 0 && midOffset < -300
+                ? "ok（跟手位移 \(Int(midOffset))pt → 第 2 頁，滾輪 → 第 1 頁）"
+                : "失敗：跟手=\(midOffset)、撥動後頁=\(swipedTo)、滾輪後頁=\(model.pager.page)"
+        }
 
         // (d5) 滑鼠在空白處按住往右拖 → 跟手並翻回上一頁（空白處 = 最後一頁格子沒排滿的位置）
         let lastPage = store.layout.pages.count - 1

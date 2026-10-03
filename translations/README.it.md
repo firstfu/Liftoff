@@ -12,13 +12,16 @@
 [![Latest release](https://img.shields.io/github/v/release/firstfu/Liftoff)](https://github.com/firstfu/Liftoff/releases/latest)
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
-[Download](https://github.com/firstfu/Liftoff/releases/latest)
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Scarica Liftoff.zip</b></a>
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · **Italiano** · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff in azione: apertura, ricerca, anteprima delle finestre, apertura di una cartella">
 
 </div>
+
+> [!NOTE]
+> Liftoff richiede **macOS 26 o versioni successive**. **Non è ancora notarizzato da Apple**, quindi macOS blocca il primo avvio: apri Impostazioni di Sistema → Privacy e sicurezza e fai clic una volta su **Apri comunque** ([passaggi](#installazione)). Tutto il codice è qui, e [a cosa serve ogni permesso](#permessi-in-sintesi) è spiegato più sotto.
 
 ## Perché Liftoff
 
@@ -75,8 +78,10 @@ Misurate su un Mac reale dall'app stessa (`scripts/selftest.sh` riproduce i nume
 
 ## Privacy
 
-Liftoff **non effettua alcuna connessione di rete**. Le miniature delle finestre vengono catturate e mostrate in locale e non lasciano mai il tuo Mac.
-Non fidarti sulla parola: il codice che usa ciascun permesso si trova in [`Liftoff/Preview`](../Liftoff/Preview) (Registrazione schermo e audio di sistema: miniature; Accessibilità: elenco e cambio delle finestre) e in [`Liftoff/Services`](../Liftoff/Services) (scorciatoia da tastiera, angolo attivo, gesto sul trackpad). Anche Little Snitch o LuLu te lo confermeranno.
+Liftoff **non effettua alcuna connessione di rete**, a meno che tu non gli chieda di verificare gli aggiornamenti. Le miniature delle finestre vengono catturate e mostrate in locale e non lasciano mai il tuo Mac.
+L’unica connessione possibile è la verifica degli aggiornamenti: una richiesta all’API di GitHub per leggere il numero dell’ultima versione, inviata solo quando fai clic su **Verifica aggiornamenti…** o attivi **Verifica aggiornamenti ogni settimana** nelle impostazioni (disattivato per impostazione predefinita). Non viene inviato alcun dato su di te.
+
+Non fidarti sulla parola: il codice che usa ciascun permesso si trova in [`Liftoff/Preview`](../Liftoff/Preview) (Registrazione schermo e audio di sistema: miniature; Accessibilità: elenco e cambio delle finestre) e in [`Liftoff/Services`](../Liftoff/Services) (scorciatoia da tastiera, angolo attivo, gesto sul trackpad e la verifica degli aggiornamenti in `UpdateChecker.swift`). Anche Little Snitch o LuLu te lo confermeranno.
 
 ### Una nota sulle API private
 
@@ -87,14 +92,62 @@ Due funzionalità usano API non documentate di macOS, entrambe caricate dinamica
 
 ## Installazione
 
-Richiede **macOS 26 o versioni successive**.
-
 1. Scarica `Liftoff.zip` da [Releases](https://github.com/firstfu/Liftoff/releases/latest) e decomprimilo.
 2. Sposta `Liftoff.app` in `/Applications`.
 3. Aprilo. La prima volta macOS lo bloccherà, perché non è ancora notarizzato da Apple: apri **Impostazioni di Sistema → Privacy e sicurezza**, scorri verso il basso e fai clic su **Apri comunque** accanto a *Il Mac ha bloccato Liftoff per garantire la sicurezza.*
 4. Concedi i permessi richiesti: **Accessibilità** (elencare e cambiare finestra) e **Registrazione schermo e audio di sistema** (miniature delle finestre, solo in locale).
 
-> Le build sono firmate ad-hoc, quindi dopo ogni aggiornamento macOS ti chiede di riattivare Accessibilità e Registrazione schermo e audio di sistema.
+Richiede **macOS 26 o versioni successive**, Apple silicon o Intel.
+
+### Aggiornamento
+
+Sostituisci `Liftoff.app` in `/Applications` con la nuova versione. Le build sono firmate ad-hoc, quindi macOS considera ogni versione una nuova app: fai clic una volta su **Apri comunque**, e Registrazione schermo e audio di sistema e Accessibilità vanno riattivati (se un interruttore sembra attivo ma non fa nulla, rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo).
+Per sapere delle nuove versioni: scegli **Verifica aggiornamenti…** nel menu della barra dei menu o nelle impostazioni, attiva **Verifica aggiornamenti ogni settimana** nelle impostazioni (disattivato per impostazione predefinita), oppure usa **Watch → Custom → Releases** in questa pagina.
+
+## Permessi in sintesi
+
+| Permesso | Necessario? | Perché | Se lo salti |
+|---|---|---|---|
+| **Registrazione schermo e audio di sistema** | Solo per le anteprime delle finestre | Miniature e titoli delle finestre (catturati e mostrati solo sul tuo Mac) | Niente anteprime delle finestre; Liftoff resta comunque un launcher |
+| **Accessibilità** | Facoltativo | Elencare le finestre minimizzate e passare esattamente alla finestra su cui hai fatto clic | Le finestre minimizzate non vengono elencate; il cambio di finestra è meno preciso |
+
+Non viene richiesto nient’altro. Il launcher in sé non richiede alcun permesso.
+
+## FAQ
+
+<details>
+<summary><b>macOS dice «Il Mac ha bloccato Liftoff per garantire la sicurezza»</b></summary>
+
+Liftoff non è ancora notarizzato da Apple. Apri Impostazioni di Sistema → Privacy e sicurezza, scorri verso il basso e fai clic su **Apri comunque** accanto al messaggio. È un passaggio da fare una sola volta per versione.
+</details>
+
+<details>
+<summary><b>Le anteprime delle finestre non compaiono o non mostrano miniature</b></summary>
+
+Controlla che **Registrazione schermo e audio di sistema** (necessaria per le anteprime) e, facoltativamente, **Accessibilità** (finestre minimizzate, cambio di finestra preciso) siano attivate per Liftoff in Impostazioni di Sistema → Privacy e sicurezza. Se un interruttore sembra attivo ma non funziona nulla (succede spesso dopo un aggiornamento), rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo.
+</details>
+
+<details>
+<summary><b>Perdo i permessi quando aggiorno?</b></summary>
+
+Sì, con le release firmate ad-hoc: macOS vede ogni versione come una nuova app, quindi Registrazione schermo e audio di sistema e Accessibilità vanno concesse di nuovo. Compilandolo tu stesso con il tuo certificato lo eviti: vedi [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+</details>
+
+<details>
+<summary><b>La scorciatoia, il gesto di pizzico o l’angolo attivo non lo aprono</b></summary>
+
+Un’altra app potrebbe già usare quella scorciatoia (Impostazioni → Attivazione mostra un avviso): scegline un’altra. Il gesto di pizzico disattiva temporaneamente il gesto di pizzico di macOS per «App» mentre Liftoff è in esecuzione e lo ripristina quando lo disattivi o chiudi l’app. `open liftoff://toggle` funziona sempre.
+</details>
+
+<details>
+<summary><b>Come lo disinstallo?</b></summary>
+
+Chiudi Liftoff dalla barra dei menu, elimina `Liftoff.app` da `/Applications` e rimuovilo da Impostazioni di Sistema → Generali → Elementi login ed estensioni se avevi attivato *Apri al login*. Per rimuovere anche le sue impostazioni: `defaults delete com.firstfu.Liftoff` ed elimina `~/Library/Caches/com.firstfu.Liftoff`.
+</details>
+
+## In cosa si differenzia da strumenti simili
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) è un buon progetto open source, attivo: è notarizzato, importa il vecchio layout di Launchpad e offre ricerca approssimata e cartelle. Se è ciò che ti serve, usalo. Ciò che Liftoff aggiunge: miniature in tempo reale delle finestre di un’app in esecuzione (un clic per andarci, comprese quelle minimizzate), una ricerca che trova anche i titoli delle finestre, l’Organizzazione smart con un clic (tabella di corrispondenza integrata, senza IA, con anteprima prima), il trascinamento delle app dalla griglia al Dock e numeri di prestazioni riproducibili. Il compromesso oggi: LaunchNext è notarizzato, Liftoff non ancora.
 
 ## Lingue
 

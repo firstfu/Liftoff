@@ -12,13 +12,16 @@
 [![Latest release](https://img.shields.io/github/v/release/firstfu/Liftoff)](https://github.com/firstfu/Liftoff/releases/latest)
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
-[下載](https://github.com/firstfu/Liftoff/releases/latest)
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>下載 Liftoff.zip</b></a>
 
 [English](../README.md) · **繁體中文** · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff 實際操作：開啟、搜尋、預覽視窗、打開資料夾">
 
 </div>
+
+> [!NOTE]
+> Liftoff 需要 **macOS 26 或以上版本**。它**還沒有經過 Apple 公證**，所以 macOS 會擋下第一次開啟：請打開「系統設定 → 隱私權與安全性」，按一次 **強制打開**（[步驟](#安裝)）。所有程式碼都公開在這裡，[各項權限分別用在哪裡](#權限一覽)也寫在下面。
 
 ## 為什麼要做 Liftoff
 
@@ -75,8 +78,10 @@ macOS 26 把經典的啟動台格線換成了「App」清單。如果你和我�
 
 ## 隱私
 
-Liftoff **完全不連網**。視窗縮圖只在你的 Mac 上擷取與顯示，不會離開你的電腦。
-不必只聽我說：用到各項權限的程式碼都在這裡，[`Liftoff/Preview`](../Liftoff/Preview)（螢幕與系統錄音：縮圖；輔助使用：列出與切換視窗）和 [`Liftoff/Services`](../Liftoff/Services)（快速鍵、熱點、觸控式軌跡板手勢）。用 Little Snitch 或 LuLu 也能確認。
+Liftoff **不會連網**，除非你要求它檢查更新。視窗縮圖只在你的 Mac 上擷取與顯示，不會離開你的電腦。
+它唯一可能發出的連線就是檢查更新：向 GitHub API 發出一次請求，讀取最新的版本號，而且只有在你按下 **檢查更新…**，或在設定中開啟 **每週自動檢查更新**（預設關閉）時才會發出。不會傳送任何關於你的資料。
+
+不必只聽我說：用到各項權限的程式碼都在這裡，[`Liftoff/Preview`](../Liftoff/Preview)（螢幕與系統錄音：縮圖；輔助使用：列出與切換視窗）和 [`Liftoff/Services`](../Liftoff/Services)（快速鍵、熱點、觸控式軌跡板手勢，以及 `UpdateChecker.swift` 裡的檢查更新）。用 Little Snitch 或 LuLu 也能確認。
 
 ### 關於私有 API
 
@@ -87,14 +92,62 @@ Liftoff **完全不連網**。視窗縮圖只在你的 Mac 上擷取與顯示，
 
 ## 安裝
 
-需要 **macOS 26 或以上版本**。
-
 1. 從 [Releases](https://github.com/firstfu/Liftoff/releases/latest) 下載 `Liftoff.zip` 並解壓縮。
 2. 把 `Liftoff.app` 移到 `/Applications`。
 3. 打開它。第一次開啟時 macOS 會擋下，因為它還沒有經過 Apple 公證：請打開 **系統設定 → 隱私權與安全性**，往下捲動，在「已阻擋「Liftoff」以保護你的Mac。」旁邊按下 **強制打開**。
 4. 依提示授予權限：**輔助使用**（列出與切換視窗）和 **螢幕與系統錄音**（視窗縮圖，只在本機處理）。
 
-> 這些建置版本採用 ad-hoc 簽章，因此每次更新後，macOS 都會要求你重新開啟輔助使用與螢幕與系統錄音的權限。
+需要 **macOS 26 或以上版本**，支援 Apple 晶片與 Intel。
+
+### 更新
+
+用新的 `Liftoff.app` 取代 `/Applications` 裡的舊版。這些建置版本採用 ad-hoc 簽章，macOS 會把每個版本當成新的 App：你要再按一次 **強制打開**，並重新開啟螢幕與系統錄音和輔助使用的權限（如果開關看起來是開的卻沒作用，請用 **－** 把 Liftoff 從清單移除，再重新加入）。
+想知道有沒有新版本：在選單列選單或設定中選擇 **檢查更新…**、在設定中開啟 **每週自動檢查更新**（預設關閉），或在本頁使用 **Watch → Custom → Releases**。
+
+## 權限一覽
+
+| 權限 | 需要嗎？ | 用途 | 不授予的話 |
+|---|---|---|---|
+| **螢幕與系統錄音** | 只有視窗預覽需要 | 視窗縮圖與標題（只在你的 Mac 上擷取與顯示） | 沒有視窗預覽；Liftoff 仍然是個啟動台 |
+| **輔助使用** | 選用 | 列出最小化的視窗，並精準跳到你點的那個視窗 | 不會列出最小化的視窗；切換比較不精準 |
+
+不會再要求其他權限。啟動台本身完全不需要任何權限。
+
+## 常見問題
+
+<details>
+<summary><b>macOS 說「已阻擋「Liftoff」以保護你的Mac」</b></summary>
+
+Liftoff 還沒有經過 Apple 公證。請打開「系統設定 → 隱私權與安全性」，往下捲動，在該訊息旁按下 **強制打開**。每個版本只需要做一次。
+</details>
+
+<details>
+<summary><b>視窗預覽沒有出現，或沒有縮圖</b></summary>
+
+請確認在「系統設定 → 隱私權與安全性」裡，**螢幕與系統錄音**（預覽需要）和選用的 **輔助使用**（最小化的視窗、精準切換）都已為 Liftoff 開啟。如果開關看起來是開的卻沒作用（更新後很常見），請用 **－** 把 Liftoff 從清單移除，再重新加入。
+</details>
+
+<details>
+<summary><b>更新後權限會不見嗎？</b></summary>
+
+會，ad-hoc 簽章的發行版就是如此：macOS 把每個版本當成新的 App，所以螢幕與系統錄音和輔助使用都要重新允許。用你自己的憑證自行建置就能避免，請參閱 [`Config/Signing.xcconfig`](../Config/Signing.xcconfig)。
+</details>
+
+<details>
+<summary><b>快速鍵、捏合手勢或熱點打不開它</b></summary>
+
+可能是別的 App 已經占用了那組快速鍵（設定 → 觸發方式會顯示警告），請換一組。捏合手勢會在 Liftoff 執行期間，暫時關閉 macOS 自己用來開「App」的捏合手勢，並在你關掉它或結束 Liftoff 時還原。`open liftoff://toggle` 一律可用。
+</details>
+
+<details>
+<summary><b>要怎麼解除安裝？</b></summary>
+
+從選單列結束 Liftoff，把 `Liftoff.app` 從 `/Applications` 刪除；如果你啟用過「在登入時打開」，也請到「系統設定 → 一般 → 登入項目」把它移除。若要連設定一起清掉：執行 `defaults delete com.firstfu.Liftoff`，並刪除 `~/Library/Caches/com.firstfu.Liftoff`。
+</details>
+
+## 與類似工具的差異
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) 是個不錯、持續維護的開源專案：它有公證、能匯入舊的啟動台排列，也有模糊搜尋和資料夾。如果那正是你需要的，就用它。Liftoff 多出來的是：執行中 App 的視窗即時縮圖（點一下就跳過去，最小化的也行）、連視窗標題都能比對的搜尋、一鍵智慧整理（內建對照表、不用 AI、套用前先預覽）、從格線把 App 拖進 Dock，以及可以自己重現的效能數字。目前的取捨是：LaunchNext 有公證，Liftoff 還沒有。
 
 ## 語言
 

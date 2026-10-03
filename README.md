@@ -16,9 +16,14 @@
 
 English · [繁體中文](translations/README.zh-Hant.md) · [简体中文](translations/README.zh-Hans.md) · [日本語](translations/README.ja.md) · [한국어](translations/README.ko.md) · [Deutsch](translations/README.de.md) · [Français](translations/README.fr.md) · [Español](translations/README.es.md) · [Português](translations/README.pt-BR.md) · [Italiano](translations/README.it.md) · [Русский](translations/README.ru.md) · [Türkçe](translations/README.tr.md) · [Nederlands](translations/README.nl.md)
 
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Download Liftoff.zip</b></a>
+
 <img src="assets/hero.gif" width="860" alt="Liftoff in action: open, search, preview windows, open a folder">
 
 </div>
+
+> [!NOTE]
+> Liftoff needs **macOS 26 or later**. It is **not notarized by Apple yet**, so macOS blocks the first launch: open System Settings → Privacy & Security and click **Open Anyway** once ([steps](#install)). All the code is here, and [what each permission is used for](#permissions-at-a-glance) is spelled out below.
 
 ## Why Liftoff
 
@@ -75,8 +80,10 @@ Measured on a real Mac by the app itself (`scripts/selftest.sh` reproduces the n
 
 ## Privacy
 
-Liftoff makes **no network connections at all**. Window thumbnails are captured and shown locally and never leave your Mac.
-Don't take my word for it: the code that uses each permission is in [`Liftoff/Preview`](Liftoff/Preview) (Screen Recording: thumbnails; Accessibility: listing and switching windows) and [`Liftoff/Services`](Liftoff/Services) (hotkey, hot corner, trackpad gesture). Little Snitch or LuLu will confirm it too.
+Liftoff makes **no network connections** unless you ask it to check for updates. Window thumbnails are captured and shown locally and never leave your Mac.
+The only connection it can make is the update check: one request to the GitHub API to read the latest version number, sent only when you click **Check for Updates…** or turn on **Check for updates weekly** in Settings (off by default). No data about you is sent.
+
+Don't take my word for it: the code that uses each permission is in [`Liftoff/Preview`](Liftoff/Preview) (Screen Recording: thumbnails; Accessibility: listing and switching windows) and [`Liftoff/Services`](Liftoff/Services) (hotkey, hot corner, trackpad gesture, and the update check in `UpdateChecker.swift`). Little Snitch or LuLu will confirm it too.
 
 ### A note on private APIs
 
@@ -87,14 +94,62 @@ Two features use undocumented macOS APIs, both loaded dynamically with a fallbac
 
 ## Install
 
-Requires **macOS 26 or later**.
-
 1. Download `Liftoff.zip` from [Releases](https://github.com/firstfu/Liftoff/releases/latest) and unzip it.
 2. Move `Liftoff.app` to `/Applications`.
 3. Open it. macOS will block it the first time, because it isn't notarized by Apple yet: open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to *"Liftoff" was blocked to protect your Mac.*
 4. Grant the permissions it asks for: **Accessibility** (list and switch windows) and **Screen Recording** (window thumbnails, local only).
 
-> Builds are ad-hoc signed, so macOS asks you to re-enable Accessibility and Screen Recording after each update.
+Requires **macOS 26 or later**, Apple silicon or Intel.
+
+### Updating
+
+Replace `Liftoff.app` in `/Applications` with the new one. Builds are ad-hoc signed, so macOS treats each version as a new app: you click **Open Anyway** once, and Screen Recording and Accessibility must be switched on again (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
+To hear about new versions: choose **Check for Updates…** in the menu bar menu or in Settings, turn on **Check for updates weekly** in Settings (off by default), or use **Watch → Custom → Releases** on this page.
+
+## Permissions at a glance
+
+| Permission | Needed? | Why | If you skip it |
+|---|---|---|---|
+| **Screen Recording** | Only for window previews | Window thumbnails and titles (captured and shown on your Mac only) | No window previews; Liftoff is still a launcher |
+| **Accessibility** | Optional | List minimized windows and jump to exactly the window you clicked | Minimized windows aren't listed; switching is less precise |
+
+Nothing else is requested. The launcher itself needs no permission at all.
+
+## FAQ
+
+<details>
+<summary><b>macOS says "Liftoff was blocked to protect your Mac"</b></summary>
+
+Liftoff isn't notarized by Apple yet. Open System Settings → Privacy & Security, scroll down and click **Open Anyway** next to the message. It is a one-time step per version.
+</details>
+
+<details>
+<summary><b>Window previews don't show up, or show no thumbnails</b></summary>
+
+Check that **Screen & System Audio Recording** (needed for the previews) and, optionally, **Accessibility** (minimized windows, precise switching) are switched on for Liftoff in System Settings → Privacy & Security. If a switch looks on but nothing works — common after an update — remove Liftoff from the list with **−** and add it back.
+</details>
+
+<details>
+<summary><b>Do I lose permissions when I update?</b></summary>
+
+Yes, with the ad-hoc signed releases: macOS sees each version as a new app, so Screen Recording and Accessibility have to be allowed again. Building it yourself with your own certificate avoids this — see [`Config/Signing.xcconfig`](Config/Signing.xcconfig).
+</details>
+
+<details>
+<summary><b>The hotkey, pinch gesture or hot corner doesn't open it</b></summary>
+
+Another app may already own the hotkey (Settings → Triggers shows a warning); pick a different one. The pinch gesture temporarily turns off macOS's own pinch gesture for "Apps" while Liftoff runs and restores it when you turn it off or quit. `open liftoff://toggle` always works.
+</details>
+
+<details>
+<summary><b>How do I uninstall it?</b></summary>
+
+Quit Liftoff from the menu bar, delete `Liftoff.app` from `/Applications`, and remove it from System Settings → General → Login Items if you enabled *Open at Login*. To remove its settings too: `defaults delete com.firstfu.Liftoff` and delete `~/Library/Caches/com.firstfu.Liftoff`.
+</details>
+
+## How it differs from similar tools
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) is a good, active open-source project: it is notarized, imports the old Launchpad layout, and has fuzzy search and folders. If that's what you need, use it. What Liftoff adds on top: live thumbnails of a running app's windows (click to jump, minimized ones included), search that also matches window titles, one-click Smart Organize (built-in lookup table, no AI, preview first), dragging apps from the grid to the Dock, and performance numbers you can reproduce. The trade-off today: LaunchNext is notarized and Liftoff isn't yet.
 
 ## Languages
 

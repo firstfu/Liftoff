@@ -15,6 +15,7 @@
 		12C9F8414B923962EDF2D1FD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99E7EF481E4A996961E78CB /* SettingsView.swift */; };
 		13DD41C8873D2B41F57E08F5 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DD46B88200B0666CEF313827 /* Localizable.xcstrings */; };
 		150EA47DD7C163F03D040B74 /* RunningApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4831AC82590FE6D49B3A4F32 /* RunningApps.swift */; };
+		1802D0E517A90D45F71F4DBE /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E02DDEFF5429CAE925442A /* UpdateChecker.swift */; };
 		1B0A2F3A2F748C1B3B834EC1 /* LayoutStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89D0A6B3EA5EF4CF646756C /* LayoutStore.swift */; };
 		1C16DECDDD04013158610B25 /* WindowPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3976A50B0A3ABB3892EA7489 /* WindowPreviewView.swift */; };
 		2818B77870C69DA99B30EAFE /* LabelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE5B45B2370CF04FDAFED69 /* LabelStore.swift */; };
@@ -45,6 +46,7 @@
 		979F5BA8F73041A0C3EBA9FD /* WindowSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9CF46797CED7C69C04A20 /* WindowSearchTests.swift */; };
 		981E5930550298F967C3F98F /* SelfTest+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0016CC1E27FFCA3B6207BB31 /* SelfTest+Preview.swift */; };
 		A231CAE89918D75EFAB655B2 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D149C029BAB8771AD6E381C1 /* AppCoordinator.swift */; };
+		A72D05B061F90A7E98942BE2 /* UpdateCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5EACF8CA9D58F7085C7B18 /* UpdateCheckerTests.swift */; };
 		AB8F99024D2CAA0C4559CDF3 /* AXExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409477CA01B0448AEB4DE07B /* AXExtensions.swift */; };
 		B1F8DCC47B6A11773D7932A7 /* WallpaperProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF685ADCDFD88B70844C09 /* WallpaperProvider.swift */; };
 		B9FD47742CC8F74EB484C293 /* LaunchpadImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FFDEB7A0B8C35C6FF4733A /* LaunchpadImporter.swift */; };
@@ -87,6 +89,7 @@
 		216237218CD1A6433B060B7A /* IconStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconStore.swift; sourceTree = "<group>"; };
 		225A0FE55E7491CE3468D35D /* ThumbnailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailService.swift; sourceTree = "<group>"; };
 		24E75248F58676E236D3D843 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
+		2B5EACF8CA9D58F7085C7B18 /* UpdateCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCheckerTests.swift; sourceTree = "<group>"; };
 		30A5C73F519E457F6C77D9ED /* TrackpadGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadGesture.swift; sourceTree = "<group>"; };
 		365775DB9A7DCE73F3E5A622 /* WindowActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowActions.swift; sourceTree = "<group>"; };
 		3976A50B0A3ABB3892EA7489 /* WindowPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowPreviewView.swift; sourceTree = "<group>"; };
@@ -118,6 +121,7 @@
 		A86E205A8525D72DFA65876C /* AppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalog.swift; sourceTree = "<group>"; };
 		A913D365C8BE25925F47B4FB /* LaunchpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadRootView.swift; sourceTree = "<group>"; };
 		B3CA71999D416D97CAA8EF5D /* GridMetricsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridMetricsTests.swift; sourceTree = "<group>"; };
+		B6E02DDEFF5429CAE925442A /* UpdateChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateChecker.swift; sourceTree = "<group>"; };
 		BA7E158E1A24AB41C05851B6 /* AppEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEntry.swift; sourceTree = "<group>"; };
 		BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadWindowController.swift; sourceTree = "<group>"; };
 		C15940A395F28F9E658742CA /* Liftoff.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Liftoff.entitlements; sourceTree = "<group>"; };
@@ -221,6 +225,7 @@
 				4831AC82590FE6D49B3A4F32 /* RunningApps.swift */,
 				30A5C73F519E457F6C77D9ED /* TrackpadGesture.swift */,
 				DF77B24B8606185953AA5FD6 /* Uninstaller.swift */,
+				B6E02DDEFF5429CAE925442A /* UpdateChecker.swift */,
 				F6CF685ADCDFD88B70844C09 /* WallpaperProvider.swift */,
 			);
 			path = Services;
@@ -256,6 +261,7 @@
 				E2A198A07C1B025351B68798 /* LocalizationTests.swift */,
 				4381D50B82214B6E91047993 /* RenderingTests.swift */,
 				63C5753B79000E7683F59D7D /* SearchIndexTests.swift */,
+				2B5EACF8CA9D58F7085C7B18 /* UpdateCheckerTests.swift */,
 				CAE9CF46797CED7C69C04A20 /* WindowSearchTests.swift */,
 			);
 			path = LiftoffTests;
@@ -439,6 +445,7 @@
 				E7AF01F27AF13F6DFC2EB60D /* LocalizationTests.swift in Sources */,
 				549E847C8A76998CC5D21402 /* RenderingTests.swift in Sources */,
 				63A5970656C069705E8AD44D /* SearchIndexTests.swift in Sources */,
+				A72D05B061F90A7E98942BE2 /* UpdateCheckerTests.swift in Sources */,
 				979F5BA8F73041A0C3EBA9FD /* WindowSearchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,6 +496,7 @@
 				0D9734B17610E5FDD76FB4FF /* ThumbnailService.swift in Sources */,
 				E228955A0CE982D7BF755ACF /* TrackpadGesture.swift in Sources */,
 				343A006FB3924496FE20AFB6 /* Uninstaller.swift in Sources */,
+				1802D0E517A90D45F71F4DBE /* UpdateChecker.swift in Sources */,
 				B1F8DCC47B6A11773D7932A7 /* WallpaperProvider.swift in Sources */,
 				DF02BB3A53A036DDA3AF5212 /* WindowActions.swift in Sources */,
 				0514A8F36F3A6D78D7A200F0 /* WindowEnumerator.swift in Sources */,

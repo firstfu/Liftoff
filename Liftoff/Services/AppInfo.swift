@@ -3,8 +3,8 @@
 //  Liftoff
 //
 //  版本資訊與對外連結（官網、Release、回報問題）。
-//  App 自己不連網：「檢查更新」「回報問題」只是請系統用瀏覽器打開網址，要不要送出由使用者決定，
-//  這樣才不違背「完全不連網」的隱私承諾。
+//  「回報問題」只是請系統用瀏覽器打開網址，要不要送出由使用者決定。
+//  App 唯一會自己連網的是檢查更新（見 UpdateChecker.swift）：只在使用者要求時才連線，預設不連。
 //
 
 import AppKit
@@ -12,7 +12,6 @@ import AppKit
 enum AppInfo {
     static let repository = URL(string: "https://github.com/firstfu/Liftoff")!
     static let website = URL(string: "https://firstfu.github.io/Liftoff/")!
-    static let latestRelease = URL(string: "https://github.com/firstfu/Liftoff/releases/latest")!
 
     /// 版本字串，例如「1.1.0 (4)」；讀不到時只顯示「—」。
     static var versionDescription: String {

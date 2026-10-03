@@ -100,7 +100,11 @@ private struct MenuContent: View {
         Button("設定…") { AppCoordinator.shared.openSettings() }
             .keyboardShortcut(",")
         Divider()
-        Button("檢查更新…") { AppInfo.open(AppInfo.latestRelease) }
+        if let update = AppCoordinator.shared.updates.availableUpdate {
+            Button("有新版本：\(update.version)…") { AppInfo.open(update.url) }
+        } else {
+            Button("檢查更新…") { Task { await AppCoordinator.shared.updates.checkAndAnnounce() } }
+        }
         Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
         Divider()
         Button("結束 Liftoff") { NSApp.terminate(nil) }

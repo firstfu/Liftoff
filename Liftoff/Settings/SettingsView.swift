@@ -15,7 +15,7 @@ struct SettingsView: View {
     var body: some View {
         TabView {
             Tab("一般", systemImage: "gearshape") {
-                GeneralSettings(settings: coordinator.settings)
+                GeneralSettings(settings: coordinator.settings, updates: coordinator.updates)
             }
             Tab("觸發方式", systemImage: "hand.tap") {
                 TriggerSettings(coordinator: coordinator, settings: coordinator.settings)
@@ -38,6 +38,7 @@ struct SettingsView: View {
 
 private struct GeneralSettings: View {
     @Bindable var settings: AppSettings
+    let updates: UpdateChecker
 
     var body: some View {
         Form {
@@ -59,8 +60,11 @@ private struct GeneralSettings: View {
             }
             Section("關於") {
                 LabeledContent("版本", value: AppInfo.versionDescription)
+                UpdateRow(updates: updates)
+                Toggle("每週自動檢查更新", isOn: $settings.autoChecksForUpdates)
+                Text("只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。")
+                    .font(.footnote).foregroundStyle(.secondary)
                 HStack {
-                    Button("檢查更新…") { AppInfo.open(AppInfo.latestRelease) }
                     Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
                     Spacer()
                     Button("官網") { AppInfo.open(AppInfo.website) }
@@ -69,6 +73,30 @@ private struct GeneralSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+/// 「關於」裡的檢查更新列：左邊顯示結果，右邊是檢查或下載按鈕。
+private struct UpdateRow: View {
+    let updates: UpdateChecker
+
+    var body: some View {
+        HStack {
+            switch updates.status {
+            case .idle: EmptyView()
+            case .checking: Text("正在檢查…").foregroundStyle(.secondary)
+            case .upToDate: Text("已是最新版本").foregroundStyle(.secondary)
+            case .available(let version, _): Text("有新版本：\(version)")
+            case .failed: Text("無法連線到 GitHub，請稍後再試").foregroundStyle(.orange)
+            }
+            Spacer()
+            if let update = updates.availableUpdate {
+                Button("下載") { AppInfo.open(update.url) }
+            } else {
+                Button("檢查更新…") { Task { await updates.check() } }
+                    .disabled(updates.status == .checking)
+            }
+        }
     }
 }
 

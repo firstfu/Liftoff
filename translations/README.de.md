@@ -12,13 +12,16 @@
 [![Latest release](https://img.shields.io/github/v/release/firstfu/Liftoff)](https://github.com/firstfu/Liftoff/releases/latest)
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
-[Download](https://github.com/firstfu/Liftoff/releases/latest)
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Liftoff.zip herunterladen</b></a>
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · **Deutsch** · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff in Aktion: öffnen, suchen, Fenster in der Vorschau ansehen, einen Ordner öffnen">
 
 </div>
+
+> [!NOTE]
+> Liftoff braucht **macOS 26 oder neuer**. Die App ist **noch nicht von Apple notarisiert**, deshalb blockiert macOS den ersten Start: Öffne Systemeinstellungen → Datenschutz & Sicherheit und klicke einmalig auf **Dennoch öffnen** ([Schritte](#installation)). Der gesamte Code liegt hier, und [wofür jede Berechtigung genutzt wird](#berechtigungen-im-überblick), steht weiter unten.
 
 ## Warum Liftoff
 
@@ -75,8 +78,10 @@ Von der App selbst auf einem echten Mac gemessen (mit `scripts/selftest.sh` kann
 
 ## Datenschutz
 
-Liftoff baut **überhaupt keine Netzwerkverbindungen** auf. Fensterminiaturen werden lokal aufgenommen und angezeigt und verlassen deinen Mac nie.
-Du musst mir das nicht einfach glauben: Der Code, der die jeweilige Berechtigung nutzt, liegt in [`Liftoff/Preview`](../Liftoff/Preview) (Aufnahme von Bildschirm & Systemaudio: Miniaturen; Bedienungshilfen: Fenster auflisten und wechseln) und [`Liftoff/Services`](../Liftoff/Services) (Tastenkurzbefehl, aktive Ecke, Trackpad-Geste). Auch Little Snitch oder LuLu bestätigen es dir.
+Liftoff baut **keine Netzwerkverbindungen** auf, es sei denn, du bittest es, nach Updates zu suchen. Fensterminiaturen werden lokal aufgenommen und angezeigt und verlassen deinen Mac nie.
+Die einzige mögliche Verbindung ist die Update-Prüfung: eine Anfrage an die GitHub-API, um die neueste Versionsnummer zu lesen. Sie wird nur gesendet, wenn du auf **Nach Updates suchen…** klickst oder in den Einstellungen **Wöchentlich nach Updates suchen** aktivierst (standardmäßig aus). Es werden keine Daten über dich gesendet.
+
+Du musst mir das nicht einfach glauben: Der Code, der die jeweilige Berechtigung nutzt, liegt in [`Liftoff/Preview`](../Liftoff/Preview) (Aufnahme von Bildschirm & Systemaudio: Miniaturen; Bedienungshilfen: Fenster auflisten und wechseln) und [`Liftoff/Services`](../Liftoff/Services) (Tastenkurzbefehl, aktive Ecke, Trackpad-Geste und die Update-Prüfung in `UpdateChecker.swift`). Auch Little Snitch oder LuLu bestätigen es dir.
 
 ### Hinweis zu privaten APIs
 
@@ -87,14 +92,62 @@ Zwei Funktionen nutzen undokumentierte macOS-APIs. Beide werden dynamisch gelade
 
 ## Installation
 
-Erfordert **macOS 26 oder neuer**.
-
 1. Lade `Liftoff.zip` von den [Releases](https://github.com/firstfu/Liftoff/releases/latest) herunter und entpacke es.
 2. Verschiebe `Liftoff.app` nach `/Applications`.
 3. Öffne die App. macOS blockiert sie beim ersten Mal, weil sie noch nicht von Apple notarisiert ist: Öffne **Systemeinstellungen → Datenschutz & Sicherheit**, scrolle nach unten und klicke bei *„Liftoff“ wurde blockiert, um deinen Mac zu schützen.* auf **Dennoch öffnen**.
 4. Erteile die Berechtigungen, nach denen die App fragt: **Bedienungshilfen** (Fenster auflisten und wechseln) und **Aufnahme von Bildschirm & Systemaudio** (Fensterminiaturen, nur lokal).
 
-> Die Builds sind ad-hoc signiert, deshalb fragt macOS nach jedem Update erneut, ob du Bedienungshilfen und Aufnahme von Bildschirm & Systemaudio wieder aktivieren willst.
+Erfordert **macOS 26 oder neuer**, Apple Silicon oder Intel.
+
+### Aktualisieren
+
+Ersetze `Liftoff.app` in `/Applications` durch die neue Version. Die Builds sind ad-hoc signiert, deshalb behandelt macOS jede Version als neue App: Du klickst einmal auf **Dennoch öffnen**, und Aufnahme von Bildschirm & Systemaudio sowie Bedienungshilfen müssen erneut aktiviert werden (sieht ein Schalter aktiv aus, bewirkt aber nichts, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu).
+Um von neuen Versionen zu erfahren: Wähle **Nach Updates suchen…** im Menü in der Menüleiste oder in den Einstellungen, aktiviere in den Einstellungen **Wöchentlich nach Updates suchen** (standardmäßig aus) oder nutze **Watch → Custom → Releases** auf dieser Seite.
+
+## Berechtigungen im Überblick
+
+| Berechtigung | Nötig? | Wofür | Wenn du sie überspringst |
+|---|---|---|---|
+| **Aufnahme von Bildschirm & Systemaudio** | Nur für Fenstervorschauen | Fensterminiaturen und -titel (nur auf deinem Mac aufgenommen und angezeigt) | Keine Fenstervorschauen; Liftoff bleibt ein vollwertiger Launcher |
+| **Bedienungshilfen** | Optional | Minimierte Fenster auflisten und genau das angeklickte Fenster nach vorn holen | Minimierte Fenster werden nicht aufgelistet; das Wechseln ist weniger genau |
+
+Weitere Berechtigungen werden nicht angefragt. Der Launcher selbst braucht überhaupt keine Berechtigung.
+
+## FAQ
+
+<details>
+<summary><b>macOS meldet: „Liftoff“ wurde blockiert, um deinen Mac zu schützen</b></summary>
+
+Liftoff ist noch nicht von Apple notarisiert. Öffne Systemeinstellungen → Datenschutz & Sicherheit, scrolle nach unten und klicke bei der Meldung auf **Dennoch öffnen**. Das ist pro Version ein einmaliger Schritt.
+</details>
+
+<details>
+<summary><b>Fenstervorschauen erscheinen nicht oder zeigen keine Miniaturen</b></summary>
+
+Prüfe, ob in Systemeinstellungen → Datenschutz & Sicherheit für Liftoff **Aufnahme von Bildschirm & Systemaudio** (für die Vorschauen nötig) und optional **Bedienungshilfen** (minimierte Fenster, genaues Wechseln) aktiviert sind. Sieht ein Schalter aktiv aus, aber nichts funktioniert – häufig nach einem Update –, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu.
+</details>
+
+<details>
+<summary><b>Verliere ich Berechtigungen, wenn ich aktualisiere?</b></summary>
+
+Ja, bei den ad-hoc signierten Releases: macOS sieht jede Version als neue App, deshalb müssen Aufnahme von Bildschirm & Systemaudio und Bedienungshilfen erneut erlaubt werden. Wenn du die App selbst mit deinem eigenen Zertifikat baust, bleibt das erspart – siehe [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+</details>
+
+<details>
+<summary><b>Tastenkurzbefehl, Zusammenziehen oder aktive Ecke öffnen es nicht</b></summary>
+
+Möglicherweise belegt schon eine andere App den Tastenkurzbefehl (Einstellungen → Auslöser zeigt eine Warnung); wähle einen anderen. Die Zusammenziehen-Geste schaltet die eigene macOS-Geste für „Apps“ vorübergehend ab, solange Liftoff läuft, und stellt sie wieder her, wenn du sie ausschaltest oder die App beendest. `open liftoff://toggle` funktioniert immer.
+</details>
+
+<details>
+<summary><b>Wie deinstalliere ich es?</b></summary>
+
+Beende Liftoff in der Menüleiste, lösche `Liftoff.app` aus `/Applications` und entferne es unter Systemeinstellungen → Allgemein → Anmeldeobjekte & Erweiterungen, falls du *Bei der Anmeldung öffnen* aktiviert hattest. Um auch die Einstellungen zu entfernen: `defaults delete com.firstfu.Liftoff` und lösche `~/Library/Caches/com.firstfu.Liftoff`.
+</details>
+
+## Worin es sich von ähnlichen Tools unterscheidet
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) ist ein gutes, aktives Open-Source-Projekt: Es ist notarisiert, importiert die alte Launchpad-Anordnung und bietet unscharfe Suche und Ordner. Wenn du das brauchst, nimm es. Was Liftoff obendrauf bietet: Live-Miniaturen der Fenster einer laufenden App (Klick zum Hinspringen, auch minimierte), eine Suche, die auch Fenstertitel findet, „Intelligent organisieren“ mit einem Klick (eingebaute Tabelle, keine KI, vorher Vorschau), Apps aus dem Raster ins Dock ziehen und Performance-Zahlen, die du selbst nachmessen kannst. Der Kompromiss heute: LaunchNext ist notarisiert, Liftoff noch nicht.
 
 ## Sprachen
 

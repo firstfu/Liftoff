@@ -16,9 +16,14 @@
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · **Türkçe** · [Nederlands](README.nl.md)
 
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Liftoff.zip dosyasını indir</b></a>
+
 <img src="../assets/hero.gif" width="860" alt="Liftoff çalışırken: aç, ara, pencereleri önizle, klasör aç">
 
 </div>
+
+> [!NOTE]
+> Liftoff için **macOS 26 veya üzeri** gerekir. **Henüz Apple tarafından noter onaylı değildir**, bu yüzden macOS ilk açılışı engeller: Sistem Ayarları → Gizlilik ve Güvenlik bölümünü açıp **Yine de Aç** düğmesine bir kez tıklayın ([adımlar](#kurulum)). Tüm kod burada, [her iznin ne için kullanıldığı](#hızlı-izin-özeti) ise aşağıda açıkça anlatılıyor.
 
 ## Neden Liftoff
 
@@ -75,8 +80,10 @@ Uygulamanın kendisi tarafından gerçek bir Mac'te ölçüldü (`scripts/selfte
 
 ## Gizlilik
 
-Liftoff **hiçbir ağ bağlantısı kurmaz**. Pencere küçük resimleri yerelde yakalanır, yerelde gösterilir ve Mac'inizden asla çıkmaz.
-Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`](../Liftoff/Preview) içinde (Ekran Kaydı: küçük resimler; Erişilebilirlik: pencereleri listeleme ve değiştirme) ve [`Liftoff/Services`](../Liftoff/Services) içinde (kısayol tuşu, sıcak köşe, izleme dörtgeni hareketi). Little Snitch ya da LuLu da bunu doğrulayacaktır.
+Liftoff, siz güncelleme denetlemesini istemedikçe **hiçbir ağ bağlantısı kurmaz**. Pencere küçük resimleri yerelde yakalanır, yerelde gösterilir ve Mac'inizden asla çıkmaz.
+Kurabileceği tek bağlantı güncelleme denetimidir: en son sürüm numarasını okumak için GitHub API'sine tek bir istek gider ve yalnızca **Güncellemeleri Denetle…** düğmesine tıkladığınızda ya da Ayarlar'da **Güncellemeleri haftalık denetle** seçeneğini açtığınızda (varsayılan olarak kapalı) gönderilir. Hakkınızda hiçbir veri gönderilmez.
+
+Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`](../Liftoff/Preview) içinde (Ekran Kaydı: küçük resimler; Erişilebilirlik: pencereleri listeleme ve değiştirme) ve [`Liftoff/Services`](../Liftoff/Services) içinde (kısayol tuşu, sıcak köşe, izleme dörtgeni hareketi ve `UpdateChecker.swift` içindeki güncelleme denetimi). Little Snitch ya da LuLu da bunu doğrulayacaktır.
 
 ### Özel API'ler hakkında bir not
 
@@ -87,14 +94,62 @@ Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`
 
 ## Kurulum
 
-**macOS 26 veya üzeri** gerekir.
-
 1. [Releases](https://github.com/firstfu/Liftoff/releases/latest) sayfasından `Liftoff.zip` dosyasını indirin ve arşivden çıkarın.
 2. `Liftoff.app` dosyasını `/Applications` klasörüne taşıyın.
 3. Açın. Apple tarafından henüz noter onaylı olmadığı için macOS ilk seferde engelleyecektir: **Sistem Ayarları → Gizlilik ve Güvenlik** bölümünü açın, aşağı kaydırın ve *“Liftoff”, Mac’inizi korumak için engellendi.* iletisinin yanındaki **Yine de Aç** düğmesine tıklayın.
 4. İstediği izinleri verin: **Erişilebilirlik** (pencereleri listelemek ve değiştirmek için) ve **Ekran ve Sistem Sesi Kaydı** (pencere küçük resimleri için, yalnızca yerel).
 
-> Derlemeler ad-hoc imzalıdır; bu yüzden macOS, her güncellemeden sonra Erişilebilirlik ve Ekran ve Sistem Sesi Kaydı izinlerini yeniden etkinleştirmenizi ister.
+**macOS 26 veya üzeri** gerekir, Apple silikon ya da Intel.
+
+### Güncelleme
+
+`/Applications` içindeki `Liftoff.app` dosyasını yenisiyle değiştirin. Derlemeler ad-hoc imzalıdır; bu yüzden macOS her sürümü yeni bir uygulama sayar: **Yine de Aç** düğmesine bir kez tıklarsınız ve Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinlerini yeniden açmanız gerekir (bir anahtar açık görünüp de işe yaramıyorsa, Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin).
+Yeni sürümlerden haberdar olmak için: menü çubuğu menüsünde ya da Ayarlar'da **Güncellemeleri Denetle…** seçeneğini kullanın, Ayarlar'da **Güncellemeleri haftalık denetle** seçeneğini açın (varsayılan olarak kapalı) veya bu sayfada **Watch → Custom → Releases** yolunu izleyin.
+
+## Hızlı izin özeti
+
+| İzin | Gerekli mi? | Neden | Atlarsanız |
+|---|---|---|---|
+| **Ekran ve Sistem Sesi Kaydı** | Yalnızca pencere önizlemeleri için | Pencere küçük resimleri ve başlıkları (yalnızca Mac'inizde yakalanır ve gösterilir) | Pencere önizlemesi olmaz; Liftoff yine bir başlatıcıdır |
+| **Erişilebilirlik** | İsteğe bağlı | Küçültülmüş pencereleri listelemek ve tıkladığınız pencereye tam olarak geçmek | Küçültülmüş pencereler listelenmez; geçiş daha az isabetli olur |
+
+Başka hiçbir şey istenmez. Başlatıcının kendisi hiçbir izne ihtiyaç duymaz.
+
+## SSS
+
+<details>
+<summary><b>macOS “Liftoff, Mac’inizi korumak için engellendi” diyor</b></summary>
+
+Liftoff henüz Apple tarafından noter onaylı değil. Sistem Ayarları → Gizlilik ve Güvenlik bölümünü açın, aşağı kaydırın ve iletinin yanındaki **Yine de Aç** düğmesine tıklayın. Bu, her sürüm için bir kerelik bir adımdır.
+</details>
+
+<details>
+<summary><b>Pencere önizlemeleri görünmüyor ya da küçük resim göstermiyor</b></summary>
+
+Sistem Ayarları → Gizlilik ve Güvenlik bölümünde Liftoff için **Ekran ve Sistem Sesi Kaydı** (önizlemeler için gerekir) ve isteğe bağlı olarak **Erişilebilirlik** (küçültülmüş pencereler, isabetli geçiş) izinlerinin açık olduğundan emin olun. Bir anahtar açık görünüp hiçbir şey çalışmıyorsa (güncellemeden sonra sık görülür), Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin.
+</details>
+
+<details>
+<summary><b>Güncelleyince izinleri kaybeder miyim?</b></summary>
+
+Evet, ad-hoc imzalı sürümlerde: macOS her sürümü yeni bir uygulama olarak görür, bu yüzden Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinleri yeniden verilmelidir. Kendi sertifikanızla kendiniz derlerseniz bundan kurtulursunuz; bkz. [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+</details>
+
+<details>
+<summary><b>Kısayol tuşu, sıkıştırma hareketi veya sıcak köşe Liftoff'ı açmıyor</b></summary>
+
+Kısayol tuşu başka bir uygulamada olabilir (Ayarlar → Tetikleyiciler bir uyarı gösterir); farklı bir tane seçin. Sıkıştırma hareketi, Liftoff çalışırken macOS'in “Uygulamalar” için kendi sıkıştırma hareketini geçici olarak kapatır ve siz hareketi kapattığınızda ya da uygulamadan çıktığınızda geri yükler. `open liftoff://toggle` her zaman çalışır.
+</details>
+
+<details>
+<summary><b>Nasıl kaldırırım?</b></summary>
+
+Liftoff'tan menü çubuğundan çıkın, `Liftoff.app` dosyasını `/Applications` içinden silin ve *Oturum Açıldığında Aç* seçeneğini etkinleştirdiyseniz Sistem Ayarları → Genel → Oturum Açma Öğeleri ve Genişletmeler bölümünden de kaldırın. Ayarlarını da silmek için: `defaults delete com.firstfu.Liftoff` ve `~/Library/Caches/com.firstfu.Liftoff` klasörünü silin.
+</details>
+
+## Benzer araçlardan farkı
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) iyi ve aktif bir açık kaynak projedir: noter onaylıdır, eski Launchpad düzenini içe aktarır, bulanık arama ve klasörler sunar. İhtiyacınız buysa onu kullanın. Liftoff'ın üstüne kattıkları: çalışan bir uygulamanın pencerelerinin canlı küçük resimleri (tıklayıp geçin, küçültülmüş olanlar dahil), pencere başlıklarını da eşleştiren arama, tek tıkla Akıllı Düzenleme (yerleşik arama tablosu, yapay zekâ yok, önce önizleme), uygulamaları ızgaradan Dock'a sürükleme ve yeniden üretebileceğiniz performans rakamları. Bugünkü ödünleşim: LaunchNext noter onaylı, Liftoff henüz değil.
 
 ## Diller
 

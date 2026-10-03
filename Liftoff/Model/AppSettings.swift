@@ -139,6 +139,11 @@ final class AppSettings {
     /// 額外掃描的資料夾（外接硬碟、自訂位置）
     var extraDirectories: [String] { didSet { defaults.set(extraDirectories, forKey: Key.extraDirectories) } }
 
+    /// 每週自動向 GitHub 查詢新版本（預設關閉，符合「不主動連網」的承諾）
+    var autoChecksForUpdates: Bool { didSet { defaults.set(autoChecksForUpdates, forKey: Key.autoChecksForUpdates) } }
+    /// 上次成功查詢新版本的時間
+    var lastUpdateCheck: Date? { didSet { defaults.set(lastUpdateCheck, forKey: Key.lastUpdateCheck) } }
+
     /// 開機自動啟動（直接讀寫 SMAppService，不另存）
     var launchAtLogin: Bool {
         get {
@@ -168,6 +173,7 @@ final class AppSettings {
         static let pinchGesture = "pinchGesture", displayTarget = "displayTarget", windowPreview = "windowPreview"
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
         static let hiddenApps = "hiddenApps", extraDirectories = "extraDirectories"
+        static let autoChecksForUpdates = "autoChecksForUpdates", lastUpdateCheck = "lastUpdateCheck"
     }
 
     /// - Parameter defaults: 測試可注入獨立的 UserDefaults
@@ -210,6 +216,8 @@ final class AppSettings {
         showsMenuBarIcon = defaults.bool(forKey: Key.showsMenuBarIcon)
         hiddenApps = Set(defaults.stringArray(forKey: Key.hiddenApps) ?? [])
         extraDirectories = defaults.stringArray(forKey: Key.extraDirectories) ?? []
+        autoChecksForUpdates = defaults.bool(forKey: Key.autoChecksForUpdates)
+        lastUpdateCheck = defaults.object(forKey: Key.lastUpdateCheck) as? Date
         // 舊版本可能已存成兩個都關；補上不變式
         if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
     }

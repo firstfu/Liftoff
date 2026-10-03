@@ -27,6 +27,7 @@ final class AppCoordinator {
     let wallpapers = WallpaperProvider()
     let labels = LabelStore()
     let permissions = Permissions()
+    let updates = UpdateChecker(settings: AppSettings.shared)
     let hotKeys = HotKeyService()
     let hotCorners = HotCornerService()
 
@@ -72,6 +73,7 @@ final class AppCoordinator {
         configureTriggers()
         phase("triggers")
         observeSettings()
+        updates.applyAutoCheckSetting()
         applyActivationPolicy()
         phase("settings")
 
@@ -243,6 +245,7 @@ final class AppCoordinator {
             self.hotKeyRegistered = self.hotKeys.register(combo)
         }
         observe({ [settings] in settings.hotCorner }) { [weak self] corner in self?.hotCorners.configure(corner) }
+        observe({ [settings] in settings.autoChecksForUpdates }) { [weak self] _ in self?.updates.applyAutoCheckSetting() }
         observe({ [settings] in settings.pinchGesture }) { [weak self] _ in self?.applyGesture() }
         observe({ [settings] in settings.showsDockIcon }) { [weak self] _ in self?.applyActivationPolicy() }
         observe({ [settings] in settings.pageCapacity }) { [weak self] capacity in

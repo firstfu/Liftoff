@@ -16,9 +16,14 @@
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · **Nederlands**
 
+<a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Download Liftoff.zip</b></a>
+
 <img src="../assets/hero.gif" width="860" alt="Liftoff in actie: openen, zoeken, vensters bekijken, een map openen">
 
 </div>
+
+> [!NOTE]
+> Liftoff vereist **macOS 26 of nieuwer**. Het is **nog niet door Apple genotariseerd**, dus macOS blokkeert de eerste start: open Systeeminstellingen → Privacy en beveiliging en klik één keer op **Open toch** ([stappen](#installeren)). Alle code staat hier, en [waarvoor elke toegang dient](#toegang-in-het-kort) staat hieronder uitgeschreven.
 
 ## Waarom Liftoff
 
@@ -75,8 +80,10 @@ Gemeten op een echte Mac door de app zelf (met `scripts/selftest.sh` reproduceer
 
 ## Privacy
 
-Liftoff maakt **helemaal geen netwerkverbindingen**. Miniaturen van vensters worden lokaal vastgelegd en getoond en verlaten je Mac nooit.
-Je hoeft me niet op mijn woord te geloven: de code die elke toegang gebruikt staat in [`Liftoff/Preview`](../Liftoff/Preview) (Schermopname: miniaturen; Toegankelijkheid: vensters opvragen en wisselen) en in [`Liftoff/Services`](../Liftoff/Services) (toetscombinatie, interactieve hoek, trackpadgebaar). Ook Little Snitch of LuLu bevestigt het.
+Liftoff maakt **geen netwerkverbindingen**, tenzij je vraagt om op updates te controleren. Miniaturen van vensters worden lokaal vastgelegd en getoond en verlaten je Mac nooit.
+De enige verbinding die het kan maken is de updatecontrole: één verzoek aan de GitHub-API om het nieuwste versienummer te lezen, alleen verstuurd als je op **Zoek naar updates…** klikt of **Wekelijks op updates controleren** inschakelt in de instellingen (standaard uit). Er worden geen gegevens over jou verstuurd.
+
+Je hoeft me niet op mijn woord te geloven: de code die elke toegang gebruikt staat in [`Liftoff/Preview`](../Liftoff/Preview) (Schermopname: miniaturen; Toegankelijkheid: vensters opvragen en wisselen) en in [`Liftoff/Services`](../Liftoff/Services) (toetscombinatie, interactieve hoek, trackpadgebaar en de updatecontrole in `UpdateChecker.swift`). Ook Little Snitch of LuLu bevestigt het.
 
 ### Een opmerking over privé-API's
 
@@ -87,14 +94,62 @@ Twee functies gebruiken ongedocumenteerde macOS-API's. Beide worden dynamisch ge
 
 ## Installeren
 
-Vereist **macOS 26 of nieuwer**.
-
 1. Download `Liftoff.zip` van [Releases](https://github.com/firstfu/Liftoff/releases/latest) en pak het uit.
 2. Verplaats `Liftoff.app` naar `/Applications`.
 3. Open de app. macOS blokkeert hem de eerste keer, omdat hij nog niet door Apple is genotariseerd: open **Systeeminstellingen → Privacy en beveiliging**, scrol omlaag en klik op **Open toch** naast *'Liftoff' is geblokkeerd om je Mac te beschermen.*
 4. Geef de toegang waar de app om vraagt: **Toegankelijkheid** (vensters opvragen en wisselen) en **Scherm- en systeemaudio-opname** (miniaturen van vensters, alleen lokaal).
 
-> Builds zijn ad-hoc ondertekend, dus macOS vraagt je na elke update om Toegankelijkheid en Scherm- en systeemaudio-opname opnieuw in te schakelen.
+Vereist **macOS 26 of nieuwer**, Apple silicon of Intel.
+
+### Updaten
+
+Vervang `Liftoff.app` in `/Applications` door de nieuwe. Builds zijn ad-hoc ondertekend, dus macOS behandelt elke versie als een nieuwe app: je klikt één keer op **Open toch**, en Scherm- en systeemaudio-opname en Toegankelijkheid moeten opnieuw worden ingeschakeld (als een schakelaar aan lijkt te staan maar niets doet, verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe).
+Om nieuwe versies te volgen: kies **Zoek naar updates…** in het menu in de menubalk of in de instellingen, schakel **Wekelijks op updates controleren** in de instellingen in (standaard uit), of gebruik **Watch → Custom → Releases** op deze pagina.
+
+## Toegang in het kort
+
+| Toegang | Nodig? | Waarom | Als je het overslaat |
+|---|---|---|---|
+| **Scherm- en systeemaudio-opname** | Alleen voor vensterweergaven | Miniaturen en titels van vensters (alleen op je Mac vastgelegd en getoond) | Geen vensterweergaven; Liftoff blijft gewoon een launcher |
+| **Toegankelijkheid** | Optioneel | Geminimaliseerde vensters opvragen en precies naar het venster springen waarop je klikte | Geminimaliseerde vensters worden niet getoond; wisselen is minder nauwkeurig |
+
+Er wordt niets anders gevraagd. De launcher zelf heeft helemaal geen toegang nodig.
+
+## Veelgestelde vragen
+
+<details>
+<summary><b>macOS zegt "Liftoff is geblokkeerd om je Mac te beschermen"</b></summary>
+
+Liftoff is nog niet door Apple genotariseerd. Open Systeeminstellingen → Privacy en beveiliging, scrol omlaag en klik op **Open toch** naast het bericht. Het is een eenmalige stap per versie.
+</details>
+
+<details>
+<summary><b>Vensterweergaven verschijnen niet of tonen geen miniaturen</b></summary>
+
+Controleer of **Scherm- en systeemaudio-opname** (nodig voor de weergaven) en eventueel **Toegankelijkheid** (geminimaliseerde vensters, nauwkeurig wisselen) voor Liftoff zijn ingeschakeld in Systeeminstellingen → Privacy en beveiliging. Als een schakelaar aan lijkt te staan maar niets werkt (vaak na een update), verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe.
+</details>
+
+<details>
+<summary><b>Raak ik de toegang kwijt als ik update?</b></summary>
+
+Ja, bij de ad-hoc ondertekende releases: macOS ziet elke versie als een nieuwe app, dus Scherm- en systeemaudio-opname en Toegankelijkheid moeten opnieuw worden toegestaan. Zelf bouwen met je eigen certificaat voorkomt dit; zie [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+</details>
+
+<details>
+<summary><b>De toetscombinatie, het knijpgebaar of de interactieve hoek opent Liftoff niet</b></summary>
+
+Mogelijk gebruikt een andere app de toetscombinatie al (Instellingen → Activering toont een waarschuwing); kies een andere. Het knijpgebaar schakelt het eigen knijpgebaar van macOS voor "Apps" tijdelijk uit zolang Liftoff draait en zet het terug als je het uitschakelt of de app afsluit. `open liftoff://toggle` werkt altijd.
+</details>
+
+<details>
+<summary><b>Hoe verwijder ik het?</b></summary>
+
+Sluit Liftoff af via de menubalk, verwijder `Liftoff.app` uit `/Applications` en haal het weg uit Systeeminstellingen → Algemeen → Inlogonderdelen en extensies als je *Open bij inloggen* had ingeschakeld. Om ook de instellingen te verwijderen: `defaults delete com.firstfu.Liftoff` en verwijder `~/Library/Caches/com.firstfu.Liftoff`.
+</details>
+
+## Wat het onderscheidt van vergelijkbare tools
+
+[LaunchNext](https://github.com/RoversX/LaunchNext) is een goed, actief open-sourceproject: het is genotariseerd, importeert de oude Launchpad-indeling en heeft fuzzy zoeken en mappen. Als je dat nodig hebt, gebruik het dan. Wat Liftoff daaraan toevoegt: live miniaturen van de vensters van een draaiende app (klik om erheen te springen, ook geminimaliseerde), zoeken dat ook op venstertitels matcht, slim ordenen met één klik (ingebouwde opzoektabel, geen AI, eerst een voorbeeld), apps vanuit het raster naar het Dock slepen en prestatiecijfers die je zelf kunt reproduceren. De afweging op dit moment: LaunchNext is genotariseerd en Liftoff nog niet.
 
 ## Talen
 

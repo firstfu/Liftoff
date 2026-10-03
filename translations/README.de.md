@@ -11,6 +11,7 @@
 ![Swift 6](https://img.shields.io/badge/Swift-6-orange?logo=swift)
 [![Latest release](https://img.shields.io/github/v/release/firstfu/Liftoff)](https://github.com/firstfu/Liftoff/releases/latest)
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
+[![AlternativeTo](https://img.shields.io/badge/AlternativeTo-listed-5ecce0?logo=alternativeto&logoColor=white)](https://alternativeto.net/software/liftoff-by-firstfu/)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Liftoff.zip herunterladen</b></a>
 &nbsp;·&nbsp;

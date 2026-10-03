@@ -23,7 +23,7 @@
 @media (prefers-color-scheme:light){:root{--bg:#f6f7fb;--bg2:#ffffff;--card:#ffffff;--text:#141824;--muted:#5b6579;--accent:#1a6dff;--accent-ink:#ffffff;--line:rgba(10,20,40,.1)}}
 *{box-sizing:border-box} html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,"PingFang TC","PingFang SC","Hiragino Sans","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit} img,video{max-width:100%;display:block}
+a{color:inherit} img,video{max-width:100%;height:auto;display:block}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(1.4) blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:20px;height:60px}
@@ -47,6 +47,7 @@ h2{text-wrap:balance;font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-sp
 .row{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:center;margin-bottom:68px}
 .row:nth-child(even) .txt{order:2}
 .row h3{font-size:26px;margin:0 0 10px;letter-spacing:-.01em} .row p{color:var(--muted);margin:0}
+.shot img{width:100%}
 .shot{border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.28)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}

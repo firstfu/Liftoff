@@ -57,6 +57,16 @@ private struct GeneralSettings: View {
                 Label("Dock 與選單列圖示至少保留一個，避免找不到啟動台的入口。", systemImage: "info.circle")
                     .foregroundStyle(.secondary)
             }
+            Section("關於") {
+                LabeledContent("版本", value: AppInfo.versionDescription)
+                HStack {
+                    Button("檢查更新…") { AppInfo.open(AppInfo.latestRelease) }
+                    Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
+                    Spacer()
+                    Button("官網") { AppInfo.open(AppInfo.website) }
+                    Button("GitHub") { AppInfo.open(AppInfo.repository) }
+                }
+            }
         }
         .formStyle(.grouped)
     }
@@ -290,6 +300,10 @@ private struct PreviewSettings: View {
                     title: "輔助使用", detail: "顯示最小化視窗、精準切換到指定視窗（選用）",
                     granted: permissions.accessibility, action: Permissions.openAccessibilitySettings
                 )
+                Text("不授權也能當啟動台使用，只是少了視窗預覽與切換。")
+                    .font(.caption).foregroundStyle(.secondary)
+                Text("更新後若系統設定裡的開關看起來是開的卻沒作用，請把 Liftoff 從清單移除（－）後重新加入。")
+                    .font(.caption).foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

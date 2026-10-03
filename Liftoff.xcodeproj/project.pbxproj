@@ -55,6 +55,7 @@
 		C1CB6CE2F47AE524988B2AB8 /* LaunchpadModel+Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8043D40529768895E2760B58 /* LaunchpadModel+Input.swift */; };
 		C3AD5065A1845FD17E5EFFA1 /* SelfTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93382444B6A2B8802496DABE /* SelfTest.swift */; };
 		C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E75248F58676E236D3D843 /* Permissions.swift */; };
+		CB7A5B6140AF2101ACA78FC6 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5A02512C1D12EA10EA793A /* AppInfo.swift */; };
 		D251E6C0DE72766B4C31B5C2 /* PagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5F3C8F2F261CCC8DB820A8 /* PagerState.swift */; };
 		DE42BDC9A8D5E30303852158 /* LaunchpadImporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D74CA77F980139C456C1C8 /* LaunchpadImporterTests.swift */; };
 		DF02BB3A53A036DDA3AF5212 /* WindowActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365775DB9A7DCE73F3E5A622 /* WindowActions.swift */; };
@@ -105,6 +106,7 @@
 		72D0D6A2E7C32B47EAC2919C /* LaunchpadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadModel.swift; sourceTree = "<group>"; };
 		74ADFF8A5AF7F7A2B6B6A662 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		7B82791E205793AA1BCB65E7 /* FolderPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPanelView.swift; sourceTree = "<group>"; };
+		7C5A02512C1D12EA10EA793A /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		7D5F3C8F2F261CCC8DB820A8 /* PagerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerState.swift; sourceTree = "<group>"; };
 		8043D40529768895E2760B58 /* LaunchpadModel+Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchpadModel+Input.swift"; sourceTree = "<group>"; };
 		878DC2F83884EB8189CFA663 /* HotKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyService.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 			children = (
 				F7359CE4F33E01E771F2EB37 /* AppActions.swift */,
 				A86E205A8525D72DFA65876C /* AppCatalog.swift */,
+				7C5A02512C1D12EA10EA793A /* AppInfo.swift */,
 				FE3749034448766A416452E0 /* HotCornerService.swift */,
 				878DC2F83884EB8189CFA663 /* HotKeyService.swift */,
 				216237218CD1A6433B060B7A /* IconStore.swift */,
@@ -450,6 +453,7 @@
 				955BDB5BDC0BA90FB6DC1A67 /* AppClassifier.swift in Sources */,
 				A231CAE89918D75EFAB655B2 /* AppCoordinator.swift in Sources */,
 				52E17C13BD9016BD7F134A79 /* AppEntry.swift in Sources */,
+				CB7A5B6140AF2101ACA78FC6 /* AppInfo.swift in Sources */,
 				038AE01DAA2C38143AE272E1 /* AppSettings.swift in Sources */,
 				43DC4C6C9205E5A6BED5C50D /* DockHandoff.swift in Sources */,
 				662600198B27F1F94E4DD495 /* FolderPanelView.swift in Sources */,

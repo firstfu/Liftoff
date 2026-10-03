@@ -665,6 +665,10 @@
         }
       }
     },
+    "GitHub": {
+      "comment": "出現在 SettingsView.swift（品牌名，各語言相同）",
+      "shouldTranslate": false
+    },
     "Liftoff": {
       "comment": "出現在 DockHandoff.swift, ItemCell.swift, WindowPreviewView.swift（英文：Liftoff）",
       "shouldTranslate": false
@@ -835,6 +839,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "一般"
+          }
+        }
+      }
+    },
+    "不授權也能當啟動台使用，只是少了視窗預覽與切換。": {
+      "comment": "出現在 SettingsView.swift（英文：Liftoff still works as a launcher without these permissions; you only lose window previews and window switching.）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auch ohne diese Berechtigungen funktioniert Liftoff als Launcher; es fehlen nur die Fenstervorschau und das Wechseln zwischen Fenstern."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff still works as a launcher without these permissions; you only lose window previews and window switching."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff funciona como lanzador aunque no concedas estos permisos; solo perderás la vista previa y el cambio de ventanas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff fonctionne comme lanceur même sans ces autorisations ; vous perdez seulement l’aperçu et le changement de fenêtre."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff funziona come launcher anche senza questi permessi; perdi solo l’anteprima e il cambio delle finestre."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "許可しなくても、Liftoffをランチャーとして使えます。ウインドウのプレビューと切り替えだけが使えなくなります。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "권한을 허용하지 않아도 Liftoff를 런치패드로 사용할 수 있습니다. 윈도우 미리보기와 전환 기능만 사용할 수 없습니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff werkt ook zonder deze toegang als launcher; je kunt alleen geen vensters bekijken of ertussen schakelen."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Liftoff funciona como launcher mesmo sem essas permissões; você só perde a pré-visualização e a troca de janelas."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff работает как панель запуска и без этих разрешений, но без просмотра окон и переключения между ними."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu izinler olmadan da Liftoff bir başlatıcı olarak çalışır; yalnızca pencere önizlemeleri ve pencere geçişi kullanılamaz."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "即使不授权，Liftoff 也可以作为启动台使用，只是没有窗口预览与切换功能。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不授權也能當啟動台使用，只是少了視窗預覽與切換。"
           }
         }
       }
@@ -2665,6 +2752,89 @@
         }
       }
     },
+    "回報問題…": {
+      "comment": "出現在 SettingsView.swift, LiftoffApp.swift（英文：Report a Problem…）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Problem melden…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report a Problem…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informar de un problema…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signaler un problème…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segnala un problema…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "問題を報告…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "문제 리포트…"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meld een probleem…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comunicar Problema…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сообщить о проблеме…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sorun Bildir…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "报告问题…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回報問題…"
+          }
+        }
+      }
+    },
     "圖形與設計": {
       "comment": "出現在 Layout.swift（英文：Graphics & Design）",
       "localizations": {
@@ -3906,6 +4076,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "學習與參考"
+          }
+        }
+      }
+    },
+    "官網": {
+      "comment": "出現在 SettingsView.swift（英文：Website）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Website"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Website"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sitio web"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site web"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sito web"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ウェブサイト"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "웹사이트"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Website"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Веб-сайт"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web Sitesi"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "官网"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "官網"
           }
         }
       }
@@ -7064,6 +7317,89 @@
         }
       }
     },
+    "更新後若系統設定裡的開關看起來是開的卻沒作用，請把 Liftoff 從清單移除（－）後重新加入。": {
+      "comment": "出現在 SettingsView.swift（英文：After an update, if the switch in System Settings looks on but does nothing, remove Liftoff from the list (−) and add it again.）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wenn der Schalter in den Systemeinstellungen nach einem Update eingeschaltet scheint, aber nichts bewirkt, entferne Liftoff aus der Liste (−) und füge es erneut hinzu."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After an update, if the switch in System Settings looks on but does nothing, remove Liftoff from the list (−) and add it again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tras una actualización, si el interruptor de Ajustes del Sistema parece activado pero no funciona, quita Liftoff de la lista (−) y vuelve a añadirlo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Après une mise à jour, si le réglage dans Réglages Système semble activé mais sans effet, retirez Liftoff de la liste (−), puis ajoutez-le à nouveau."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopo un aggiornamento, se l’interruttore in Impostazioni di Sistema sembra attivo ma non funziona, rimuovi Liftoff dall’elenco (−) e aggiungilo di nuovo."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデート後、「システム設定」のスイッチがオンなのに機能しない場合は、Liftoffをリストから削除（−）して、もう一度追加してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "업데이트 후 “시스템 설정”의 스위치가 켜져 있는데도 작동하지 않으면, Liftoff를 목록에서 제거(−)한 다음 다시 추가하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als de schakelaar in Systeeminstellingen na een update aan lijkt te staan maar niets doet, verwijder Liftoff dan uit de lijst (−) en voeg het opnieuw toe."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Após uma atualização, se o botão nos Ajustes do Sistema parecer ativado mas não funcionar, remova o Liftoff da lista (−) e adicione-o novamente."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Если после обновления переключатель в Системных настройках включён, но не действует, удалите Liftoff из списка (−) и добавьте его снова."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir güncellemeden sonra Sistem Ayarları’ndaki anahtar açık görünüyor ama işe yaramıyorsa, Liftoff’ı listeden kaldırıp (−) yeniden ekleyin."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新后，如果“系统设置”中的开关看起来已打开却没有作用，请将 Liftoff 从列表中移除（－），然后重新添加。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更新後若系統設定裡的開關看起來是開的卻沒作用，請把 Liftoff 從清單移除（－）後重新加入。"
+          }
+        }
+      }
+    },
     "書籍": {
       "comment": "出現在 Layout.swift（英文：Books）",
       "localizations": {
@@ -7807,6 +8143,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "檔案與雲端"
+          }
+        }
+      }
+    },
+    "檢查更新…": {
+      "comment": "出現在 SettingsView.swift, LiftoffApp.swift（英文：Check for Updates…）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Updates suchen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar actualizaciones…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher les mises à jour…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verifica aggiornamenti…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデートを確認…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "업데이트 확인…"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoek naar updates…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar Atualizações…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверить наличие обновлений…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Güncellemeleri Denetle…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查更新…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檢查更新…"
           }
         }
       }
@@ -9467,6 +9886,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "熱點"
+          }
+        }
+      }
+    },
+    "版本": {
+      "comment": "出現在 SettingsView.swift（英文：Version）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versión"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versione"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バージョン"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "버전"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versie"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versão"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Версия"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sürüm"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "版本"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "版本"
           }
         }
       }
@@ -14613,6 +15115,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "開發者工具"
+          }
+        }
+      }
+    },
+    "關於": {
+      "comment": "出現在 SettingsView.swift（英文：About）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acerca de"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "情報"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "정보"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sobre"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "О программе"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hakkında"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关于"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "關於"
           }
         }
       }

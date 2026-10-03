@@ -157,6 +157,15 @@ Quit Liftoff from the menu bar, delete `Liftoff.app` from `/Applications`, and r
 
 [LaunchNext](https://github.com/RoversX/LaunchNext) is a good, active open-source project: it is notarized, imports the old Launchpad layout, and has fuzzy search and folders. If that's what you need, use it. What Liftoff adds on top: live thumbnails of a running app's windows (click to jump, minimized ones included), search that also matches window titles, one-click Smart Organize (built-in lookup table, no AI, preview first), dragging apps from the grid to the Dock, and performance numbers you can reproduce. The trade-off today: LaunchNext is notarized and Liftoff isn't yet.
 
+## Under consideration: vote with 👍
+
+I won't build these until real people ask for them. If one matters to you, 👍 the issue and tell me **how you'd use it** in a comment.
+
+- [Your own Smart Organize rules](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
+- [Command-line / scripting control](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
+- [Install updates inside the app](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
+- [Sync your layout between Macs](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
+
 ## Languages
 
 Liftoff follows your system language: English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português (Brasil), Italiano, Русский, Türkçe and Nederlands. Anything else falls back to English.
@@ -180,6 +189,10 @@ Tests: replace `build` with `test` in the `xcodebuild` command. `scripts/install
 ## Contributing
 
 Free and open source, built by one person — [issues](https://github.com/firstfu/Liftoff/issues/new/choose) and pull requests are very welcome. The easiest ways to help: fix a translation, add a missing app to [`AppCategories.json`](Liftoff/Resources/AppCategories.json), or report a bug with your macOS version. New here? Start with the [good first issues](https://github.com/firstfu/Liftoff/labels/good%20first%20issue), and use [Discussions](https://github.com/firstfu/Liftoff/discussions) for questions and ideas.
+
+## Also by the same author
+
+[DockLens](https://github.com/firstfu/DockLens-app) — hover a Dock icon to see live thumbnails of all of that app's windows. Free and open source, for macOS 26+.
 
 ## License
 

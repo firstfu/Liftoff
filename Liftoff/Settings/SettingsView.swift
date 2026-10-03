@@ -328,6 +328,8 @@ private struct LayoutSettings: View {
     @State private var backups: [LayoutStore.Backup] = []
     @State private var pendingAction: PendingAction?
     @State private var message: String?
+    /// 智慧整理的預覽（有值時顯示預覽面板）
+    @State private var organizePlan: OrganizePlan?
 
     private enum PendingAction: Identifiable {
         case importLegacy, alphabetical, restore(LayoutStore.Backup)
@@ -345,6 +347,9 @@ private struct LayoutSettings: View {
             Section("整理") {
                 Button("匯入舊版啟動台的排列…") { pendingAction = .importLegacy }
                     .disabled(LaunchpadImporter.databaseURL == nil)
+                Button("智慧整理…") {
+                    organizePlan = OrganizePlan(entries: coordinator.catalog.entries, hidden: settings.hiddenApps, classifier: .bundled())
+                }
                 Button("依名稱重新排列…") { pendingAction = .alphabetical }
                 Button("填滿各頁空位") {
                     coordinator.layoutStore.update { $0.compact(capacity: settings.pageCapacity) }
@@ -401,6 +406,11 @@ private struct LayoutSettings: View {
         }
         .formStyle(.grouped)
         .onAppear(perform: reloadBackups)
+        .sheet(isPresented: Binding(get: { organizePlan != nil }, set: { if !$0 { organizePlan = nil } })) {
+            if let plan = organizePlan {
+                OrganizePreview(plan: plan, coordinator: coordinator) { applyOrganize(plan) } onCancel: { organizePlan = nil }
+            }
+        }
         .alert(item: $pendingAction) { action in
             Alert(
                 title: Text(title(for: action)),
@@ -444,6 +454,15 @@ private struct LayoutSettings: View {
         reloadBackups()
     }
 
+    /// 套用智慧整理（先自動備份目前排列）。
+    private func applyOrganize(_ plan: OrganizePlan) {
+        _ = try? coordinator.layoutStore.createBackup()
+        coordinator.layoutStore.replace(with: plan.layout(capacity: settings.pageCapacity))
+        organizePlan = nil
+        message = String(localized: "已智慧整理，原本的排列已備份")
+        reloadBackups()
+    }
+
     private func reloadBackups() {
         backups = coordinator.layoutStore.backups()
     }
@@ -476,4 +495,78 @@ private struct LayoutSettings: View {
 #Preview("佈局") {
     LayoutSettings(coordinator: AppCoordinator.shared, settings: AppSettings.shared)
         .frame(width: 560, height: 620)
+}
+
+// MARK: - 智慧整理預覽
+
+/// 智慧整理的預覽：列出每個資料夾會收哪些 App、哪些留在外面，確認後才套用。
+private struct OrganizePreview: View {
+    let plan: OrganizePlan
+    let coordinator: AppCoordinator
+    let onApply: () -> Void
+    let onCancel: () -> Void
+
+    private let columns = [GridItem(.adaptive(minimum: 84), spacing: 8, alignment: .top)]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("智慧整理").font(.title2.bold())
+                Text("將建立 \(plan.groups.count) 個資料夾，\(plan.loose.count) 個 App 留在資料夾外。目前的排列會先自動備份。")
+                    .foregroundStyle(.secondary)
+                if !plan.guessed.isEmpty || plan.unclassifiedCount > 0 {
+                    Text("標示 ? 的 \(plan.guessed.count) 個 App 是依 App 自填的類別推測；另有 \(plan.unclassifiedCount) 個判斷不出分類。")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            .padding(20)
+            Divider()
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 18) {
+                    ForEach(plan.groups) { group in
+                        section(title: "\(group.folder.displayName)（\(group.apps.count)）", apps: group.apps)
+                    }
+                    if !plan.loose.isEmpty {
+                        section(title: String(localized: "留在資料夾外（\(plan.loose.count)）"), apps: plan.loose)
+                    }
+                }
+                .padding(20)
+            }
+            Divider()
+            HStack {
+                Spacer()
+                Button("取消", role: .cancel, action: onCancel).keyboardShortcut(.cancelAction)
+                Button("套用", action: onApply).keyboardShortcut(.defaultAction)
+            }
+            .padding(16)
+        }
+        .frame(width: 640, height: 600)
+    }
+
+    private func section(title: String, apps: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title).font(.headline)
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
+                ForEach(apps, id: \.self) { id in
+                    VStack(spacing: 4) {
+                        ZStack(alignment: .topTrailing) {
+                            if let image = coordinator.icons.icon(for: id).cgImage {
+                                Image(decorative: image, scale: 1).resizable().frame(width: 40, height: 40)
+                            } else {
+                                Color.clear.frame(width: 40, height: 40)
+                            }
+                            if plan.guessed.contains(id) {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .foregroundStyle(.white, .orange)
+                                    .offset(x: 4, y: -4)
+                            }
+                        }
+                        Text(coordinator.catalog.entry(id)?.name ?? id)
+                            .font(.caption).lineLimit(2).multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+    }
 }

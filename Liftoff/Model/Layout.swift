@@ -316,8 +316,8 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
     static func alphabetical(entries: [AppEntry], capacity: Int, hidden: Set<String> = []) -> Layout {
         let visible = entries.filter { !hidden.contains($0.id) }
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        let utilities = visible.filter { isUtility($0) }
-        let others = visible.filter { !isUtility($0) }
+        let utilities = visible.filter(AppClassifier.isSystemUtility)
+        let others = visible.filter { !AppClassifier.isSystemUtility($0) }
 
         var items = others.map { LayoutItem.app($0.id) }
         if utilities.count >= 2 {
@@ -329,9 +329,80 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
         layout.normalize(capacity: capacity)
         return layout
     }
+}
 
-    private static func isUtility(_ entry: AppEntry) -> Bool {
-        entry.resolvedPath.hasPrefix("/System/Applications/Utilities/") || entry.path.hasPrefix("/Applications/Utilities/")
+// MARK: - 智慧整理
+
+/// 智慧整理的結果：哪些 App 收進哪個資料夾、哪些留在外面。設定頁先拿來預覽，確認後再轉成版面。
+nonisolated struct OrganizePlan: Sendable {
+    struct Group: Sendable, Identifiable {
+        let folder: AppFolder
+        let apps: [String]
+        var id: AppFolder { folder }
+    }
+
+    /// 少於這個數量的分類不建資料夾（App 直接留在外面），避免一堆只有一兩個 App 的資料夾
+    static let minimumFolderSize = 3
+
+    /// 會建成資料夾的分類，依 `AppFolder.allCases` 順序；工具程式固定在最後
+    let groups: [Group]
+    /// 留在資料夾外的 App（判斷不出來，或該分類 App 太少），依名稱排序
+    let loose: [String]
+    /// 依 App 自填類別判斷的 App（預覽時標成推測）
+    let guessed: Set<String>
+    /// 判斷不出分類的 App 數（量測對照表涵蓋率用）
+    let unclassifiedCount: Int
+
+    /// 依分類規則規劃整理結果。
+    /// - Parameters:
+    ///   - entries: 已安裝的 App
+    ///   - hidden: 使用者隱藏的 App（不列入）
+    ///   - classifier: 分類規則
+    init(entries: [AppEntry], hidden: Set<String> = [], classifier: AppClassifier) {
+        let visible = entries.filter { !hidden.contains($0.id) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        var members: [AppFolder: [String]] = [:]
+        var loose: [String] = []
+        var guessed = Set<String>()
+        var unclassified = 0
+        for entry in visible {
+            guard let result = classifier.classify(entry) else {
+                loose.append(entry.id)
+                unclassified += 1
+                continue
+            }
+            members[result.folder, default: []].append(entry.id)
+            if result.source == .category { guessed.insert(entry.id) }
+        }
+
+        var groups: [Group] = []
+        var looseFromSmall: [String] = []
+        for folder in AppFolder.allCases.filter({ $0 != .systemUtilities }) + [.systemUtilities] {
+            guard let apps = members[folder] else { continue }
+            // 工具程式沿用預設版面的門檻（2 個就收），其他分類要 3 個以上
+            let minimum = folder == .systemUtilities ? 2 : Self.minimumFolderSize
+            if apps.count >= minimum { groups.append(Group(folder: folder, apps: apps)) } else { looseFromSmall += apps }
+        }
+        // 兩種留在外面的 App 合併後重新依名稱排序（visible 已排序，照它的順序取即可）
+        let looseSet = Set(loose + looseFromSmall)
+        self.loose = visible.map(\.id).filter(looseSet.contains)
+        self.groups = groups
+        self.guessed = guessed
+        self.unclassifiedCount = unclassified
+    }
+
+    /// 轉成版面：一般資料夾在前、留在外面的 App 其次、工具程式資料夾最後（仿經典啟動台）。
+    /// - Parameter capacity: 每頁容量
+    func layout(capacity: Int) -> Layout {
+        func folderItem(_ group: Group) -> LayoutItem {
+            .folder(FolderData(name: group.folder.displayName, apps: group.apps))
+        }
+        var items = groups.filter { $0.folder != .systemUtilities }.map(folderItem)
+        items += loose.map { LayoutItem.app($0) }
+        items += groups.filter { $0.folder == .systemUtilities }.map(folderItem)
+        var layout = Layout(pages: [items])
+        layout.normalize(capacity: capacity)
+        return layout
     }
 }
 

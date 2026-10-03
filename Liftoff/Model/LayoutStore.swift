@@ -54,7 +54,7 @@ final class LayoutStore {
         scheduleSave()
     }
 
-    /// 與已安裝 App 同步；首次沒有存檔時建立初始版面（優先沿用舊版啟動台排列）。
+    /// 與已安裝 App 同步；首次沒有存檔時建立初始版面（優先沿用舊版啟動台排列，沒有的話用智慧整理）。
     /// - Returns: 初始版面的來源說明（log 用）
     @discardableResult
     func reconcile(entries: [AppEntry], hidden: Set<String>, capacity: Int) -> String {
@@ -63,8 +63,9 @@ final class LayoutStore {
                 replace(with: LaunchpadImporter.makeLayout(from: imported, entries: entries, hidden: hidden, capacity: capacity))
                 return "legacy-launchpad"
             }
-            replace(with: .alphabetical(entries: entries, capacity: capacity, hidden: hidden))
-            return "alphabetical"
+            let plan = OrganizePlan(entries: entries, hidden: hidden, classifier: .bundled())
+            replace(with: plan.layout(capacity: capacity))
+            return "organized"
         }
         update { $0.reconcile(installed: entries.map(\.id), hidden: hidden, capacity: capacity) }
         return "reconciled"

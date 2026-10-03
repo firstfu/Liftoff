@@ -17,6 +17,8 @@
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · **Русский** · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Скачать Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff в деле: открытие, поиск, просмотр окон, открытие папки">
 
@@ -93,6 +95,8 @@ Liftoff **не обращается к сети**, пока вы сами не �
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, для жеста щипка (тот же подход, что в BetterTouchTool и MiddleClick)
 
 ## Установка
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. Скачайте `Liftoff.zip` со страницы [Releases](https://github.com/firstfu/Liftoff/releases/latest) и распакуйте архив.
 2. Переместите `Liftoff.app` в `/Applications`.

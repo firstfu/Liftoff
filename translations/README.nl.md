@@ -17,6 +17,8 @@
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · **Nederlands**
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Download Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff in actie: openen, zoeken, vensters bekijken, een map openen">
 
@@ -93,6 +95,8 @@ Twee functies gebruiken ongedocumenteerde macOS-API's. Beide worden dynamisch ge
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, voor het knijpgebaar (dezelfde aanpak als BetterTouchTool en MiddleClick)
 
 ## Installeren
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. Download `Liftoff.zip` van [Releases](https://github.com/firstfu/Liftoff/releases/latest) en pak het uit.
 2. Verplaats `Liftoff.app` naar `/Applications`.

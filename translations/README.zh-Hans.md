@@ -13,6 +13,8 @@
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>下载 Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · **简体中文** · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
@@ -91,6 +93,8 @@ Liftoff **不会建立任何网络连接**，除非你要求它检查更新。�
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift)：MultitouchSupport，用于捏合手势（做法与 BetterTouchTool、MiddleClick 相同）
 
 ## 安装
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. 从 [Releases](https://github.com/firstfu/Liftoff/releases/latest) 下载 `Liftoff.zip` 并解压。
 2. 把 `Liftoff.app` 移到 `/Applications`。

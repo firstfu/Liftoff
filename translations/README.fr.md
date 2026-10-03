@@ -13,6 +13,8 @@
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Télécharger Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · **Français** · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
@@ -91,6 +93,8 @@ Deux fonctionnalités utilisent des API macOS non documentées, toutes deux char
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift) — MultitouchSupport, pour le geste de pincement (même approche que BetterTouchTool et MiddleClick)
 
 ## Installation
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. Téléchargez `Liftoff.zip` depuis les [Releases](https://github.com/firstfu/Liftoff/releases/latest) et décompressez-le.
 2. Déplacez `Liftoff.app` dans `/Applications`.

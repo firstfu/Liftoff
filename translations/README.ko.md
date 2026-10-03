@@ -13,6 +13,8 @@
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Liftoff.zip 다운로드</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · **한국어** · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
@@ -91,6 +93,8 @@ Liftoff는 업데이트 확인을 요청하지 않는 한 **네트워크에 연�
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport. 핀치 제스처에 사용합니다(BetterTouchTool, MiddleClick과 같은 방식).
 
 ## 설치
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. [Releases](https://github.com/firstfu/Liftoff/releases/latest)에서 `Liftoff.zip`을 내려받아 압축을 풉니다.
 2. `Liftoff.app`을 `/Applications`로 옮깁니다.

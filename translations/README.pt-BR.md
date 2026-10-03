@@ -17,6 +17,8 @@
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · **Português (Brasil)** · [Italiano](README.it.md) · [Русский](README.ru.md) · [Türkçe](README.tr.md) · [Nederlands](README.nl.md)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Baixar o Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff em ação: abrir, buscar, pré-visualizar janelas e abrir uma pasta">
 
@@ -93,6 +95,8 @@ Dois recursos usam APIs não documentadas do macOS, ambas carregadas dinamicamen
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, para o gesto de pinça (a mesma abordagem do BetterTouchTool e do MiddleClick)
 
 ## Instalação
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. Baixe o `Liftoff.zip` em [Releases](https://github.com/firstfu/Liftoff/releases/latest) e descompacte.
 2. Mova o `Liftoff.app` para `/Applications`.

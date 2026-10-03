@@ -17,6 +17,8 @@
 English · [繁體中文](translations/README.zh-Hant.md) · [简体中文](translations/README.zh-Hans.md) · [日本語](translations/README.ja.md) · [한국어](translations/README.ko.md) · [Deutsch](translations/README.de.md) · [Français](translations/README.fr.md) · [Español](translations/README.es.md) · [Português](translations/README.pt-BR.md) · [Italiano](translations/README.it.md) · [Русский](translations/README.ru.md) · [Türkçe](translations/README.tr.md) · [Nederlands](translations/README.nl.md)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Download Liftoff.zip</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 <img src="assets/hero.gif" width="860" alt="Liftoff in action: open, search, preview windows, open a folder">
 
@@ -94,6 +96,10 @@ Two features use undocumented macOS APIs, both loaded dynamically with a fallbac
 
 ## Install
 
+**Homebrew** (a [personal tap](https://github.com/firstfu/homebrew-tap)): `brew install --cask firstfu/tap/liftoff`
+
+**Or download manually:**
+
 1. Download `Liftoff.zip` from [Releases](https://github.com/firstfu/Liftoff/releases/latest) and unzip it.
 2. Move `Liftoff.app` to `/Applications`.
 3. Open it. macOS will block it the first time, because it isn't notarized by Apple yet: open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to *"Liftoff" was blocked to protect your Mac.*
@@ -103,7 +109,7 @@ Requires **macOS 26 or later**, Apple silicon or Intel.
 
 ### Updating
 
-Replace `Liftoff.app` in `/Applications` with the new one. Builds are ad-hoc signed, so macOS treats each version as a new app: you click **Open Anyway** once, and Screen Recording and Accessibility must be switched on again (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
+Replace `Liftoff.app` in `/Applications` with the new one, or run `brew upgrade --cask liftoff` once the tap is updated. Builds are ad-hoc signed, so macOS treats each version as a new app: you click **Open Anyway** once, and Screen Recording and Accessibility must be switched on again (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
 To hear about new versions: choose **Check for Updates…** in the menu bar menu or in Settings, turn on **Check for updates weekly** in Settings (off by default), or use **Watch → Custom → Releases** on this page.
 
 ## Permissions at a glance

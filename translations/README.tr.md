@@ -17,6 +17,8 @@
 [English](../README.md) · [繁體中文](README.zh-Hant.md) · [简体中文](README.zh-Hans.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md) · [Português](README.pt-BR.md) · [Italiano](README.it.md) · [Русский](README.ru.md) · **Türkçe** · [Nederlands](README.nl.md)
 
 <a href="https://github.com/firstfu/Liftoff/releases/latest"><b>Liftoff.zip dosyasını indir</b></a>
+&nbsp;·&nbsp;
+<code>brew install --cask firstfu/tap/liftoff</code>
 
 <img src="../assets/hero.gif" width="860" alt="Liftoff çalışırken: aç, ara, pencereleri önizle, klasör aç">
 
@@ -93,6 +95,8 @@ Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): sıkıştırma hareketi için MultitouchSupport (BetterTouchTool ve MiddleClick ile aynı yaklaşım)
 
 ## Kurulum
+
+**Homebrew**: `brew install --cask firstfu/tap/liftoff` (`brew upgrade --cask liftoff`)
 
 1. [Releases](https://github.com/firstfu/Liftoff/releases/latest) sayfasından `Liftoff.zip` dosyasını indirin ve arşivden çıkarın.
 2. `Liftoff.app` dosyasını `/Applications` klasörüne taşıyın.

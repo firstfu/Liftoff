@@ -5,7 +5,7 @@ options:
   deploymentTarget:
     macOS: "26.0"
   createIntermediateGroups: true
-  developmentLanguage: zh-Hant
+  developmentLanguage: en
 configFiles:
   Debug: Config/Signing.xcconfig
   Release: Config/Signing.xcconfig
@@ -31,7 +31,7 @@ targets:
         CFBundleDisplayName: Liftoff
         CFBundleShortVersionString: "1.0.2"
         CFBundleVersion: "3"
-        CFBundleDevelopmentRegion: zh-Hant
+        CFBundleDevelopmentRegion: en
         CFBundleAllowMixedLocalizations: true
         LSApplicationCategoryType: public.app-category.productivity
         LSMinimumSystemVersion: "26.0"

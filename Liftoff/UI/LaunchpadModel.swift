@@ -528,7 +528,7 @@ final class LaunchpadModel {
             if failed.isEmpty {
                 showToast(String(localized: "已徹底移除「\(entry.name)」"))
             } else {
-                showToast(String(localized: "已移除「\(entry.name)」，但有 \(failed.count) 個殘留檔無法移除"))
+                showToast(String(localized: "已移除「\(entry.name)」；無法移除的殘留檔：\(failed.count)"))
             }
             await catalog.rescan()
         }

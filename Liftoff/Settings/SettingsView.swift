@@ -97,7 +97,7 @@ private struct TriggerSettings: View {
                 }
             }
             Section("其他") {
-                LabeledContent("Dock 圖示", value: "點一下打開或收起")
+                LabeledContent("Dock 圖示") { Text("點一下打開或收起") }
                 LabeledContent("捷徑 / 腳本") {
                     Text("open liftoff://toggle").font(.system(.body, design: .monospaced)).textSelection(.enabled)
                 }
@@ -229,7 +229,7 @@ private struct AppearanceSettings: View {
                 if settings.backgroundStyle == .customImage {
                     LabeledContent("圖片") {
                         HStack {
-                            Text(settings.customImagePath.map { ($0 as NSString).lastPathComponent } ?? "未選擇")
+                            Text(settings.customImagePath.map { ($0 as NSString).lastPathComponent } ?? String(localized: "未選擇"))
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                             Button("選擇…") { chooseImage() }
@@ -500,7 +500,7 @@ private struct LayoutSettings: View {
 // MARK: - 智慧整理預覽
 
 /// 智慧整理的預覽：列出每個資料夾會收哪些 App、哪些留在外面，確認後才套用。
-private struct OrganizePreview: View {
+struct OrganizePreview: View {
     let plan: OrganizePlan
     let coordinator: AppCoordinator
     let onApply: () -> Void
@@ -512,11 +512,14 @@ private struct OrganizePreview: View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
                 Text("智慧整理").font(.title2.bold())
-                Text("將建立 \(plan.groups.count) 個資料夾，\(plan.loose.count) 個 App 留在資料夾外。目前的排列會先自動備份。")
+                Text("將建立的資料夾：\(plan.groups.count)　留在資料夾外的 App：\(plan.loose.count)")
                     .foregroundStyle(.secondary)
-                if !plan.guessed.isEmpty || plan.unclassifiedCount > 0 {
-                    Text("標示 ? 的 \(plan.guessed.count) 個 App 是依 App 自填的類別推測；另有 \(plan.unclassifiedCount) 個判斷不出分類。")
-                        .font(.caption).foregroundStyle(.secondary)
+                Text("目前的排列會先自動備份。").foregroundStyle(.secondary)
+                if !plan.guessed.isEmpty {
+                    Text("標示 ? 的 App 是依 App 自填的類別推測。").font(.caption).foregroundStyle(.secondary)
+                }
+                if plan.unclassifiedCount > 0 {
+                    Text("判斷不出分類的 App：\(plan.unclassifiedCount)").font(.caption).foregroundStyle(.secondary)
                 }
             }
             .padding(20)
@@ -524,7 +527,7 @@ private struct OrganizePreview: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 18) {
                     ForEach(plan.groups) { group in
-                        section(title: "\(group.folder.displayName)（\(group.apps.count)）", apps: group.apps)
+                        section(title: String(localized: "\(group.folder.displayName)（\(group.apps.count)）"), apps: group.apps)
                     }
                     if !plan.loose.isEmpty {
                         section(title: String(localized: "留在資料夾外（\(plan.loose.count)）"), apps: plan.loose)

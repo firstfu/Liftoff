@@ -10,6 +10,8 @@ import SwiftUI
 
 @main
 struct LiftoffApp: App {
+    /// 必須排在所有屬性之前：上次素材產生若沒正常結束，要在 AppSettings／版面被讀進記憶體之前把檔案還原（屬性依宣告順序初始化）
+    private let demoRecovery: Void = DemoShots.restoreIfInterrupted()
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var settings = AppSettings.shared
 
@@ -39,6 +41,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Task { await SelfTest.runPreviewTest(coordinator: coordinator) }
         } else if arguments.contains("--selftest-profile") {
             Task { await SelfTest.profileLoop(coordinator: coordinator) }
+        } else if let output = DemoShots.outputDirectory {
+            Task {
+                await DemoShots.run(coordinator: coordinator, output: output)
+                NSApp.terminate(nil)
+            }
         } else if SelfTest.isRequested {
             Task { await SelfTest.run(coordinator: coordinator) }
         } else if !arguments.contains("--background") && !Self.launchedAsLoginItem {

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="meta_title">Liftoff — The Launchpad that macOS 26 took away</title>
+<meta name="description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No network connections." data-i18n-attr="content:meta_desc">
+<link rel="canonical" href="https://firstfu.github.io/Liftoff/">
+<link rel="icon" href="assets/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Liftoff — The Launchpad that macOS 26 took away">
+<meta property="og:description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No network connections.">
+<meta property="og:image" content="https://firstfu.github.io/Liftoff/assets/social-preview.png">
+<meta property="og:url" content="https://firstfu.github.io/Liftoff/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://firstfu.github.io/Liftoff/assets/social-preview.png">
+<meta name="theme-color" content="#0e1118">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Liftoff","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 26 or later","description":"A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No network connections.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://www.gnu.org/licenses/gpl-3.0.html","url":"https://firstfu.github.io/Liftoff/","downloadUrl":"https://github.com/firstfu/Liftoff/releases/latest","image":"https://firstfu.github.io/Liftoff/assets/social-preview.png"}
+</script>
+<style>
+:root{--bg:#0e1118;--bg2:#161b26;--card:#1a2030;--text:#eef1f7;--muted:#a3adc2;--accent:#6aa5ff;--accent-ink:#06142e;--line:rgba(255,255,255,.09)}
+@media (prefers-color-scheme:light){:root{--bg:#f6f7fb;--bg2:#ffffff;--card:#ffffff;--text:#141824;--muted:#5b6579;--accent:#1a6dff;--accent-ink:#ffffff;--line:rgba(10,20,40,.1)}}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,"PingFang TC","PingFang SC","Hiragino Sans","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit} img,video{max-width:100%;display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+header{position:sticky;top:0;z-index:5;backdrop-filter:saturate(1.4) blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;text-decoration:none}
+.brand img{width:30px;height:30px;border-radius:7px}
+nav{margin-left:auto;display:flex;align-items:center;gap:22px;font-size:15px;color:var(--muted)}
+nav a{text-decoration:none} nav a:hover{color:var(--text)}
+select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit;font-size:14px}
+.hero{text-align:center;padding:72px 0 40px}
+h1{font-size:clamp(34px,5.6vw,60px);line-height:1.12;letter-spacing:-.02em;margin:0 auto 18px;max-width:880px;text-wrap:balance}
+.sub{font-size:clamp(18px,2.2vw,22px);color:var(--muted);max-width:680px;margin:0 auto 30px;text-wrap:balance}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 24px;border-radius:12px;font-weight:600;text-decoration:none;font-size:17px}
+.btn.primary{background:var(--accent);color:var(--accent-ink)} .btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border:1px solid var(--line);background:var(--card)} .btn.ghost:hover{border-color:var(--accent)}
+.note{margin-top:16px;color:var(--muted);font-size:14px}
+.demo{margin:44px auto 0;max-width:960px;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.demo video{width:100%;height:auto}
+section{padding:72px 0} section.alt{background:var(--bg2)}
+h2{text-wrap:balance;font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-spacing:-.015em;text-align:center;margin:0 auto 48px;max-width:760px}
+.row{display:grid;grid-template-columns:1fr 1.15fr;gap:44px;align-items:center;margin-bottom:68px}
+.row:nth-child(even) .txt{order:2}
+.row h3{font-size:26px;margin:0 0 10px;letter-spacing:-.01em} .row p{color:var(--muted);margin:0}
+.shot{border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.28)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.card h3{margin:0 0 8px;font-size:19px} .card p{margin:0;color:var(--muted);font-size:15.5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 14px}
+.stat b{display:block;font-size:30px;letter-spacing:-.02em;color:var(--accent)} .stat span{color:var(--muted);font-size:14.5px}
+ol{max-width:720px;margin:0 auto;padding:0;list-style:none;counter-reset:s}
+ol li{counter-increment:s;position:relative;padding:14px 0 14px 54px;border-bottom:1px solid var(--line)}
+ol li::before{content:counter(s);position:absolute;left:0;top:12px;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:700;display:grid;place-items:center}
+.fine{text-align:center;color:var(--muted);font-size:14.5px;max-width:720px;margin:22px auto 0}
+.langs{text-align:center;color:var(--muted);max-width:760px;margin:0 auto}
+.final{text-align:center} footer{padding:34px 0 50px;text-align:center;color:var(--muted);font-size:14.5px;border-top:1px solid var(--line)}
+@media(max-width:820px){.row{grid-template-columns:1fr;gap:22px}.row:nth-child(even) .txt{order:0}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}nav a.hide-sm{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <a class="brand" href="#top"><img src="assets/icon.png" alt="" width="30" height="30">Liftoff</a>
+  <nav>
+    <a class="hide-sm" href="#features" data-i18n="nav_features">Features</a>
+    <a class="hide-sm" href="#install" data-i18n="nav_install">Install</a>
+    <a href="https://github.com/firstfu/Liftoff" data-i18n="nav_github">GitHub</a>
+    <select id="lang" aria-label="Language"></select>
+  </nav>
+</div></header>
+<main id="top">
+<div class="wrap hero">
+  <h1 data-i18n="hero_title">The Launchpad macOS 26 took away. Back — and faster.</h1>
+  <p class="sub" data-i18n="hero_sub">A free, open-source launcher with live window previews and one-click Smart Organize.</p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/firstfu/Liftoff/releases/latest" data-i18n="cta_download">Download for macOS 26+</a>
+    <a class="btn ghost" href="https://github.com/firstfu/Liftoff" data-i18n="cta_github">View on GitHub</a>
+  </div>
+  <p class="note" data-i18n="hero_note">Free · Open source (GPLv3) · No network connections · 13 languages</p>
+  <div class="demo"><video autoplay muted loop playsinline preload="metadata" poster="assets/grid.jpg" aria-label="Liftoff demo"><source src="assets/hero.mp4" type="video/mp4"></video></div>
+</div>
+<section id="features" class="alt"><div class="wrap">
+  <h2 data-i18n="features_title">Everything you loved. Plus what was missing.</h2>
+  <div class="row"><div class="txt"><h3 data-i18n="f1_title">Live window previews</h3><p data-i18n="f1_text">Rest the pointer on a running app and its windows appear as thumbnails. Click one to jump straight to that window — even minimized ones or windows on other desktops.</p></div><div class="shot"><img src="assets/window-preview.jpg" alt="" loading="lazy" width="720" height="370"></div></div>
+  <div class="row"><div class="txt"><h3 data-i18n="f2_title">Search apps and windows</h3><p data-i18n="f2_text">Type a few letters. Liftoff matches app names, initials (vsc → Visual Studio Code), pinyin, and the titles of your open windows.</p></div><div class="shot"><img src="assets/search.jpg" alt="" loading="lazy" width="1400" height="285"></div></div>
+  <div class="row"><div class="txt"><h3 data-i18n="f3_title">Smart Organize</h3><p data-i18n="f3_text">One click sorts all your apps into sensible folders. Preview first, nothing changes until you apply, and your layout is backed up. Built-in table of 1,000+ popular Mac apps: no AI, no network, the same result every time.</p></div><div class="shot"><img src="assets/smart-organize.png" alt="" loading="lazy" width="712" height="704"></div></div>
+  <div class="grid">
+    <div class="card"><h3 data-i18n="f4_title">Drag to the Dock</h3><p data-i18n="f4_text">Drag an app straight from the grid into the Dock. Import your old Launchpad layout, or start fresh.</p></div>
+    <div class="card"><h3 data-i18n="f5_title">Built for speed</h3><p data-i18n="f5_text">Opens in under 3 ms, never drops a frame while paging, and uses 0% CPU when idle.</p></div>
+    <div class="card"><h3 data-i18n="f6_title">Private by design</h3><p data-i18n="f6_text">Liftoff makes no network connections at all. Window thumbnails never leave your Mac, and every line of code is open for you to read.</p></div>
+  </div>
+</div></section>
+<section><div class="wrap"><div class="stats">
+  <div class="stat"><b>&lt; 3 ms</b><span data-i18n="perf_open">Open the panel</span></div>
+  <div class="stat"><b>&lt; 8 ms</b><span data-i18n="perf_search">Search, per keystroke</span></div>
+  <div class="stat"><b data-i18n="perf_paging_value">0 dropped frames</b><span data-i18n="perf_paging">Paging</span></div>
+  <div class="stat"><b>0% CPU</b><span data-i18n="perf_idle">Idle</span></div>
+</div></div></section>
+<section id="install" class="alt"><div class="wrap">
+  <h2 data-i18n="install_title">Install in a minute</h2>
+  <ol>
+    <li data-i18n="step1">Download Liftoff.zip and unzip it.</li><li data-i18n="step2">Move Liftoff.app to your Applications folder.</li><li data-i18n="step3">Open it. If macOS blocks it, go to System Settings → Privacy & Security and click Open Anyway.</li><li data-i18n="step4">Allow Accessibility and Screen & System Audio Recording when asked. Thumbnails are processed locally only.</li>
+  </ol>
+  <p class="fine" data-i18n="install_note">Requires macOS 26 or later. Builds are not notarized yet, so macOS asks you to re-enable permissions after each update.</p>
+</div></section>
+<section><div class="wrap"><h2 data-i18n="lang_title">Speaks your language</h2><p class="langs" data-i18n="lang_text">English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.</p></div></section>
+<section class="alt final"><div class="wrap"><div class="cta"><a class="btn primary" href="https://github.com/firstfu/Liftoff/releases/latest" data-i18n="cta_final">Get Liftoff</a><a class="btn ghost" href="https://github.com/firstfu/Liftoff" data-i18n="cta_github">View on GitHub</a></div></div></section>
+</main>
+<footer><div class="wrap" data-i18n="footer_text">Free and open source under GPLv3. Made by one person — issues and pull requests are welcome.</div></footer>
+<script>
+(function(){
+  var LANGS=[["en","English"],["zh-Hant","繁體中文"],["zh-Hans","简体中文"],["ja","日本語"],["ko","한국어"],["de","Deutsch"],["fr","Français"],["es","Español"],["pt-BR","Português"],["it","Italiano"],["ru","Русский"],["tr","Türkçe"],["nl","Nederlands"]];
+  var sel=document.getElementById("lang");
+  LANGS.forEach(function(l){var o=document.createElement("option");o.value=l[0];o.textContent=l[1];sel.appendChild(o);});
+  function detect(){
+    var q=new URLSearchParams(location.search).get("lang"); if(q&&LANGS.some(function(l){return l[0]===q}))return q;
+    try{var s=localStorage.getItem("lang"); if(s&&LANGS.some(function(l){return l[0]===s}))return s;}catch(e){}
+    var prefs=navigator.languages||[navigator.language||"en"];
+    for(var i=0;i<prefs.length;i++){
+      var p=prefs[i].toLowerCase();
+      if(p==="zh-tw"||p==="zh-hk"||p==="zh-mo"||p.indexOf("zh-hant")===0)return "zh-Hant";
+      if(p==="zh"||p==="zh-cn"||p==="zh-sg"||p.indexOf("zh-hans")===0)return "zh-Hans";
+      if(p.indexOf("pt")===0)return "pt-BR";
+      var base=p.split("-")[0]; var hit=LANGS.filter(function(l){return l[0].toLowerCase()===base})[0]; if(hit)return hit[0];
+    }
+    return "en";
+  }
+  function apply(t,code){
+    document.documentElement.lang=code;
+    document.querySelectorAll("[data-i18n]").forEach(function(el){var k=el.getAttribute("data-i18n"); if(t[k]!==undefined)el.textContent=t[k];});
+    document.querySelectorAll("[data-i18n-attr]").forEach(function(el){var p=el.getAttribute("data-i18n-attr").split(":"); if(t[p[1]]!==undefined)el.setAttribute(p[0],t[p[1]]);});
+    if(t.meta_title)document.title=t.meta_title;
+  }
+  function load(code){
+    sel.value=code;
+    if(code==="en"){ if(window.__en)apply(window.__en,"en"); else location.reload(); return; }
+    fetch("i18n/"+code+".json").then(function(r){return r.json()}).then(function(t){apply(t,code)}).catch(function(){});
+  }
+  // 英文版直接寫在 HTML 裡（利於搜尋引擎）；切回英文時從頁面上記下的原文還原
+  window.__en={}; document.querySelectorAll("[data-i18n]").forEach(function(el){window.__en[el.getAttribute("data-i18n")]=el.textContent;});
+  document.querySelectorAll("[data-i18n-attr]").forEach(function(el){var p=el.getAttribute("data-i18n-attr").split(":"); window.__en[p[1]]=el.getAttribute(p[0]);});
+  window.__en.meta_title=document.title;
+  sel.addEventListener("change",function(){try{localStorage.setItem("lang",sel.value)}catch(e){} load(sel.value);});
+  var first=detect(); if(first!=="en")load(first); else sel.value="en";
+})();
+</script>
+</body>
+</html>

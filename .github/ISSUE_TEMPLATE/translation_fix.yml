@@ -1,0 +1,42 @@
+name: Translation fix / 翻譯修正
+description: Report an awkward or wrong translation / 回報不自然或錯誤的翻譯
+labels: [translation]
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language / 語言
+      options:
+        - 繁體中文
+        - 简体中文
+        - 日本語
+        - 한국어
+        - Deutsch
+        - Français
+        - Español
+        - Português (Brasil)
+        - Italiano
+        - Русский
+        - Türkçe
+        - Nederlands
+        - English
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where does it appear? / 出現在哪裡？
+      description: Settings tab, context menu, a message… / 設定頁籤、右鍵選單、提示訊息…
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text / 目前的文字
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested text / 建議的文字
+      description: If it is a macOS system term (System Settings, Accessibility…), please paste what your macOS actually shows. / 若是 macOS 系統術語，請貼上你的系統實際顯示的用詞。
+    validations:
+      required: true

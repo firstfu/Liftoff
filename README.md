@@ -12,7 +12,7 @@
 [![Latest release](https://img.shields.io/github/v/release/firstfu/Liftoff)](https://github.com/firstfu/Liftoff/releases/latest)
 ![Languages](https://img.shields.io/badge/languages-13-brightgreen)
 
-[Download](https://github.com/firstfu/Liftoff/releases/latest) · [Features](#features) · [Install](#install) · [Privacy](#privacy) · [Translations](#languages)
+[Website](https://firstfu.github.io/Liftoff/) · [Download](https://github.com/firstfu/Liftoff/releases/latest) · [Features](#features) · [Install](#install) · [Privacy](#privacy) · [Translations](#languages)
 
 English · [繁體中文](translations/README.zh-Hant.md) · [简体中文](translations/README.zh-Hans.md) · [日本語](translations/README.ja.md) · [한국어](translations/README.ko.md) · [Deutsch](translations/README.de.md) · [Français](translations/README.fr.md) · [Español](translations/README.es.md) · [Português](translations/README.pt-BR.md) · [Italiano](translations/README.it.md) · [Русский](translations/README.ru.md) · [Türkçe](translations/README.tr.md) · [Nederlands](translations/README.nl.md)
 

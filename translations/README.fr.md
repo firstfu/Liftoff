@@ -128,7 +128,7 @@ Liftoff n’est pas encore notarisé par Apple. Ouvrez Réglages Système → Co
 <details>
 <summary><b>Les aperçus de fenêtres n’apparaissent pas ou n’affichent aucune miniature</b></summary>
 
-Vérifiez que **Enregistrement de l’écran et des sons du système** (nécessaire pour les aperçus) et, facultativement, **Accessibilité** (fenêtres réduites, changement de fenêtre précis) sont activés pour Liftoff dans Réglages Système → Confidentialité et sécurité. Si un réglage semble activé mais que rien ne fonctionne (fréquent après une mise à jour), retirez Liftoff de la liste avec **−** puis ajoutez-le de nouveau.
+Vérifiez que **Enregistrement de l’écran et des sons du système** (nécessaire pour les aperçus) et, facultativement, **Accessibilité** (fenêtres réduites, changement de fenêtre précis) sont activés pour Liftoff dans Réglages Système → Confidentialité et sécurité. Si un réglage semble activé mais que rien ne fonctionne (fréquent après une mise à jour), retirez Liftoff de la liste avec **−** puis ajoutez-le de nouveau. Si Liftoff n’apparaît pas du tout dans la liste (macOS ne l’ajoute pas toujours lui-même), cliquez sur **+** sous la liste et choisissez Liftoff dans Applications.
 </details>
 
 <details>

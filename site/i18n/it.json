@@ -31,7 +31,7 @@
  "step1": "Scarica Liftoff.zip e decomprimilo.",
  "step2": "Sposta Liftoff.app nella cartella Applicazioni.",
  "step3": "Aprilo. Se macOS lo blocca, vai in Impostazioni di Sistema → Privacy e sicurezza e clicca su Apri comunque.",
- "step4": "Consenti Accessibilità e Registrazione schermo e audio di sistema quando richiesto. Le miniature vengono elaborate solo in locale.",
+ "step4": "Consenti Accessibilità e Registrazione schermo e audio di sistema quando richiesto. Le miniature vengono elaborate solo in locale. Se Liftoff non compare affatto nell’elenco (macOS non sempre lo aggiunge da solo), fai clic su + sotto l’elenco e scegli Liftoff in Applicazioni.",
  "install_note": "Richiede macOS 26 o successivo. Le build non sono ancora notarizzate, quindi macOS ti chiede di riattivare i permessi dopo ogni aggiornamento.",
  "lang_title": "Parla la tua lingua",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

@@ -128,7 +128,7 @@ Apple aún no ha notarizado Liftoff. Abre Ajustes del Sistema → Privacidad y s
 <details>
 <summary><b>Las vistas previas de ventanas no aparecen o no muestran miniaturas</b></summary>
 
-Comprueba que **Grabación de pantalla y del audio del sistema** (necesaria para las vistas previas) y, opcionalmente, **Accesibilidad** (ventanas minimizadas, cambio de ventana preciso) estén activadas para Liftoff en Ajustes del Sistema → Privacidad y seguridad. Si un interruptor parece activado pero nada funciona (es habitual tras una actualización), quita Liftoff de la lista con **−** y vuelve a añadirlo.
+Comprueba que **Grabación de pantalla y del audio del sistema** (necesaria para las vistas previas) y, opcionalmente, **Accesibilidad** (ventanas minimizadas, cambio de ventana preciso) estén activadas para Liftoff en Ajustes del Sistema → Privacidad y seguridad. Si un interruptor parece activado pero nada funciona (es habitual tras una actualización), quita Liftoff de la lista con **−** y vuelve a añadirlo. Si Liftoff no aparece en la lista (macOS no siempre lo añade solo), haz clic en **+** debajo de la lista y elige Liftoff en Aplicaciones.
 </details>
 
 <details>

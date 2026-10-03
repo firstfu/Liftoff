@@ -128,7 +128,7 @@ Liftoff non è ancora notarizzato da Apple. Apri Impostazioni di Sistema → Pri
 <details>
 <summary><b>Le anteprime delle finestre non compaiono o non mostrano miniature</b></summary>
 
-Controlla che **Registrazione schermo e audio di sistema** (necessaria per le anteprime) e, facoltativamente, **Accessibilità** (finestre minimizzate, cambio di finestra preciso) siano attivate per Liftoff in Impostazioni di Sistema → Privacy e sicurezza. Se un interruttore sembra attivo ma non funziona nulla (succede spesso dopo un aggiornamento), rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo.
+Controlla che **Registrazione schermo e audio di sistema** (necessaria per le anteprime) e, facoltativamente, **Accessibilità** (finestre minimizzate, cambio di finestra preciso) siano attivate per Liftoff in Impostazioni di Sistema → Privacy e sicurezza. Se un interruttore sembra attivo ma non funziona nulla (succede spesso dopo un aggiornamento), rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo. Se Liftoff non compare affatto nell’elenco (macOS non sempre lo aggiunge da solo), fai clic su **+** sotto l’elenco e scegli Liftoff in Applicazioni.
 </details>
 
 <details>

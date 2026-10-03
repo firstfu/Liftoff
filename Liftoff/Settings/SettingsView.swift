@@ -330,6 +330,10 @@ private struct PreviewSettings: View {
                 )
                 Text("不授權也能當啟動台使用，只是少了視窗預覽與切換。")
                     .font(.caption).foregroundStyle(.secondary)
+                // macOS 對同一個 App 通常只跳一次授權提示；之後（含 tccutil reset、ad-hoc 版更新後）
+                // 申請會被直接拒絕且不會把 App 寫進清單，使用者只能用 ＋ 手動加入
+                Text("按「授權…」後若系統設定的清單裡沒有 Liftoff，請按清單下方的 ＋，到「應用程式」選 Liftoff 加入。")
+                    .font(.caption).foregroundStyle(.secondary)
                 Text("更新後若系統設定裡的開關看起來是開的卻沒作用，請把 Liftoff 從清單移除（－）後重新加入。")
                     .font(.caption).foregroundStyle(.secondary)
             }

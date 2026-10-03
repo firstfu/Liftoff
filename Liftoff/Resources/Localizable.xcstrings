@@ -6570,6 +6570,89 @@
         }
       }
     },
+    "按「授權…」後若系統設定的清單裡沒有 Liftoff，請按清單下方的 ＋，到「應用程式」選 Liftoff 加入。": {
+      "comment": "出現在 SettingsView.swift（英文：If Liftoff isn't in the System Settings list after you click Grant Access…）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wenn Liftoff nach „Erlauben …“ nicht in der Liste der Systemeinstellungen erscheint, klicke unter der Liste auf + und wähle Liftoff im Ordner „Programme“ aus."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If Liftoff isn't in the System Settings list after you click Grant Access…, click + below the list and choose Liftoff in Applications."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si Liftoff no aparece en la lista de Ajustes del Sistema tras pulsar «Conceder acceso…», haz clic en + debajo de la lista y elige Liftoff en Aplicaciones."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si Liftoff n’apparaît pas dans la liste de Réglages Système après avoir cliqué sur « Autoriser… », cliquez sur + sous la liste et choisissez Liftoff dans Applications."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se dopo aver fatto clic su “Concedi accesso…” Liftoff non compare nell’elenco di Impostazioni di Sistema, fai clic su + sotto l’elenco e scegli Liftoff in Applicazioni."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「許可…」をクリックしても「システム設定」のリストにLiftoffがない場合は、リストの下の＋をクリックし、「アプリケーション」からLiftoffを選んで追加してください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“권한 허용…”을 클릭한 후에도 “시스템 설정” 목록에 Liftoff가 없으면, 목록 아래의 +를 클릭하고 “응용 프로그램”에서 Liftoff를 선택해 추가하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Staat Liftoff na ‘Geef toegang…’ niet in de lijst in Systeeminstellingen, klik dan op + onder de lijst en kies Liftoff in Apps."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se o Liftoff não aparecer na lista dos Ajustes do Sistema depois de clicar em “Conceder acesso…”, clique em + abaixo da lista e escolha o Liftoff em Aplicativos."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Если после нажатия «Предоставить доступ…» Liftoff нет в списке Системных настроек, нажмите + под списком и выберите Liftoff в папке «Программы»."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“İzin Ver…” düğmesine bastıktan sonra Liftoff, Sistem Ayarları’ndaki listede yoksa listenin altındaki + düğmesine tıklayın ve Uygulamalar klasöründen Liftoff’u seçin."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点按“授权…”后，如果“系统设置”的列表中没有 Liftoff，请点按列表下方的 ＋，在“应用程序”中选择 Liftoff 添加。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按「授權…」後若系統設定的清單裡沒有 Liftoff，請按清單下方的 ＋，到「應用程式」選 Liftoff 加入。"
+          }
+        }
+      }
+    },
     "捷徑 / 腳本": {
       "comment": "出現在 SettingsView.swift（英文：Shortcuts / Scripts）",
       "localizations": {

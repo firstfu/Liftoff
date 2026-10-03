@@ -132,7 +132,7 @@ Liftoff isn't notarized by Apple yet. Open System Settings → Privacy & Securit
 <details>
 <summary><b>Window previews don't show up, or show no thumbnails</b></summary>
 
-Check that **Screen & System Audio Recording** (needed for the previews) and, optionally, **Accessibility** (minimized windows, precise switching) are switched on for Liftoff in System Settings → Privacy & Security. If a switch looks on but nothing works — common after an update — remove Liftoff from the list with **−** and add it back.
+Check that **Screen & System Audio Recording** (needed for the previews) and, optionally, **Accessibility** (minimized windows, precise switching) are switched on for Liftoff in System Settings → Privacy & Security. If a switch looks on but nothing works — common after an update — remove Liftoff from the list with **−** and add it back. If Liftoff isn't in the list at all (macOS doesn't always add it for you), click **+** below the list and choose Liftoff in Applications.
 </details>
 
 <details>

@@ -31,7 +31,7 @@
  "step1": "Lade Liftoff.zip herunter und entpacke die Datei.",
  "step2": "Bewege Liftoff.app in den Ordner „Programme“.",
  "step3": "Öffne die App. Wenn macOS sie blockiert, gehe zu Systemeinstellungen → Datenschutz & Sicherheit und klicke auf „Dennoch öffnen“.",
- "step4": "Erlaube bei Nachfrage „Bedienungshilfen“ und „Aufnahme von Bildschirm & Systemaudio“. Vorschaubilder werden nur lokal verarbeitet.",
+ "step4": "Erlaube bei Nachfrage „Bedienungshilfen“ und „Aufnahme von Bildschirm & Systemaudio“. Vorschaubilder werden nur lokal verarbeitet. Fehlt Liftoff ganz in der Liste (macOS fügt es nicht immer selbst hinzu), klicke unter der Liste auf + und wähle Liftoff im Ordner „Programme“ aus.",
  "install_note": "Erfordert macOS 26 oder neuer. Die Builds sind noch nicht notarisiert, deshalb fordert macOS dich nach jedem Update auf, die Berechtigungen erneut zu aktivieren.",
  "lang_title": "Spricht deine Sprache",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

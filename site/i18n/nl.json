@@ -31,7 +31,7 @@
  "step1": "Download Liftoff.zip en pak het uit.",
  "step2": "Verplaats Liftoff.app naar je map Apps.",
  "step3": "Open de app. Blokkeert macOS hem, ga dan naar Systeeminstellingen → Privacy en beveiliging en klik op Open toch.",
- "step4": "Sta Toegankelijkheid en Scherm- en systeemaudio-opname toe wanneer erom wordt gevraagd. Miniaturen worden alleen lokaal verwerkt.",
+ "step4": "Sta Toegankelijkheid en Scherm- en systeemaudio-opname toe wanneer erom wordt gevraagd. Miniaturen worden alleen lokaal verwerkt. Staat Liftoff helemaal niet in de lijst (macOS voegt het niet altijd zelf toe), klik dan op + onder de lijst en kies Liftoff in Apps.",
  "install_note": "Vereist macOS 26 of nieuwer. Builds zijn nog niet genotariseerd, dus macOS vraagt je na elke update om de rechten opnieuw in te schakelen.",
  "lang_title": "Spreekt jouw taal",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

@@ -128,7 +128,7 @@ Liftoff ist noch nicht von Apple notarisiert. Öffne Systemeinstellungen → Dat
 <details>
 <summary><b>Fenstervorschauen erscheinen nicht oder zeigen keine Miniaturen</b></summary>
 
-Prüfe, ob in Systemeinstellungen → Datenschutz & Sicherheit für Liftoff **Aufnahme von Bildschirm & Systemaudio** (für die Vorschauen nötig) und optional **Bedienungshilfen** (minimierte Fenster, genaues Wechseln) aktiviert sind. Sieht ein Schalter aktiv aus, aber nichts funktioniert – häufig nach einem Update –, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu.
+Prüfe, ob in Systemeinstellungen → Datenschutz & Sicherheit für Liftoff **Aufnahme von Bildschirm & Systemaudio** (für die Vorschauen nötig) und optional **Bedienungshilfen** (minimierte Fenster, genaues Wechseln) aktiviert sind. Sieht ein Schalter aktiv aus, aber nichts funktioniert – häufig nach einem Update –, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu. Fehlt Liftoff ganz in der Liste (macOS fügt es nicht immer selbst hinzu), klicke unter der Liste auf **+** und wähle Liftoff im Ordner „Programme“ aus.
 </details>
 
 <details>

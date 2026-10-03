@@ -31,7 +31,7 @@
  "step1": "下载 Liftoff.zip 并解压。",
  "step2": "将 Liftoff.app 移到“应用程序”文件夹。",
  "step3": "打开它。如果 macOS 拦截，请前往“系统设置”→“隐私与安全”，点按“仍要打开”。",
- "step4": "按提示允许“无障碍”和“录屏与系统录音”。缩略图仅在本机处理。",
+ "step4": "按提示允许“无障碍”和“录屏与系统录音”。缩略图仅在本机处理。如果列表中根本没有 Liftoff（macOS 不一定会自动添加），请点按列表下方的 +，在“应用程序”中选择 Liftoff。",
  "install_note": "需要 macOS 26 或更高版本。目前的版本尚未经过公证，因此每次更新后，macOS 会要求你重新授权。",
  "lang_title": "说你的语言",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

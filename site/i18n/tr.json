@@ -31,7 +31,7 @@
  "step1": "Liftoff.zip dosyasını indirin ve açın.",
  "step2": "Liftoff.app'i Uygulamalar klasörünüze taşıyın.",
  "step3": "Açın. macOS engellerse Sistem Ayarları → Gizlilik ve Güvenlik bölümüne gidip Yine de Aç'a tıklayın.",
- "step4": "İstendiğinde Erişilebilirlik ve Ekran ve Sistem Sesi Kaydı iznini verin. Küçük resimler yalnızca yerel olarak işlenir.",
+ "step4": "İstendiğinde Erişilebilirlik ve Ekran ve Sistem Sesi Kaydı iznini verin. Küçük resimler yalnızca yerel olarak işlenir. Liftoff listede hiç yoksa (macOS onu her zaman kendisi eklemez), listenin altındaki + düğmesine tıklayın ve Uygulamalar klasöründen Liftoff’u seçin.",
  "install_note": "macOS 26 veya üstü gerekir. Sürümler henüz noter onaylı değildir; bu yüzden macOS her güncellemeden sonra izinleri yeniden etkinleştirmenizi ister.",
  "lang_title": "Sizin dilinizi konuşur",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

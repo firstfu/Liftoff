@@ -130,7 +130,7 @@ O Liftoff ainda não é notarizado pela Apple. Abra Ajustes do Sistema → Priva
 <details>
 <summary><b>A pré-visualização das janelas não aparece ou aparece sem miniaturas</b></summary>
 
-Confira se **Gravação do Áudio do Sistema e da Tela** (necessária para as pré-visualizações) e, opcionalmente, **Acessibilidade** (janelas minimizadas, troca precisa) estão ativadas para o Liftoff em Ajustes do Sistema → Privacidade e Segurança. Se um botão parecer ativado mas nada funcionar (comum após uma atualização), remova o Liftoff da lista com **−** e adicione-o novamente.
+Confira se **Gravação do Áudio do Sistema e da Tela** (necessária para as pré-visualizações) e, opcionalmente, **Acessibilidade** (janelas minimizadas, troca precisa) estão ativadas para o Liftoff em Ajustes do Sistema → Privacidade e Segurança. Se um botão parecer ativado mas nada funcionar (comum após uma atualização), remova o Liftoff da lista com **−** e adicione-o novamente. Se o Liftoff nem aparecer na lista (o macOS nem sempre o adiciona sozinho), clique em **+** abaixo da lista e escolha o Liftoff em Aplicativos.
 </details>
 
 <details>

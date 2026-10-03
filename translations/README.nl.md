@@ -130,7 +130,7 @@ Liftoff is nog niet door Apple genotariseerd. Open Systeeminstellingen → Priva
 <details>
 <summary><b>Vensterweergaven verschijnen niet of tonen geen miniaturen</b></summary>
 
-Controleer of **Scherm- en systeemaudio-opname** (nodig voor de weergaven) en eventueel **Toegankelijkheid** (geminimaliseerde vensters, nauwkeurig wisselen) voor Liftoff zijn ingeschakeld in Systeeminstellingen → Privacy en beveiliging. Als een schakelaar aan lijkt te staan maar niets werkt (vaak na een update), verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe.
+Controleer of **Scherm- en systeemaudio-opname** (nodig voor de weergaven) en eventueel **Toegankelijkheid** (geminimaliseerde vensters, nauwkeurig wisselen) voor Liftoff zijn ingeschakeld in Systeeminstellingen → Privacy en beveiliging. Als een schakelaar aan lijkt te staan maar niets werkt (vaak na een update), verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe. Staat Liftoff helemaal niet in de lijst (macOS voegt het niet altijd zelf toe), klik dan op **+** onder de lijst en kies Liftoff in Apps.
 </details>
 
 <details>

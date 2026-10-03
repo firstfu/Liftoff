@@ -31,7 +31,7 @@
  "step1": "Baixe o Liftoff.zip e descompacte.",
  "step2": "Mova o Liftoff.app para a pasta Aplicativos.",
  "step3": "Abra o app. Se o macOS bloquear, vá em Ajustes do Sistema → Privacidade e Segurança e clique em Abrir Mesmo Assim.",
- "step4": "Permita Acessibilidade e Gravação do Áudio do Sistema e da Tela quando solicitado. As miniaturas são processadas apenas localmente.",
+ "step4": "Permita Acessibilidade e Gravação do Áudio do Sistema e da Tela quando solicitado. As miniaturas são processadas apenas localmente. Se o Liftoff nem aparecer na lista (o macOS nem sempre o adiciona sozinho), clique em + abaixo da lista e escolha o Liftoff em Aplicativos.",
  "install_note": "Requer macOS 26 ou posterior. As versões ainda não são notarizadas, então o macOS pede que você reative as permissões após cada atualização.",
  "lang_title": "Fala o seu idioma",
  "lang_text": "English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.",

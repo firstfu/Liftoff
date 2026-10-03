@@ -130,7 +130,7 @@ Liftoff henüz Apple tarafından noter onaylı değil. Sistem Ayarları → Gizl
 <details>
 <summary><b>Pencere önizlemeleri görünmüyor ya da küçük resim göstermiyor</b></summary>
 
-Sistem Ayarları → Gizlilik ve Güvenlik bölümünde Liftoff için **Ekran ve Sistem Sesi Kaydı** (önizlemeler için gerekir) ve isteğe bağlı olarak **Erişilebilirlik** (küçültülmüş pencereler, isabetli geçiş) izinlerinin açık olduğundan emin olun. Bir anahtar açık görünüp hiçbir şey çalışmıyorsa (güncellemeden sonra sık görülür), Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin.
+Sistem Ayarları → Gizlilik ve Güvenlik bölümünde Liftoff için **Ekran ve Sistem Sesi Kaydı** (önizlemeler için gerekir) ve isteğe bağlı olarak **Erişilebilirlik** (küçültülmüş pencereler, isabetli geçiş) izinlerinin açık olduğundan emin olun. Bir anahtar açık görünüp hiçbir şey çalışmıyorsa (güncellemeden sonra sık görülür), Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin. Liftoff listede hiç yoksa (macOS onu her zaman kendisi eklemez), listenin altındaki **+** düğmesine tıklayın ve Uygulamalar klasöründen Liftoff’u seçin.
 </details>
 
 <details>

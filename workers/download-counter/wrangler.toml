@@ -1,0 +1,13 @@
+# 下載計數轉址器的 Wrangler 設定。部署：npx wrangler@4 deploy（在本資料夾內）
+name = "download-counter"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+# 自訂網域：dl.ailoop.uk（ailoop.uk 的 zone 在同一個 Cloudflare 帳號）
+routes = [{ pattern = "dl.ailoop.uk", custom_domain = true }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "download-counter"
+database_id = "e548c6d4-097a-4f62-b105-f2253ff571fd"

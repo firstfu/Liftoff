@@ -11,3 +11,6 @@ Config/Signing.local.xcconfig
 docs/
 CLAUDE.md
 CLAUDE.local.md
+
+# Cloudflare Worker 本機暫存（含帳號資訊與測試資料庫）
+.wrangler/

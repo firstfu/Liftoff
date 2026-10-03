@@ -4901,7 +4901,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "已還原"
+            "value": "已回復"
           }
         }
       }
@@ -9466,7 +9466,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "熱角"
+            "value": "熱點"
           }
         }
       }
@@ -9881,7 +9881,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "登入時自動啟動"
+            "value": "在登入時打開"
           }
         }
       }
@@ -10130,7 +10130,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "目前的排列會先自動備份，之後可在這裡還原。"
+            "value": "目前的排列會先自動備份，之後可在這裡回復。"
           }
         }
       }
@@ -11873,7 +11873,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "螢幕錄製"
+            "value": "螢幕與系統錄音"
           }
         }
       }
@@ -12205,7 +12205,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "要還原「%@」的排列嗎？"
+            "value": "要回復「%@」的排列嗎？"
           }
         }
       }
@@ -12537,7 +12537,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "觸控板"
+            "value": "觸控式軌跡板"
           }
         }
       }
@@ -14031,7 +14031,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "還原"
+            "value": "回復"
           }
         }
       }
@@ -14114,7 +14114,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "還原預設外觀"
+            "value": "回復預設外觀"
           }
         }
       }
@@ -14446,7 +14446,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "開啟時會自動關閉系統的捏合手勢（「App」），關閉或結束 Liftoff 時還原。"
+            "value": "開啟時會自動關閉系統的捏合手勢（「App」），關閉或結束 Liftoff 時回復。"
           }
         }
       }
@@ -14861,7 +14861,7 @@
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "需要「螢幕錄製」權限才能顯示視窗縮圖。"
+            "value": "需要「螢幕與系統錄音」權限才能顯示視窗縮圖。"
           }
         }
       }

@@ -79,6 +79,8 @@ final class LaunchpadModel {
 
     /// 啟動台可用區域大小（由畫面回報）
     var containerSize = CGSize(width: 1440, height: 900)
+    /// 內容區上方被瀏海遮住的高度（控制器依螢幕與「覆蓋選單列」設定回報）
+    var topInset: CGFloat = 0
     /// 背景偏亮時 App 名稱改用深色字
     var backgroundIsLight = false
     /// 目前是否顯示中（控制器設定；隱藏時不處理 hover 等事件）
@@ -162,7 +164,8 @@ final class LaunchpadModel {
         GridMetrics(
             containerSize: containerSize, columns: settings.columns, rows: settings.rows,
             iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
-            showsLabels: settings.showsLabels, compact: settings.compactMargins
+            showsLabels: settings.showsLabels, compact: settings.compactMargins,
+            topInset: topInset
         )
     }
 

@@ -421,6 +421,8 @@ final class LaunchpadWindowController {
                 width: visible.width, height: visible.height
             )
         }
+        // 內容區鋪滿螢幕時才會被瀏海遮到；避開選單列時（visibleFrame）內容本來就在瀏海下方
+        model.topInset = settings.coversDock ? screen.safeAreaInsets.top : 0
         if contentView.frame != content {
             contentView.frame = content
             let bounds = CGRect(origin: .zero, size: content.size)

@@ -34,7 +34,8 @@ nonisolated struct GridMetrics: Equatable, Sendable {
     ///   - labelFontSize: 名稱字級
     ///   - showsLabels: 是否顯示名稱
     ///   - compact: 緊湊模式（四周留白較少）
-    init(containerSize: CGSize, columns: Int, rows: Int, iconScale: Double, labelFontSize: Double, showsLabels: Bool, compact: Bool) {
+    ///   - topInset: 上方被硬體遮住的高度（瀏海機型的 safeAreaInsets.top；內容區已避開選單列時為 0）
+    init(containerSize: CGSize, columns: Int, rows: Int, iconScale: Double, labelFontSize: Double, showsLabels: Bool, compact: Bool, topInset: CGFloat = 0) {
         self.containerSize = containerSize
         self.columns = max(1, columns)
         self.rows = max(1, rows)
@@ -46,9 +47,15 @@ nonisolated struct GridMetrics: Equatable, Sendable {
         let height = max(containerSize.height, 200)
         // 上方留給搜尋列、下方留給頁碼點；比例參考經典啟動台
         let horizontalMargin = width * (compact ? 0.05 : 0.10)
-        let topMargin = compact ? 76.0 : min(118, height * 0.11)
+        var topMargin = compact ? 76.0 : min(118, height * 0.11)
         let bottomMargin = compact ? 58.0 : min(96, height * 0.09)
-        searchBarY = compact ? 38 : max(40, topMargin * 0.42)
+        var barY = compact ? 38 : max(40, topMargin * 0.42)
+        // 瀏海會遮住螢幕最上緣：搜尋列整個移到瀏海下方（高度 32 → 中心 = 瀏海 + 8 + 16），格線跟著下移避免與搜尋列重疊
+        if topInset > 0 {
+            barY = max(barY, topInset + 8 + 16)
+            topMargin = max(topMargin, barY + 16 + 24)
+        }
+        searchBarY = barY
         pageDotsY = height - bottomMargin * 0.52
 
         gridRect = CGRect(x: horizontalMargin, y: topMargin, width: width - horizontalMargin * 2, height: height - topMargin - bottomMargin)

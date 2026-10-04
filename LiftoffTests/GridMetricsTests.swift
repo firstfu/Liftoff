@@ -24,6 +24,16 @@ struct GridMetricsTests {
         #expect(abs(last.maxY - metrics.gridRect.maxY) < 0.001)
     }
 
+    @Test func searchBarSitsBelowNotch() {
+        let notched = GridMetrics(
+            containerSize: CGSize(width: 1512, height: 982), columns: 7, rows: 5,
+            iconScale: 1, labelFontSize: 13, showsLabels: true, compact: false, topInset: 38
+        )
+        // 搜尋列上緣（中心 − 半高 16）必須在瀏海下方，且格線不與搜尋列重疊
+        #expect(notched.searchBarY - 16 >= 38)
+        #expect(notched.gridRect.minY >= notched.searchBarY + 16)
+    }
+
     @Test func iconSizeIsReasonableForFullHD() {
         #expect(metrics.iconSize > 70 && metrics.iconSize < 130)
     }

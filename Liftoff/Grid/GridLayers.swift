@@ -138,20 +138,30 @@ nonisolated final class CellLayer: StaticLayer {
         let width = min(metrics.cellSize.width - 8, iconRect.width * 2.1)
         highlight.frame = CGRect(x: iconRect.midX - width / 2, y: iconRect.minY - 8, width: width, height: block)
         labelSpacing = metrics.labelSpacing
+        // metrics 變動（瀏海 inset、欄列數、圖示大小）後名稱圖不會重新設定（setLabel 對同一張圖直接略過），
+        // 所以框要在這裡依新的 iconRect 重算，否則標籤會停在舊位置而與圖示錯位
+        layoutLabel()
     }
 
     private var labelSpacing: CGFloat = 7
+    /// 目前名稱圖的點尺寸，layout 時用來重算位置
+    private var labelSize = CGSize.zero
+
+    /// 名稱圖置於圖示下方；四周各留 2pt 陰影空間。
+    private func layoutLabel() {
+        guard labelSize != .zero else { return }
+        label.frame = CGRect(x: iconRect.midX - labelSize.width / 2, y: iconRect.maxY + labelSpacing - 2,
+                             width: labelSize.width, height: labelSize.height)
+    }
 
     /// 設定名稱圖（像素 → 點以 scale 換算），置中於圖示下方。
     func setLabel(_ image: CGImage?, scale: CGFloat) {
         guard label.contents as! CGImage? !== image || label.contentsScale != scale else { return }
         label.contents = image
         label.contentsScale = scale
-        guard let image else { return }
-        let size = CGSize(width: CGFloat(image.width) / scale, height: CGFloat(image.height) / scale)
-        // 名稱圖四周各留 2pt 陰影空間
-        label.frame = CGRect(x: iconRect.midX - size.width / 2, y: iconRect.maxY + labelSpacing - 2,
-                             width: size.width, height: size.height)
+        guard let image else { labelSize = .zero; return }
+        labelSize = CGSize(width: CGFloat(image.width) / scale, height: CGFloat(image.height) / scale)
+        layoutLabel()
     }
 
     /// 套用外觀狀態（按下/合併目標的縮放有動畫）。

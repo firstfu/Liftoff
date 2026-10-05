@@ -58,8 +58,17 @@ nonisolated struct GridMetrics: Equatable, Sendable {
         searchBarY = barY
         pageDotsY = height - bottomMargin * 0.52
 
-        gridRect = CGRect(x: horizontalMargin, y: topMargin, width: width - horizontalMargin * 2, height: height - topMargin - bottomMargin)
-        cellSize = CGSize(width: gridRect.width / CGFloat(self.columns), height: gridRect.height / CGFloat(self.rows))
+        // 格子尺寸取整點、格線原點取整點：圖示與名稱圖都是整數像素的點陣圖，
+        // 只要格子落在小數座標，Core Animation 取樣時就會插值，邊緣與文字因此發糊
+        let cellWidth = ((width - horizontalMargin * 2) / CGFloat(self.columns)).rounded(.down)
+        let cellHeight = ((height - topMargin - bottomMargin) / CGFloat(self.rows)).rounded(.down)
+        let gridWidth = cellWidth * CGFloat(self.columns)
+        let gridHeight = cellHeight * CGFloat(self.rows)
+        gridRect = CGRect(
+            x: ((width - gridWidth) / 2).rounded(), y: topMargin.rounded(),
+            width: gridWidth, height: gridHeight
+        )
+        cellSize = CGSize(width: cellWidth, height: cellHeight)
 
         let labelHeight = showsLabels ? labelFontSize * 1.35 + labelSpacing : 0
         let base = min(cellSize.width * 0.5, (cellSize.height - labelHeight) * 0.66)
@@ -112,7 +121,8 @@ nonisolated struct GridMetrics: Equatable, Sendable {
     /// 第 index 格圖示本體的外框。
     func iconFrame(_ index: Int) -> CGRect {
         let center = iconCenter(index)
-        return CGRect(x: center.x - iconSize / 2, y: center.y - iconSize / 2, width: iconSize, height: iconSize)
+        // 原點取整到整點：奇偶不同的 iconSize 與格子尺寸會讓圖示落在半個點上，1x 螢幕會被插值而發糊
+        return CGRect(x: (center.x - iconSize / 2).rounded(), y: (center.y - iconSize / 2).rounded(), width: iconSize, height: iconSize)
     }
 
     /// 第 index 格可點擊的範圍：圖示＋名稱，四周多留一點，點在格子間的空白處不算（會收起啟動台，與經典啟動台相同）。

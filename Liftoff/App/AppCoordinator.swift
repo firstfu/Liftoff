@@ -324,7 +324,9 @@ final class AppCoordinator {
 
     // MARK: - 圖示與背景
 
-    /// 圖示要畫成的像素尺寸：所有螢幕中最大的顯示尺寸 × 該螢幕倍率（向上取 8 的倍數，減少微調設定時重畫）。
+    /// 圖示要畫成的像素尺寸：所有螢幕中最大的顯示尺寸 × 該螢幕倍率。
+    /// 刻意不再預留放大餘量、也不取 8 的倍數：靜態格線上貼圖大小要與實際顯示像素 1:1，
+    /// 否則 Core Animation 以雙線性縮小（例如 1.4 倍）會讓圖示邊緣發糊；拖曳中圖示放大 1.12 倍時只是略為放大。
     private var iconPixelSize: Int {
         var best: CGFloat = 0
         for screen in NSScreen.screens {
@@ -333,9 +335,9 @@ final class AppCoordinator {
                 iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
                 showsLabels: settings.showsLabels, compact: settings.compactMargins
             )
-            best = max(best, metrics.iconSize * 1.12 * screen.backingScaleFactor)
+            best = max(best, metrics.iconSize * screen.backingScaleFactor)
         }
-        return max(32, Int((best / 8).rounded(.up)) * 8)
+        return max(32, Int(best.rounded()))
     }
 
     private var iconsAreDark: Bool {

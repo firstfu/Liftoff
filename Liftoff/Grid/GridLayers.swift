@@ -150,7 +150,7 @@ nonisolated final class CellLayer: StaticLayer {
     /// 名稱圖置於圖示下方；四周各留 2pt 陰影空間。
     private func layoutLabel() {
         guard labelSize != .zero else { return }
-        label.frame = CGRect(x: iconRect.midX - labelSize.width / 2, y: iconRect.maxY + labelSpacing - 2,
+        label.frame = CGRect(x: (iconRect.midX - labelSize.width / 2).rounded(), y: (iconRect.maxY + labelSpacing - 2).rounded(),
                              width: labelSize.width, height: labelSize.height)
     }
 

@@ -159,6 +159,28 @@ final class AppCoordinator {
            let action = item.action {
             NSApp.sendAction(action, to: item.target, from: item)
         }
+        bringSettingsToFront()
+    }
+
+    /// 把設定視窗強制帶到最前並成為 key window。
+    ///
+    /// 為什麼要補這一步：`NSApp.activate()` 在 macOS 14+ 是協作式啟用，從選單列／Dock／URL／啟動台收起後呼叫時，
+    /// 系統可能不讓我們變成前景，SwiftUI 的 Settings 視窗就會開在其他 App 後面。
+    /// 視窗由 SwiftUI 非同步建立，第一次呼叫時可能還不存在，所以隔一小段時間再補一次。
+    private func bringSettingsToFront() {
+        Task { @MainActor in
+            for delay in [Duration.zero, .milliseconds(150)] {
+                try? await Task.sleep(for: delay)
+                guard let window = NSApp.windows.first(where: {
+                    $0 !== controller.panel && $0.isVisible && $0.canBecomeKey && $0.level == .normal
+                }) else { continue }
+                NSApp.activate()
+                // 私有 API 可指定視窗前置；不可用時（回 false）退回公開 API
+                _ = SkyLight.focus(pid: ProcessInfo.processInfo.processIdentifier, windowID: CGWindowID(window.windowNumber))
+                window.makeKeyAndOrderFront(nil)
+                window.orderFrontRegardless()
+            }
+        }
     }
 
     // MARK: - 觸發方式

@@ -119,6 +119,7 @@ final class AppCoordinator {
         guard !controller.isVisible else { return }
         let target = screen ?? targetScreen()
         activatedForShow = NSApp.isActive
+        ensureIconsMatch(target)
         controller.show(on: target)
     }
 
@@ -222,7 +223,9 @@ final class AppCoordinator {
                 if !controller.isVisible, ratio < 1 - Self.pinchDeadZone {
                     pinchMode = .opening
                     activatedForShow = NSApp.isActive
-                    controller.show(on: targetScreen(), interactive: true)
+                    let target = targetScreen()
+                    ensureIconsMatch(target)
+                    controller.show(on: target, interactive: true)
                 } else if controller.isVisible, ratio > 1 + Self.pinchDeadZone {
                     pinchMode = .closing
                     controller.beginInteractiveClose()
@@ -324,20 +327,22 @@ final class AppCoordinator {
 
     // MARK: - 圖示與背景
 
-    /// 圖示要畫成的像素尺寸：所有螢幕中最大的顯示尺寸 × 該螢幕倍率。
+    /// 圖示要畫成的像素尺寸：該螢幕上的圖示顯示尺寸 × 該螢幕倍率。
     /// 刻意不再預留放大餘量、也不取 8 的倍數：靜態格線上貼圖大小要與實際顯示像素 1:1，
-    /// 否則 Core Animation 以雙線性縮小（例如 1.4 倍）會讓圖示邊緣發糊；拖曳中圖示放大 1.12 倍時只是略為放大。
-    private var iconPixelSize: Int {
-        var best: CGFloat = 0
-        for screen in NSScreen.screens {
-            let metrics = GridMetrics(
-                containerSize: screen.frame.size, columns: settings.columns, rows: settings.rows,
-                iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
-                showsLabels: settings.showsLabels, compact: settings.compactMargins
-            )
-            best = max(best, metrics.iconSize * screen.backingScaleFactor)
-        }
-        return max(32, Int(best.rounded()))
+    /// 否則 Core Animation 以雙線性縮小會讓圖示邊緣發糊；拖曳中圖示放大 1.12 倍時只是略為放大。
+    /// 也不取「所有螢幕的最大值」：Retina 筆電接 1x 外接螢幕時，1x 那邊會被縮小約一半而發糊；
+    /// 改為依「這次要顯示的螢幕」決定，換螢幕時由 `syncIcons(for:)` 重載（磁碟快取鍵含像素尺寸，重載很快）。
+    private func iconPixelSize(for screen: NSScreen) -> Int {
+        // 容器要與 LaunchpadWindowController.layout 實際擺放的內容區一致（不蓋 Dock/選單列時是 visibleFrame），
+        // 否則算出的 iconSize 會差幾個點，貼圖就不再與顯示像素 1:1
+        let container = settings.coversDock ? screen.frame.size : screen.visibleFrame.size
+        let metrics = GridMetrics(
+            containerSize: container, columns: settings.columns, rows: settings.rows,
+            iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
+            showsLabels: settings.showsLabels, compact: settings.compactMargins,
+            topInset: settings.coversDock ? screen.safeAreaInsets.top : 0
+        )
+        return max(32, Int((metrics.iconSize * screen.backingScaleFactor).rounded()))
     }
 
     private var iconsAreDark: Bool {
@@ -348,8 +353,16 @@ final class AppCoordinator {
         }
     }
 
-    private func syncIcons() {
-        icons.sync(entries: catalog.entries, pixelSize: iconPixelSize, dark: iconsAreDark)
+    /// 以指定螢幕（預設為下次會顯示的螢幕）的尺寸同步圖示。
+    private func syncIcons(for screen: NSScreen? = nil) {
+        icons.sync(entries: catalog.entries, pixelSize: iconPixelSize(for: screen ?? targetScreen()), dark: iconsAreDark)
+    }
+
+    /// 顯示前確認圖示尺寸對得上要顯示的螢幕；對不上（換到不同倍率／解析度的螢幕）才重載。
+    /// 先比尺寸再決定要不要 sync：sync 會逐 App 算快取鍵，不放在每次打開的路徑上（show 同步 < 3ms 的紅線）。
+    private func ensureIconsMatch(_ screen: NSScreen) {
+        guard icons.pixelSize != iconPixelSize(for: screen) else { return }
+        syncIcons(for: screen)
     }
 
     /// 拖動滑桿時設定連續變化，等停下來再重畫圖示。

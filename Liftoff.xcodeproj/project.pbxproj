@@ -52,12 +52,14 @@
 		A231CAE89918D75EFAB655B2 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D149C029BAB8771AD6E381C1 /* AppCoordinator.swift */; };
 		A72D05B061F90A7E98942BE2 /* UpdateCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5EACF8CA9D58F7085C7B18 /* UpdateCheckerTests.swift */; };
 		AB8F99024D2CAA0C4559CDF3 /* AXExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409477CA01B0448AEB4DE07B /* AXExtensions.swift */; };
+		AC0188CEC36BED35592492F4 /* PinchIntentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05ADDCD75D91D4D0B1326EEE /* PinchIntentTests.swift */; };
 		B1F8DCC47B6A11773D7932A7 /* WallpaperProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF685ADCDFD88B70844C09 /* WallpaperProvider.swift */; };
 		B9FD47742CC8F74EB484C293 /* LaunchpadImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FFDEB7A0B8C35C6FF4733A /* LaunchpadImporter.swift */; };
 		BB44AE1C19CE094818B23300 /* GridMetricsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3CA71999D416D97CAA8EF5D /* GridMetricsTests.swift */; };
 		BBB8AED065408F2C021B20F1 /* GridRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E077D59A2F669D59094A02 /* GridRenderer.swift */; };
 		BD6E1B1B434D8F3914535363 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B253794BF109AFA8BB4B710 /* Assets.xcassets */; };
 		BE648A85CFAEC6607DB23E1C /* AppCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86E205A8525D72DFA65876C /* AppCatalog.swift */; };
+		C082547BD1B86BE42533CD6B /* PinchIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFAFED5398A1653D4F1C360 /* PinchIntent.swift */; };
 		C1CB6CE2F47AE524988B2AB8 /* LaunchpadModel+Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8043D40529768895E2760B58 /* LaunchpadModel+Input.swift */; };
 		C3AD5065A1845FD17E5EFFA1 /* SelfTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93382444B6A2B8802496DABE /* SelfTest.swift */; };
 		C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E75248F58676E236D3D843 /* Permissions.swift */; };
@@ -88,6 +90,7 @@
 /* Begin PBXFileReference section */
 		0016CC1E27FFCA3B6207BB31 /* SelfTest+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfTest+Preview.swift"; sourceTree = "<group>"; };
 		02E077D59A2F669D59094A02 /* GridRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridRenderer.swift; sourceTree = "<group>"; };
+		05ADDCD75D91D4D0B1326EEE /* PinchIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchIntentTests.swift; sourceTree = "<group>"; };
 		09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRenderer.swift; sourceTree = "<group>"; };
 		0CE5B45B2370CF04FDAFED69 /* LabelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStore.swift; sourceTree = "<group>"; };
 		1C7637BF7533195E06087011 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
@@ -125,6 +128,7 @@
 		93CC6EE32683E270C7CBD082 /* HotKeyRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyRecorder.swift; sourceTree = "<group>"; };
 		94C7E8FE78ED021D0520D56D /* Liftoff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Liftoff.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9683709034D8C85CCF265165 /* BackgroundRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRendererTests.swift; sourceTree = "<group>"; };
+		9AFAFED5398A1653D4F1C360 /* PinchIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchIntent.swift; sourceTree = "<group>"; };
 		9B64EFD2E048AE0B5F6C39A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A86E205A8525D72DFA65876C /* AppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalog.swift; sourceTree = "<group>"; };
 		A913D365C8BE25925F47B4FB /* LaunchpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadRootView.swift; sourceTree = "<group>"; };
@@ -231,6 +235,7 @@
 				FE3749034448766A416452E0 /* HotCornerService.swift */,
 				878DC2F83884EB8189CFA663 /* HotKeyService.swift */,
 				216237218CD1A6433B060B7A /* IconStore.swift */,
+				9AFAFED5398A1653D4F1C360 /* PinchIntent.swift */,
 				1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */,
 				4831AC82590FE6D49B3A4F32 /* RunningApps.swift */,
 				30A5C73F519E457F6C77D9ED /* TrackpadGesture.swift */,
@@ -270,6 +275,7 @@
 				41D74CA77F980139C456C1C8 /* LaunchpadImporterTests.swift */,
 				CE4D25EFA1BCB6AFDD92A3D7 /* LayoutTests.swift */,
 				E2A198A07C1B025351B68798 /* LocalizationTests.swift */,
+				05ADDCD75D91D4D0B1326EEE /* PinchIntentTests.swift */,
 				5A159D9CC16347F223D820EE /* PinchReleaseTests.swift */,
 				4381D50B82214B6E91047993 /* RenderingTests.swift */,
 				63C5753B79000E7683F59D7D /* SearchIndexTests.swift */,
@@ -456,6 +462,7 @@
 				DE42BDC9A8D5E30303852158 /* LaunchpadImporterTests.swift in Sources */,
 				EE60B20481291DA089E14F87 /* LayoutTests.swift in Sources */,
 				E7AF01F27AF13F6DFC2EB60D /* LocalizationTests.swift in Sources */,
+				AC0188CEC36BED35592492F4 /* PinchIntentTests.swift in Sources */,
 				7E9648CDF146DC21780ADB81 /* PinchReleaseTests.swift in Sources */,
 				549E847C8A76998CC5D21402 /* RenderingTests.swift in Sources */,
 				63A5970656C069705E8AD44D /* SearchIndexTests.swift in Sources */,
@@ -500,6 +507,7 @@
 				D251E6C0DE72766B4C31B5C2 /* PagerState.swift in Sources */,
 				FB28B3E34AF3358F9C73C2AA /* Paths.swift in Sources */,
 				C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */,
+				C082547BD1B86BE42533CD6B /* PinchIntent.swift in Sources */,
 				779DA7471A10C4E85DBEAEDF /* PinchRelease.swift in Sources */,
 				3E5BC09296E73837C5E7DD63 /* PrivateAPI.swift in Sources */,
 				150EA47DD7C163F03D040B74 /* RunningApps.swift in Sources */,

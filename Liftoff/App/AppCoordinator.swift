@@ -212,8 +212,8 @@ final class AppCoordinator {
     /// 捏合手勢的跟手狀態：nil = 沒有進行中的手勢。
     private enum PinchMode { case opening, closing }
     private var pinchMode: PinchMode?
-    /// ratio 偏離 1 超過這個量才算手勢開始（避免手指微動就把視窗叫出來）
-    private static let pinchDeadZone = 0.05
+    /// ratio 偏離 1 超過這個量才算手勢開始（避免手指微動就把視窗叫出來）；與 `TrackpadGesture` 判定捏合用同一個值
+    private static let pinchDeadZone = PinchIntent.deadZone
     /// 這次手勢的進度樣本，放手時據以判斷完成或回彈（含速度）
     private var pinchRelease = PinchRelease()
 

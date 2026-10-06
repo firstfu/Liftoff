@@ -5,11 +5,10 @@
 //  啟動台背景：把桌布（或自選圖片）預先縮小、高斯模糊、壓暗，算好一張小圖快取起來。
 //  為什麼不用即時模糊：即時模糊要 WindowServer 每一幀對整個螢幕取樣合成；預算好的圖只是一張靜態貼圖，
 //  顯示/翻頁時 GPU 幾乎不用做事。模糊後的圖在低解析度下放大看不出差異，所以只算螢幕 1/4 大小。
-//  同時計算平均亮度，讓 App 名稱自動選擇黑字或白字。
+//  同時計算平均亮度，讓 App 名稱自動選擇黑字或白字。影像處理本身在 `BackgroundRenderer`（CPU，不用 Core Image）。
 //
 
 import AppKit
-import CoreImage
 
 /// 算好的背景。
 nonisolated struct PreparedBackground: @unchecked Sendable {
@@ -113,9 +112,6 @@ final class WallpaperProvider {
 
     // MARK: - 影像處理（背景執行緒）
 
-    /// Core Image 以 Metal 執行；CIContext 建立成本高，全 App 共用一個（CIContext 本身執行緒安全）。
-    nonisolated private static let context = CIContext(options: [.cacheIntermediates: false])
-
     /// 縮圖 → 依螢幕比例裁切 → 模糊 → 壓暗 → 算平均亮度。
     nonisolated static func render(url: URL, screenSize: CGSize, blurRadius: Double, dimming: Double) -> PreparedBackground? {
         // 只取約 1/3 螢幕寬的縮圖（至少 480px）：模糊後看不出差別，運算量與記憶體少約 9 倍
@@ -126,44 +122,11 @@ final class WallpaperProvider {
                   kCGImageSourceCreateThumbnailFromImageAlways: true,
                   kCGImageSourceThumbnailMaxPixelSize: maxPixel,
                   kCGImageSourceCreateThumbnailWithTransform: true,
-              ] as CFDictionary) else { return nil }
-
-        var image = CIImage(cgImage: thumbnail)
-        // 依螢幕長寬比置中裁切（等同桌布的「填滿螢幕」）
-        let extent = image.extent
-        let screenAspect = screenSize.width / max(screenSize.height, 1)
-        var crop = extent
-        if extent.width / extent.height > screenAspect {
-            crop.size.width = extent.height * screenAspect
-            crop.origin.x = extent.midX - crop.width / 2
-        } else {
-            crop.size.height = extent.width / screenAspect
-            crop.origin.y = extent.midY - crop.height / 2
-        }
-        image = image.cropped(to: crop)
-
-        // 模糊半徑以「螢幕點數」為單位設定，換算到縮圖像素
-        let radius = blurRadius * crop.width / max(screenSize.width, 1)
-        if radius > 0.5 {
-            image = image.clampedToExtent().applyingGaussianBlur(sigma: radius).cropped(to: crop)
-        }
-        if dimming > 0 {
-            let black = CIImage(color: CIColor(red: 0, green: 0, blue: 0, alpha: dimming)).cropped(to: crop)
-            image = black.composited(over: image)
-        }
-        guard let output = context.createCGImage(image, from: crop, format: .RGBA8, colorSpace: CGColorSpace(name: CGColorSpace.sRGB)) else {
-            return nil
-        }
-        return PreparedBackground(image: output, luminance: averageLuminance(of: image, in: crop))
-    }
-
-    /// 以 CIAreaAverage 取整張圖平均色，換算成相對亮度。
-    nonisolated private static func averageLuminance(of image: CIImage, in rect: CGRect) -> Double {
-        let average = image.applyingFilter("CIAreaAverage", parameters: [kCIInputExtentKey: CIVector(cgRect: rect)])
-        var pixel = [UInt8](repeating: 0, count: 4)
-        context.render(average, toBitmap: &pixel, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-                       format: .RGBA8, colorSpace: CGColorSpace(name: CGColorSpace.sRGB))
-        return (0.2126 * Double(pixel[0]) + 0.7152 * Double(pixel[1]) + 0.0722 * Double(pixel[2])) / 255
+              ] as CFDictionary),
+              let output = BackgroundRenderer.render(
+                  thumbnail: thumbnail, screenSize: screenSize, blurRadius: blurRadius, dimming: dimming
+              ) else { return nil }
+        return PreparedBackground(image: output.image, luminance: output.luminance)
     }
 }
 

@@ -428,6 +428,7 @@ private struct PreviewSettings: View {
             permissions.refresh()
             permissions.startPolling()
         }
+        .onDisappear { permissions.stopPolling() }
     }
 }
 

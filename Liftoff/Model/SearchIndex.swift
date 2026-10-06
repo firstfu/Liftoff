@@ -3,24 +3,55 @@
 //  Liftoff
 //
 //  App 搜尋：支援完整名稱、字首、單字字首縮寫（vsc → Visual Studio Code）、中文名稱的拼音與拼音首字母、
-//  子字串與模糊子序列比對。所有正規化在建索引時一次做完，查詢只做字串比對，170 個 App 查詢 < 0.2ms。
+//  子字串與模糊子序列比對。所有正規化在建索引時一次做完，並轉成 Unicode scalar 整數陣列；
+//  查詢只做整數陣列比對。為什麼不直接比 String：Foundation 的 `range(of:)` 每次呼叫都要做泛型型別查找，
+//  Time Profiler 量到每鍵約 0.5ms 幾乎都花在這裡；比陣列不到它的十分之一。
 //  另有 WindowSearchIndex：執行中視窗的標題，規則較嚴（標題長，模糊比對幾乎什麼都對得上）。
 //
 
 import Foundation
 
 nonisolated struct SearchIndex: Sendable {
+    /// 正規化後的字串，以 Unicode scalar 值表示（已 NFC 組合，與 Character 比對結果一致）
+    typealias Scalars = [UInt32]
+
     struct Key: Sendable {
         /// 正規化後的完整字串（小寫、去重音、全形轉半形）
-        let text: String
+        let text: Scalars
         /// 去掉空白與符號的連寫版本（"visual studio code" → "visualstudiocode"）
-        let compact: String
+        let compact: Scalars
         /// 各單字（含 camelCase 切分）
-        let words: [String]
+        let words: [Scalars]
         /// 單字字首縮寫
-        let initials: String
+        let initials: Scalars
         /// 權重：主要名稱 1.0，其他名稱略低
         let weight: Double
+        /// `text`／`compact` 的字元（Character）數：分數裡的長度差以字元計，emoji 等一個字元會含多個 scalar
+        let textLength: Int
+        let compactLength: Int
+    }
+
+    /// 正規化後的查詢（每次按鍵只做一次）。
+    struct Query: Sendable {
+        /// 完整查詢
+        let text: Scalars
+        /// 去掉空白的查詢
+        let compact: Scalars
+        /// 字元（Character）數
+        let textLength: Int
+        let compactLength: Int
+
+        /// - Parameter raw: 使用者輸入
+        init(_ raw: String) {
+            let q = SearchIndex.normalize(raw)
+            let compactString = String(q.filter { !$0.isWhitespace })
+            text = SearchIndex.scalars(q)
+            compact = SearchIndex.scalars(compactString)
+            textLength = q.count
+            compactLength = compactString.count
+        }
+
+        var isEmpty: Bool { text.isEmpty }
     }
 
     private struct Entry: Sendable {
@@ -57,15 +88,14 @@ nonisolated struct SearchIndex: Sendable {
     ///   - boost: 依使用頻率給的加權
     /// - Returns: (App 識別鍵, 分數)，分數高的在前
     func scored(_ query: String, boost: [String: Double] = [:]) -> [(id: String, score: Double)] {
-        let q = Self.normalize(query)
+        let q = Query(query)
         guard !q.isEmpty else { return [] }
-        let qCompact = q.filter { !$0.isWhitespace }
 
         var scored: [(id: String, score: Double)] = []
         for entry in entries {
             var best = 0.0
             for key in entry.keys {
-                let score = Self.score(q, compactQuery: qCompact, key: key) * key.weight
+                let score = Self.score(q, key: key) * key.weight
                 if score > best { best = score }
             }
             if best > 0 {
@@ -78,29 +108,62 @@ nonisolated struct SearchIndex: Sendable {
 
     // MARK: - 計分
 
-    static func score(_ q: String, compactQuery: String, key: Key) -> Double {
-        if key.text == q || key.compact == compactQuery { return 1000 }
-        if key.text.hasPrefix(q) { return 900 - Double(min(key.text.count - q.count, 50)) }
-        if key.compact.hasPrefix(compactQuery) { return 860 - Double(min(key.compact.count - compactQuery.count, 50)) }
-        if key.words.contains(where: { $0.hasPrefix(q) }) { return 800 }
-        if compactQuery.count >= 2, key.initials.hasPrefix(compactQuery) { return 760 }
-        if let range = key.text.range(of: q) {
-            return 600 - Double(min(key.text.distance(from: key.text.startIndex, to: range.lowerBound), 100))
+    /// 計算查詢與一個名稱的相符分數（未乘權重）。規則由嚴到寬，取第一個成立的。
+    /// - Parameters:
+    ///   - q: 正規化後的查詢
+    ///   - key: 名稱索引
+    /// - Returns: 0（不相符）或 100…1000
+    static func score(_ q: Query, key: Key) -> Double {
+        if key.text == q.text || key.compact == q.compact { return 1000 }
+        if key.text.starts(with: q.text) { return 900 - Double(min(key.textLength - q.textLength, 50)) }
+        if key.compact.starts(with: q.compact) { return 860 - Double(min(key.compactLength - q.compactLength, 50)) }
+        if key.words.contains(where: { $0.starts(with: q.text) }) { return 800 }
+        if q.compactLength >= 2, key.initials.starts(with: q.compact) { return 760 }
+        if let position = firstOccurrence(of: q.text, in: key.text) {
+            // 位置以字元計；名稱全是單一 scalar 的字元時（絕大多數）scalar 索引就是字元索引
+            let characters = key.textLength == key.text.count ? position : characterCount(key.text[..<position])
+            return 600 - Double(min(characters, 100))
         }
-        if compactQuery.count >= 2, let gaps = subsequenceGaps(compactQuery, in: key.compact) {
+        if q.compactLength >= 2, let gaps = subsequenceGaps(q.compact, in: key.compact) {
             return max(100, 400 - Double(gaps) * 15)
         }
         return 0
     }
 
+    /// 一段 scalar 組成幾個字元（只在名稱含 emoji 等多 scalar 字元時才用到）。
+    private static func characterCount(_ scalars: ArraySlice<UInt32>) -> Int {
+        var view = String.UnicodeScalarView()
+        view.append(contentsOf: scalars.compactMap(Unicode.Scalar.init))
+        return String(view).count
+    }
+
+    /// 子字串第一次出現的位置（名稱都很短，直接逐位比對）。
+    /// - Returns: 起點索引；不包含時為 nil
+    static func firstOccurrence(of needle: Scalars, in haystack: Scalars) -> Int? {
+        let n = needle.count, h = haystack.count
+        guard n > 0, n <= h else { return n == 0 ? 0 : nil }
+        return needle.withUnsafeBufferPointer { needle in
+            haystack.withUnsafeBufferPointer { haystack in
+                let first = needle[0]
+                outer: for start in 0...(h - n) where haystack[start] == first {
+                    for k in 1..<n where haystack[start + k] != needle[k] { continue outer }
+                    return start
+                }
+                return nil
+            }
+        }
+    }
+
     /// 模糊子序列比對：查詢的每個字元都依序出現在目標中時，回傳中間跳過的字元數（越小越相關）。
-    static func subsequenceGaps(_ query: String, in text: String) -> Int? {
+    static func subsequenceGaps(_ query: Scalars, in text: Scalars) -> Int? {
         var gaps = 0
         var started = false
-        var iterator = text.makeIterator()
+        var position = 0
         for character in query {
             var matched = false
-            while let next = iterator.next() {
+            while position < text.count {
+                let next = text[position]
+                position += 1
                 if next == character { matched = true; started = true; break }
                 if started { gaps += 1 }
             }
@@ -117,15 +180,23 @@ nonisolated struct SearchIndex: Sendable {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /// 轉成比對用的 scalar 陣列：先做 NFC 組合，讓檔名常見的分解形式（韓文字母、重音）與輸入的組合形式一致。
+    static func scalars(_ string: String) -> Scalars {
+        string.precomposedStringWithCanonicalMapping.unicodeScalars.map(\.value)
+    }
+
     static func makeKey(_ raw: String, weight: Double) -> Key {
         let text = normalize(raw)
+        let compact = String(text.filter { $0.isLetter || $0.isNumber })
         let words = splitWords(raw).map(normalize).filter { !$0.isEmpty }
         return Key(
-            text: text,
-            compact: String(text.filter { $0.isLetter || $0.isNumber }),
-            words: words,
-            initials: String(words.compactMap(\.first)),
-            weight: weight
+            text: scalars(text),
+            compact: scalars(compact),
+            words: words.map(scalars),
+            initials: scalars(String(words.compactMap(\.first))),
+            weight: weight,
+            textLength: text.count,
+            compactLength: compact.count
         )
     }
 
@@ -172,12 +243,11 @@ nonisolated struct WindowSearchIndex: Sendable {
     /// - Parameter query: 使用者輸入（至少 2 個字元才查，避免一個字母就列出一堆視窗）
     /// - Returns: (視窗, 已打折的分數)，分數高的在前；同分時維持快照順序（越前面的視窗越近期使用）
     func search(_ query: String) -> [(hit: WindowHit, score: Double)] {
-        let q = SearchIndex.normalize(query)
-        let compact = q.filter { !$0.isWhitespace }
-        guard compact.count >= 2 else { return [] }
+        let q = SearchIndex.Query(query)
+        guard q.compact.count >= 2 else { return [] }
         var result: [(index: Int, score: Double)] = []
         for (index, key) in keys.enumerated() {
-            let raw = SearchIndex.score(q, compactQuery: compact, key: key)
+            let raw = SearchIndex.score(q, key: key)
             if raw >= Self.minimumScore { result.append((index, raw * key.weight)) }
         }
         result.sort { $0.score != $1.score ? $0.score > $1.score : $0.index < $1.index }

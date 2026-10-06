@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01E5A1C61F94950651FC30AF /* BackgroundRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9683709034D8C85CCF265165 /* BackgroundRendererTests.swift */; };
 		038AE01DAA2C38143AE272E1 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7637BF7533195E06087011 /* AppSettings.swift */; };
 		0514A8F36F3A6D78D7A200F0 /* WindowEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03BD58EF321E2ABA25BCC9A /* WindowEnumerator.swift */; };
 		0B466ABF16EA542CBEE33D05 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7359CE4F33E01E771F2EB37 /* AppActions.swift */; };
@@ -34,6 +35,7 @@
 		63A5970656C069705E8AD44D /* SearchIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C5753B79000E7683F59D7D /* SearchIndexTests.swift */; };
 		662600198B27F1F94E4DD495 /* FolderPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B82791E205793AA1BCB65E7 /* FolderPanelView.swift */; };
 		6D3BCDE063BB33B737CFD2B1 /* DockZoneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3266004A58BC73F1EBEB60A /* DockZoneTests.swift */; };
+		6EAFEF67D02F7ED7FABE2BD5 /* BackgroundRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */; };
 		7756455E33BEB6CD40E44F8A /* SearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDDB63B1795F23EC48EC634 /* SearchIndex.swift */; };
 		779DA7471A10C4E85DBEAEDF /* PinchRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */; };
 		7867B174A31F7C0A73CDE7F0 /* LaunchpadWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */; };
@@ -86,6 +88,7 @@
 /* Begin PBXFileReference section */
 		0016CC1E27FFCA3B6207BB31 /* SelfTest+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfTest+Preview.swift"; sourceTree = "<group>"; };
 		02E077D59A2F669D59094A02 /* GridRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridRenderer.swift; sourceTree = "<group>"; };
+		09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRenderer.swift; sourceTree = "<group>"; };
 		0CE5B45B2370CF04FDAFED69 /* LabelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStore.swift; sourceTree = "<group>"; };
 		1C7637BF7533195E06087011 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchRelease.swift; sourceTree = "<group>"; };
@@ -121,6 +124,7 @@
 		93382444B6A2B8802496DABE /* SelfTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfTest.swift; sourceTree = "<group>"; };
 		93CC6EE32683E270C7CBD082 /* HotKeyRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyRecorder.swift; sourceTree = "<group>"; };
 		94C7E8FE78ED021D0520D56D /* Liftoff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Liftoff.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9683709034D8C85CCF265165 /* BackgroundRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRendererTests.swift; sourceTree = "<group>"; };
 		9B64EFD2E048AE0B5F6C39A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A86E205A8525D72DFA65876C /* AppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCatalog.swift; sourceTree = "<group>"; };
 		A913D365C8BE25925F47B4FB /* LaunchpadRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadRootView.swift; sourceTree = "<group>"; };
@@ -223,6 +227,7 @@
 				F7359CE4F33E01E771F2EB37 /* AppActions.swift */,
 				A86E205A8525D72DFA65876C /* AppCatalog.swift */,
 				7C5A02512C1D12EA10EA793A /* AppInfo.swift */,
+				09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */,
 				FE3749034448766A416452E0 /* HotCornerService.swift */,
 				878DC2F83884EB8189CFA663 /* HotKeyService.swift */,
 				216237218CD1A6433B060B7A /* IconStore.swift */,
@@ -259,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				D24830FBD3733C269825C976 /* AppClassifierTests.swift */,
+				9683709034D8C85CCF265165 /* BackgroundRendererTests.swift */,
 				D3266004A58BC73F1EBEB60A /* DockZoneTests.swift */,
 				B3CA71999D416D97CAA8EF5D /* GridMetricsTests.swift */,
 				41D74CA77F980139C456C1C8 /* LaunchpadImporterTests.swift */,
@@ -444,6 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5014578F9C50A7E18083FC34 /* AppClassifierTests.swift in Sources */,
+				01E5A1C61F94950651FC30AF /* BackgroundRendererTests.swift in Sources */,
 				6D3BCDE063BB33B737CFD2B1 /* DockZoneTests.swift in Sources */,
 				BB44AE1C19CE094818B23300 /* GridMetricsTests.swift in Sources */,
 				DE42BDC9A8D5E30303852158 /* LaunchpadImporterTests.swift in Sources */,
@@ -469,6 +476,7 @@
 				52E17C13BD9016BD7F134A79 /* AppEntry.swift in Sources */,
 				CB7A5B6140AF2101ACA78FC6 /* AppInfo.swift in Sources */,
 				038AE01DAA2C38143AE272E1 /* AppSettings.swift in Sources */,
+				6EAFEF67D02F7ED7FABE2BD5 /* BackgroundRenderer.swift in Sources */,
 				43DC4C6C9205E5A6BED5C50D /* DockHandoff.swift in Sources */,
 				662600198B27F1F94E4DD495 /* FolderPanelView.swift in Sources */,
 				28BD6129D814F640A954123E /* GridLayers.swift in Sources */,

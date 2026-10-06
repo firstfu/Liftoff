@@ -50,6 +50,7 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
         field.usesSingleLineMode = true
         field.cell?.isScrollable = true
         field.cell?.wraps = false
+        field.isAutomaticTextCompletionEnabled = false
         field.delegate = self
         let fieldHeight: CGFloat = 18
         field.frame = CGRect(x: 35, y: (Self.size.height - fieldHeight) / 2, width: Self.size.width - 35 - 30, height: fieldHeight)
@@ -126,6 +127,7 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
     func focus() {
         guard let window, !isHidden else { return }
         window.makeFirstResponder(field)
+        disableTextServices()
         if let editor = field.currentEditor() {
             editor.selectedRange = NSRange(location: (field.stringValue as NSString).length, length: 0)
         }
@@ -137,6 +139,30 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
     }
 
     // MARK: - 輸入
+
+    /// 使用者直接點進輸入框（沒經過 `focus()`）時，在第一個字送進來時補做設定。
+    func controlTextDidBeginEditing(_ notification: Notification) {
+        disableTextServices()
+    }
+
+    /// 關掉欄位編輯器（整個視窗共用的 NSTextView）上搜尋用不到的文字服務。
+    /// 拼字檢查、自動修正、文字替換、行內預測每打一個字都會在主執行緒跑一輪（Time Profiler 量到約占按鍵處理的一成），
+    /// 而且在搜尋框裡是錯的行為——自動修正可能把 App 名稱改成字典裡的字、使用者自訂的文字替換會把縮寫展開。
+    private func disableTextServices() {
+        guard let editor = field.currentEditor() as? NSTextView, editor.isContinuousSpellCheckingEnabled
+                || editor.isAutomaticSpellingCorrectionEnabled || editor.isAutomaticTextReplacementEnabled
+                || editor.inlinePredictionType != .no else { return }
+        editor.isContinuousSpellCheckingEnabled = false
+        editor.isGrammarCheckingEnabled = false
+        editor.isAutomaticSpellingCorrectionEnabled = false
+        editor.isAutomaticTextReplacementEnabled = false
+        editor.isAutomaticQuoteSubstitutionEnabled = false
+        editor.isAutomaticDashSubstitutionEnabled = false
+        editor.isAutomaticDataDetectionEnabled = false
+        editor.isAutomaticLinkDetectionEnabled = false
+        editor.isAutomaticTextCompletionEnabled = false
+        editor.inlinePredictionType = .no
+    }
 
     func controlTextDidChange(_ notification: Notification) {
         guard !isComposing else { return }

@@ -5,7 +5,8 @@
 //  視窗縮圖預覽用到的兩項權限（啟動台本身不需要任何權限）：
 //  - 螢幕錄製（Screen Recording）：擷取視窗縮圖、讀取視窗標題（必要）
 //  - 輔助使用（Accessibility）：列出最小化的視窗、點縮圖時精準切換到「那一個」視窗（選用）
-//  系統不會通知權限變更，因此在尚未全部授權時每秒輪詢一次；全部授權後停止輪詢。
+//  系統不會通知權限變更，因此設定頁的權限區顯示期間、尚未全部授權時每秒輪詢一次；
+//  全部授權或離開該頁就停止——螢幕錄製是選用權限，不授權的使用者若一直輪詢，就是每秒一次 TCC IPC 直到 App 結束。
 //
 
 import AppKit
@@ -31,17 +32,23 @@ final class Permissions {
         if !wasGranted && allGranted { onAllGranted?() }
     }
 
-    /// 在尚未全部授權期間每秒輪詢。
+    /// 在尚未全部授權期間每秒輪詢；呼叫端離開權限畫面時必須呼叫 `stopPolling()`。
     func startPolling() {
-        guard pollTask == nil else { return }
+        guard pollTask == nil, !allGranted else { return }
         pollTask = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(1))
-                guard let self else { return }
+                guard let self, !Task.isCancelled else { return }
                 self.refresh()
                 if self.allGranted { self.pollTask = nil; return }
             }
         }
+    }
+
+    /// 停止輪詢（設定頁的權限區消失時）。
+    func stopPolling() {
+        pollTask?.cancel()
+        pollTask = nil
     }
 
     /// 跳出系統的輔助使用授權提示，並打開對應的系統設定頁。

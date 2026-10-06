@@ -159,6 +159,8 @@ nonisolated enum IconRenderer {
     }
 
     /// 讀取 PNG 並立即解碼（避免把解碼成本留到主執行緒第一次繪製時）。
+    /// 刻意直接用 ImageIO 解出的 CGImage：實測改畫進自建的 BGRA 點陣後，Image IO 的 6MB 雖然消失，
+    /// CoreAnimation 卻從 6MB 漲到 12MB、總 footprint 多 5MB（CA 對 ImageIO 的解碼緩衝區有較省的上屏路徑）。
     static func readPNG(_ url: URL) -> CGImage? {
         guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
         let options = [kCGImageSourceShouldCacheImmediately: true] as CFDictionary

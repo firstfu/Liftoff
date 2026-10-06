@@ -53,6 +53,8 @@ nonisolated enum WindowEnumerator {
     /// - Returns: 視窗清單（可能為空）
     static func windows(for pid: pid_t, includeOtherSpaces: Bool) -> [WindowInfo] {
         let cgWindows = cgWindowList(for: pid)
+        // 權限查詢每次都是一趟 TCC IPC：整次列舉只查一次，不在逐視窗的迴圈裡重查
+        let trusted = AXIsProcessTrusted()
         // CGWindowList 由前到後排列，索引即 z-order
         var zOrder: [CGWindowID: Int] = [:]
         for (index, entry) in cgWindows.enumerated() { zOrder[entry.id] = index }
@@ -116,7 +118,7 @@ nonisolated enum WindowEnumerator {
 
         // 沒有輔助使用權限時 AX 拿不到任何視窗：退回只用 CGWindowList 列出畫面上的一般視窗
         // （無法得知最小化視窗，也無法指定前置哪一個視窗，但縮圖預覽仍可用）
-        if !AXIsProcessTrusted() {
+        if !trusted {
             for cg in cgWindows where !seen.contains(cg.id) && cg.isOnScreen
                 && cg.frame.width >= minimumSide * 2 && cg.frame.height >= minimumSide * 2 {
                 seen.insert(cg.id)
@@ -140,7 +142,7 @@ nonisolated enum WindowEnumerator {
                 }
                 // 沒有輔助使用權限時無法用 AX 確認是不是真正的視窗；其他桌面上沒有標題的多半是隱藏輔助視窗
                 //（例如 Chrome 的背景視窗，截出來是空白），有螢幕錄製權限時真正的視窗都讀得到標題
-                if !AXIsProcessTrusted(), cg.title.isEmpty, CGPreflightScreenCaptureAccess() { continue }
+                if !trusted, cg.title.isEmpty, CGPreflightScreenCaptureAccess() { continue }
                 seen.insert(cg.id)
                 result.append(WindowInfo(
                     id: cg.id, pid: pid, title: cg.title, frame: cg.frame,

@@ -9,28 +9,93 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct SettingsView: View {
-    let coordinator: AppCoordinator
+/// 設定視窗的分頁；順序即側邊欄順序。
+private enum SettingsPane: CaseIterable, Identifiable {
+    case general, trigger, appearance, preview, layout
+
+    var id: Self { self }
+
+    /// 與字串目錄既有的 key 相同，沿用原本的 13 語言翻譯
+    var title: LocalizedStringKey {
+        switch self {
+        case .general: "一般"
+        case .trigger: "觸發方式"
+        case .appearance: "外觀"
+        case .preview: "視窗預覽"
+        case .layout: "佈局"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .general: "gearshape.fill"
+        case .trigger: "hand.tap.fill"
+        case .appearance: "paintpalette.fill"
+        case .preview: "rectangle.on.rectangle"
+        case .layout: "square.grid.3x3.fill"
+        }
+    }
+
+    /// 圖示底色：仿「系統設定」每個項目一個顏色，掃一眼就能分辨
+    var tint: Color {
+        switch self {
+        case .general: .gray
+        case .trigger: .blue
+        case .appearance: .pink
+        case .preview: .purple
+        case .layout: .orange
+        }
+    }
+}
+
+/// 側邊欄的圖示：彩色圓角方塊＋白色符號，與 macOS「系統設定」同款。
+private struct SettingsIconTile: View {
+    let symbol: String
+    let tint: Color
+    var size: CGFloat = 24
 
     var body: some View {
-        TabView {
-            Tab("一般", systemImage: "gearshape") {
-                GeneralSettings(settings: coordinator.settings, updates: coordinator.updates)
+        Image(systemName: symbol)
+            .font(.system(size: size * 0.54, weight: .medium))
+            .foregroundStyle(.white)
+            .frame(width: size, height: size)
+            .background(tint.gradient, in: .rect(cornerRadius: size * 0.27, style: .continuous))
+    }
+}
+
+/// 設定視窗：仿 macOS 26「系統設定」的側邊欄＋分組表單版型，而不是舊式的工具列分頁。
+struct SettingsView: View {
+    let coordinator: AppCoordinator
+    @State private var selection: SettingsPane = .general
+
+    var body: some View {
+        NavigationSplitView {
+            List(SettingsPane.allCases, selection: $selection) { pane in
+                Label {
+                    Text(pane.title)
+                } icon: {
+                    SettingsIconTile(symbol: pane.symbol, tint: pane.tint)
+                }
+                .padding(.vertical, 2)
             }
-            Tab("觸發方式", systemImage: "hand.tap") {
-                TriggerSettings(coordinator: coordinator, settings: coordinator.settings)
-            }
-            Tab("外觀", systemImage: "paintpalette") {
-                AppearanceSettings(settings: coordinator.settings)
-            }
-            Tab("視窗預覽", systemImage: "rectangle.on.rectangle") {
-                PreviewSettings(settings: coordinator.settings, permissions: coordinator.permissions)
-            }
-            Tab("佈局", systemImage: "square.grid.3x3") {
-                LayoutSettings(coordinator: coordinator, settings: coordinator.settings)
-            }
+            .navigationSplitViewColumnWidth(190)
+            .toolbar(removing: .sidebarToggle)
+        } detail: {
+            detail
+                .navigationTitle(selection.title)
         }
-        .frame(width: 560, height: 640)
+        .frame(width: 760, height: 620)
+    }
+
+    @ViewBuilder
+    private var detail: some View {
+        switch selection {
+        case .general: GeneralSettings(settings: coordinator.settings, updates: coordinator.updates)
+        case .trigger: TriggerSettings(coordinator: coordinator, settings: coordinator.settings)
+        case .appearance: AppearanceSettings(settings: coordinator.settings)
+        case .preview: PreviewSettings(settings: coordinator.settings, permissions: coordinator.permissions)
+        case .layout: LayoutSettings(coordinator: coordinator, settings: coordinator.settings)
+        }
     }
 }
 
@@ -42,6 +107,9 @@ private struct GeneralSettings: View {
 
     var body: some View {
         Form {
+            Section {
+                AboutHeader()
+            }
             Section {
                 Toggle("登入時自動啟動", isOn: $settings.launchAtLogin)
                 Toggle("在 Dock 顯示圖示（點一下打開啟動台）", isOn: $settings.showsDockIcon)
@@ -59,7 +127,6 @@ private struct GeneralSettings: View {
                     .foregroundStyle(.secondary)
             }
             Section("關於") {
-                LabeledContent("版本", value: AppInfo.versionDescription)
                 UpdateRow(updates: updates)
                 Toggle("每週自動檢查更新", isOn: $settings.autoChecksForUpdates)
                 Text("只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。")
@@ -73,6 +140,24 @@ private struct GeneralSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+/// 一般頁最上方的 App 識別卡：圖示＋名稱＋版本（仿系統設定頂端的帳號卡），取代原本「關於」裡一行純文字的版本號。
+private struct AboutHeader: View {
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .frame(width: 52, height: 52)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: "Liftoff").font(.title3.bold())
+                Text(verbatim: AppInfo.versionDescription)
+                    .font(.callout).foregroundStyle(.secondary)
+            }
+            Spacer()
+        }
+        .padding(.vertical, 2)
     }
 }
 

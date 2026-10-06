@@ -34,6 +34,36 @@ struct GridMetricsTests {
         #expect(notched.gridRect.minY >= notched.searchBarY + 16)
     }
 
+    /// 格子尺寸與格線原點必須是整點：圖示與名稱圖是整數像素的點陣圖，落在小數座標會被 Core Animation 插值而發糊
+    @Test(arguments: [CGSize(width: 1920, height: 1080), CGSize(width: 1512, height: 982), CGSize(width: 1470, height: 956), CGSize(width: 1366, height: 768)])
+    func gridIsAlignedToWholePoints(container: CGSize) {
+        for columns in [5, 6, 7, 8] {
+            let m = GridMetrics(
+                containerSize: container, columns: columns, rows: 5,
+                iconScale: 1, labelFontSize: 13, showsLabels: true, compact: false
+            )
+            #expect(m.cellSize.width == m.cellSize.width.rounded())
+            #expect(m.cellSize.height == m.cellSize.height.rounded())
+            #expect(m.gridRect.minX == m.gridRect.minX.rounded())
+            #expect(m.gridRect.minY == m.gridRect.minY.rounded())
+            #expect(m.iconFrame(0).minX == m.iconFrame(0).minX.rounded())
+            #expect(m.iconFrame(0).minY == m.iconFrame(0).minY.rounded())
+        }
+    }
+
+    /// 瀏海 inset 會讓格線下移而縮小可用高度，較矮的螢幕上 iconSize 因此變小（1280×800：68 → 66；
+    /// 982 高的 14" 則不受影響）。AppCoordinator 預先算圖示像素尺寸時必須帶入同樣的 topInset，
+    /// 否則貼圖與顯示尺寸對不上、圖示發糊
+    @Test func notchInsetShrinksIconSizeOnShortScreens() {
+        func iconSize(topInset: CGFloat) -> CGFloat {
+            GridMetrics(
+                containerSize: CGSize(width: 1280, height: 800), columns: 7, rows: 5,
+                iconScale: 1, labelFontSize: 13, showsLabels: true, compact: false, topInset: topInset
+            ).iconSize
+        }
+        #expect(iconSize(topInset: 38) < iconSize(topInset: 0))
+    }
+
     @Test func iconSizeIsReasonableForFullHD() {
         #expect(metrics.iconSize > 70 && metrics.iconSize < 130)
     }

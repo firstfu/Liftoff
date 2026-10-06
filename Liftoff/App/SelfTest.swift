@@ -31,6 +31,8 @@ enum SelfTest {
         let screen: String
         let refreshRate: Double
         let iconPixelSize: Int
+        /// 版面實際顯示的圖示像素（model.metrics.iconSize × 倍率）；應與 iconPixelSize 相等，否則圖示不是 1:1 會發糊
+        let displayedIconPixels: Int
         let showLatencyMs: [Double]
         /// show() 本身的同步執行時間（不含等 vsync）
         let showSyncMs: [Double]
@@ -251,6 +253,7 @@ enum SelfTest {
         // 6. 互動：以合成滑鼠事件實際走一遍「點擊、拖曳排序、拖到圖示上合併資料夾、Esc 取消拖曳、hover 預覽」
         let interactions = await interact(coordinator: coordinator, capture: capture)
 
+        let displayedIconPixels = Int((coordinator.model.metrics.iconSize * screen.backingScaleFactor).rounded())
         coordinator.hide(reason: .user)
         try? await Task.sleep(for: .milliseconds(300))
 
@@ -258,7 +261,7 @@ enum SelfTest {
             date: .now, apps: coordinator.catalog.entries.count, pages: pageCount,
             screen: "\(Int(screen.frame.width))×\(Int(screen.frame.height))@\(screen.backingScaleFactor)x",
             refreshRate: Double(screen.maximumFramesPerSecond),
-            iconPixelSize: coordinator.icons.pixelSize,
+            iconPixelSize: coordinator.icons.pixelSize, displayedIconPixels: displayedIconPixels,
             showLatencyMs: latencies.map { ($0 * 10).rounded() / 10 }, showSyncMs: showSync,
             showAnimation: showStats, pageFlip: flipStats, trackpadSwipe: swipeStats,
             searchLatencyMs: (searchLatency * 100).rounded() / 100, searchResults: Array(results),

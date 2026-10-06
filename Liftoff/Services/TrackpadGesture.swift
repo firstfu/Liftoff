@@ -18,8 +18,9 @@ import Synchronization
 
 nonisolated final class TrackpadGesture: Sendable {
     enum Event: Sendable {
-        /// 手勢進行中：ratio < 1 表示手指往內收（開啟方向）、> 1 表示往外張（關閉方向）
-        case changed(ratio: Double)
+        /// 手勢進行中：ratio < 1 表示手指往內收（開啟方向）、> 1 表示往外張（關閉方向）；
+        /// time 是觸控板回報的時間戳（秒），供放手時算速度
+        case changed(ratio: Double, time: Double)
         /// 手指離開（少於 4 指），手勢結束
         case ended
     }
@@ -168,7 +169,7 @@ nonisolated final class TrackpadGesture: Sendable {
             state.reported = true
             return spread / state.baseline
         }
-        if let ratio, let handler = handler.withLock({ $0 }) { handler(.changed(ratio: ratio)) }
+        if let ratio, let handler = handler.withLock({ $0 }) { handler(.changed(ratio: ratio, time: timestamp)) }
     }
 
     /// 手勢結束：若這次手勢回報過進度，補發 ended 讓呼叫端決定完成或回彈。

@@ -214,11 +214,13 @@ final class AppCoordinator {
     private var pinchMode: PinchMode?
     /// ratio 偏離 1 超過這個量才算手勢開始（避免手指微動就把視窗叫出來）
     private static let pinchDeadZone = 0.05
+    /// 這次手勢的進度樣本，放手時據以判斷完成或回彈（含速度）
+    private var pinchRelease = PinchRelease()
 
-    /// 手勢每幀把 ratio 換算成視窗進度（0 收起…1 展開）；放手時依進度決定完成或回彈。
+    /// 手勢每幀把 ratio 換算成視窗進度（0 收起…1 展開）；放手時依進度與速度決定完成或回彈。
     private func handlePinch(_ event: TrackpadGesture.Event) {
         switch event {
-        case .changed(let ratio):
+        case .changed(let ratio, let time):
             if pinchMode == nil {
                 if !controller.isVisible, ratio < 1 - Self.pinchDeadZone {
                     pinchMode = .opening
@@ -230,21 +232,25 @@ final class AppCoordinator {
                     pinchMode = .closing
                     controller.beginInteractiveClose()
                 }
+                if pinchMode != nil { pinchRelease.reset() }
             }
             switch pinchMode {
             case .opening:
                 controller.updateInteractive((1 - ratio) / (1 - TrackpadGesture.inwardRatio))
+                pinchRelease.record(time: time, progress: controller.fraction)
             case .closing:
                 controller.updateInteractive(1 - (ratio - 1) / (TrackpadGesture.outwardRatio - 1))
+                pinchRelease.record(time: time, progress: 1 - controller.fraction)
             case nil:
                 break
             }
         case .ended:
             guard let mode = pinchMode else { return }
             pinchMode = nil
-            // 開啟：進度過 4 成就完成；關閉：收了 4 成以上就收起
-            let progress = mode == .opening ? controller.fraction : 1 - controller.fraction
-            controller.endInteractive(opening: mode == .opening, commit: progress >= 0.4)
+            // 進度過 4 成，或放手前仍快速朝目標方向移動（又快又小的捏合）就完成，否則回彈
+            let commit = pinchRelease.shouldCommit
+            Log.input.info("捏合放手 \(mode == .opening ? "開啟" : "關閉", privacy: .public) 進度 \(self.pinchRelease.progress, format: .fixed(precision: 2)) 速度 \(self.pinchRelease.velocity, format: .fixed(precision: 2))/s → \(commit ? "完成" : "回彈", privacy: .public)")
+            controller.endInteractive(opening: mode == .opening, commit: commit)
         }
     }
 

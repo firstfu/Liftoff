@@ -94,6 +94,9 @@ private struct FolderLayer: View {
                 FolderPanelView(model: model, folder: current)
             }
         }
+        // 面板子樹常駐，換資料夾時 position／frame 會跟著變；若被下方的淡入動畫波及，
+        // 標題就會從上一個資料夾的位置滑到定位。這裡切斷內部的隱式動畫，只讓 opacity 有動畫
+        .transaction { $0.animation = nil }
         .opacity(isOpen ? 1 : 0)
         .allowsHitTesting(isOpen)
         // 面板由圖層從資料夾圖示放大，標題晚一點淡入，免得面板還很小時標題已經出現在定位

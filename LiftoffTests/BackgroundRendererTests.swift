@@ -94,6 +94,39 @@ struct BackgroundRendererTests {
         #expect(reds(output.image) == reds(source))
     }
 
+    /// 清晰模式走 8 位元查表路徑：壓暗結果與亮度要與模糊路徑的線性光語意一致（均勻圖模糊前後不變）。
+    @Test func noBlurDimmingMatchesBlurPath() {
+        let source = image(width: 120, height: 80) { x, y in UInt8((x * 7 + y * 3) % 256) }
+        let clear = BackgroundRenderer.render(thumbnail: source, screenSize: CGSize(width: 1200, height: 800), blurRadius: 0, dimming: 0.3)!
+        let expected = reds(source).map { value -> UInt8 in
+            let c = Double(value) / 255
+            let linear = c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4)
+            return BackgroundRenderer.encode(Float(linear * 0.7))
+        }
+        // Float／Double 捨入不同，容許 1 個色階
+        #expect(zip(reds(clear.image), expected).allSatisfy { abs(Int($0) - Int($1)) <= 1 })
+
+        let uniform = image(width: 120, height: 80) { _, _ in 200 }
+        let a = BackgroundRenderer.render(thumbnail: uniform, screenSize: CGSize(width: 1200, height: 800), blurRadius: 0, dimming: 0.5)!
+        let b = BackgroundRenderer.render(thumbnail: uniform, screenSize: CGSize(width: 1200, height: 800), blurRadius: 45, dimming: 0.5)!
+        #expect(reds(a.image) == reds(b.image))
+        #expect(abs(a.luminance - b.luminance) < 1e-9)
+        #expect(a.image.alphaInfo == .noneSkipLast)
+    }
+
+    /// 解析度依模糊程度：清晰用螢幕倍率，重度模糊維持約 1/3，輕度模糊介於中間且受像素上限約束。
+    @Test func pixelsPerPointFollowsBlur() {
+        let retina = CGSize(width: 1512, height: 982)
+        #expect(WallpaperProvider.pixelsPerPoint(screenSize: retina, backingScale: 2, blurRadius: 0) == 2)
+        #expect(WallpaperProvider.pixelsPerPoint(screenSize: retina, backingScale: 2, blurRadius: 0.9) == 2)
+        #expect(abs(WallpaperProvider.pixelsPerPoint(screenSize: retina, backingScale: 2, blurRadius: 45) - 1.0 / 3) < 1e-9)
+        let mild = WallpaperProvider.pixelsPerPoint(screenSize: retina, backingScale: 2, blurRadius: 1)
+        #expect(mild > 1 && retina.width * retina.height * mild * mild <= WallpaperProvider.maxBlurPixels + 1)
+        // 1x 螢幕不超過倍率；小螢幕至少 480px 寬
+        #expect(WallpaperProvider.pixelsPerPoint(screenSize: CGSize(width: 1920, height: 1080), backingScale: 1, blurRadius: 1) == 1)
+        #expect(WallpaperProvider.pixelsPerPoint(screenSize: CGSize(width: 1024, height: 768), backingScale: 1, blurRadius: 45) == 480.0 / 1024)
+    }
+
     @Test func luminanceExtremes() {
         let black = BackgroundRenderer.render(thumbnail: image(width: 32, height: 18) { _, _ in 0 }, screenSize: CGSize(width: 320, height: 180), blurRadius: 10, dimming: 0)!
         let white = BackgroundRenderer.render(thumbnail: image(width: 32, height: 18) { _, _ in 255 }, screenSize: CGSize(width: 320, height: 180), blurRadius: 10, dimming: 0)!

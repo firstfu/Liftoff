@@ -72,6 +72,8 @@ final class AppCoordinator {
         observeWorkspace()
         configureTriggers()
         phase("triggers")
+        // 在開始觀察設定之前：改指向副本不必觸發一次背景重算
+        WallpaperLibrary.adoptLegacyPath(in: settings)
         observeSettings()
         updates.applyAutoCheckSetting()
         applyActivationPolicy()

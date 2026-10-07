@@ -352,11 +352,20 @@ private struct AppearanceSettings: View {
                 if settings.backgroundStyle == .customImage {
                     LabeledContent("圖片") {
                         HStack {
-                            Text(settings.customImagePath.map { ($0 as NSString).lastPathComponent } ?? String(localized: "未選擇"))
+                            Text(settings.customImagePath.map(WallpaperLibrary.displayName) ?? String(localized: "未選擇"))
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                             Button("選擇…") { chooseImage() }
                         }
+                    }
+                    .dropDestination(for: URL.self) { urls, _ in
+                        guard let url = urls.first, UTType(filenameExtension: url.pathExtension)?.conforms(to: .image) == true else { return false }
+                        return useImage(url)
+                    }
+                    .help(Text("也可以直接把圖片拖到這一列"))
+                    if let path = settings.customImagePath, !FileManager.default.fileExists(atPath: path) {
+                        Text("找不到這張圖片，請重新選擇")
+                            .foregroundStyle(.red)
                     }
                 }
                 if settings.backgroundStyle != .liveBlur {
@@ -381,7 +390,23 @@ private struct AppearanceSettings: View {
         panel.allowedContentTypes = [.image]
         panel.allowsMultipleSelection = false
         if panel.runModal() == .OK, let url = panel.url {
-            settings.customImagePath = url.path
+            useImage(url)
+        }
+    }
+
+    /// 把圖片複製進 App 的桌布資料夾並設為背景，再清掉舊的副本。
+    /// - Parameter url: 使用者選的或拖進來的圖片
+    /// - Returns: 成功為 true；不是可讀的圖片時為 false（設定維持原樣）
+    @discardableResult
+    private func useImage(_ url: URL) -> Bool {
+        do {
+            let copy = try WallpaperLibrary.importImage(from: url)
+            settings.customImagePath = copy.path
+            WallpaperLibrary.removeUnused(keeping: copy.path)
+            return true
+        } catch {
+            Log.ui.error("自選背景圖複製失敗：\(error.localizedDescription, privacy: .public)")
+            return false
         }
     }
 }

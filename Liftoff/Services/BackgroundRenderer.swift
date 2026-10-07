@@ -8,6 +8,7 @@
 //  這裡的運算量很小（三次 box blur 與模糊半徑無關，O(像素數)），CPU 幾毫秒就做完。
 //  語意比照原本的 Core Image 版本：在線性光空間模糊（亮部不會被暗部吃掉）、邊緣延伸（等同 clampedToExtent）、
 //  壓暗等同黑色以 dimming 透明度疊在上面、平均亮度取線性光平均色再換回 sRGB 計算。
+//  不模糊（清晰桌布）時圖是螢幕原生解析度，改走 8 位元查表的路徑，不配置浮點緩衝。
 //  純函式、可在任何執行緒呼叫，方便單元測試。
 //
 
@@ -44,6 +45,16 @@ nonisolated enum BackgroundRenderer {
         context.draw(cropped, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         let count = width * height
+        // 壓暗：黑色以 dimming 透明度疊上去，在線性光下等於乘上 (1 - dimming)
+        let keep = Float(1 - min(max(dimming, 0), 1))
+        // 模糊半徑以「螢幕點數」為單位設定，換算到縮圖像素
+        let sigma = blurRadius * Double(width) / max(screenSize.width, 1)
+        guard sigma > 0.5 else {
+            // 不模糊（清晰桌布）：圖可能是螢幕原生解析度（5K 約 1,470 萬像素），
+            // 浮點緩衝要 3 倍 Float × 2 份，直接在 8 位元上查表處理，結果與浮點路徑相同
+            return dimInPlace(bytes, count: count, keep: keep, context: context)
+        }
+
         var pixels = [Float](repeating: 0, count: count * 3)
         let decode = linearTable
         for i in 0..<count {
@@ -52,12 +63,8 @@ nonisolated enum BackgroundRenderer {
             pixels[i * 3 + 2] = decode[Int(bytes[i * 4 + 2])]
         }
 
-        // 模糊半徑以「螢幕點數」為單位設定，換算到縮圖像素
-        let sigma = blurRadius * Double(width) / max(screenSize.width, 1)
-        if sigma > 0.5 { gaussianBlur(&pixels, width: width, height: height, sigma: sigma) }
+        gaussianBlur(&pixels, width: width, height: height, sigma: sigma)
 
-        // 壓暗：黑色以 dimming 透明度疊上去，在線性光下等於乘上 (1 - dimming)
-        let keep = Float(1 - min(max(dimming, 0), 1))
         var sum: (Double, Double, Double) = (0, 0, 0)
         for i in 0..<count {
             let r = pixels[i * 3] * keep, g = pixels[i * 3 + 1] * keep, b = pixels[i * 3 + 2] * keep
@@ -68,13 +75,52 @@ nonisolated enum BackgroundRenderer {
             bytes[i * 4 + 3] = 255
         }
         guard let image = context.makeImage() else { return nil }
+        return Output(image: image, luminance: luminance(linearSum: sum, count: count))
+    }
 
-        // 平均色在線性光下取平均，再換回 sRGB 以 Rec.709 權重算亮度（與文字顏色判斷的門檻一致）
-        let n = Double(count)
-        let luminance = (0.2126 * Double(encode(Float(sum.0 / n)))
+    /// 不模糊時的壓暗：每個 8 位元值的結果只有 256 種，先算成表再逐位元組替換；
+    /// 平均亮度改用直方圖累計，不必逐像素做浮點加總。
+    /// - Parameters:
+    ///   - bytes: RGBX 點陣（就地修改）
+    ///   - count: 像素數
+    ///   - keep: 線性光保留比例（1 − dimming）
+    ///   - context: 擁有 `bytes` 的點陣 context
+    /// - Returns: 處理後的圖與平均亮度；無法產生圖時為 nil
+    private static func dimInPlace(_ bytes: UnsafeMutablePointer<UInt8>, count: Int, keep: Float, context: CGContext) -> Output? {
+        let decode = linearTable
+        let dimmed = decode.map { $0 * keep }
+        let table = dimmed.map { encode($0) }
+        // 三個通道的直方圖放在同一個陣列：[R 0…255, G 0…255, B 0…255]
+        var histogram = [Int](repeating: 0, count: 768)
+        histogram.withUnsafeMutableBufferPointer { h in
+            table.withUnsafeBufferPointer { t in
+                for i in 0..<count {
+                    let o = i * 4
+                    let r = Int(bytes[o]), g = Int(bytes[o + 1]), b = Int(bytes[o + 2])
+                    h[r] += 1; h[256 + g] += 1; h[512 + b] += 1
+                    bytes[o] = t[r]; bytes[o + 1] = t[g]; bytes[o + 2] = t[b]
+                    bytes[o + 3] = 255
+                }
+            }
+        }
+        guard let image = context.makeImage() else { return nil }
+        func channelSum(_ offset: Int) -> Double {
+            (0..<256).reduce(0) { $0 + Double(histogram[offset + $1]) * Double(dimmed[$1]) }
+        }
+        let sum = (channelSum(0), channelSum(256), channelSum(512))
+        return Output(image: image, luminance: luminance(linearSum: sum, count: count))
+    }
+
+    /// 平均色在線性光下取平均，再換回 sRGB 以 Rec.709 權重算亮度（與文字顏色判斷的門檻一致）。
+    /// - Parameters:
+    ///   - linearSum: 各通道線性光總和
+    ///   - count: 像素數
+    /// - Returns: 平均亮度 0…1
+    private static func luminance(linearSum sum: (Double, Double, Double), count: Int) -> Double {
+        let n = Double(max(count, 1))
+        return (0.2126 * Double(encode(Float(sum.0 / n)))
             + 0.7152 * Double(encode(Float(sum.1 / n)))
             + 0.0722 * Double(encode(Float(sum.2 / n)))) / 255
-        return Output(image: image, luminance: luminance)
     }
 
     /// 依目標長寬比計算置中裁切範圍（像素、取整）。

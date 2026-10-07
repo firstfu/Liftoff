@@ -1175,6 +1175,89 @@
         }
       }
     },
+    "也可以直接把圖片拖到這一列": {
+      "comment": "出現在 SettingsView.swift（英文：You can also drag an image onto this row）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du kannst auch ein Bild direkt auf diese Zeile ziehen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can also drag an image onto this row"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "También puedes arrastrar una imagen directamente a esta fila"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous pouvez aussi glisser une image directement sur cette ligne"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puoi anche trascinare un'immagine direttamente su questa riga"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像をこの行に直接ドラッグすることもできます"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미지를 이 줄로 바로 드래그할 수도 있습니다"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je kunt ook een afbeelding rechtstreeks naar deze rij slepen"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você também pode arrastar uma imagem diretamente para esta linha"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Также можно перетащить изображение прямо на эту строку"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir görüntüyü doğrudan bu satıra da sürükleyebilirsiniz"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "也可以直接把图片拖到这一行"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "也可以直接把圖片拖到這一列"
+          }
+        }
+      }
+    },
     "佈局": {
       "comment": "出現在 LaunchpadModel.swift, SettingsView.swift（英文：Layout）",
       "localizations": {
@@ -6483,6 +6566,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "找不到舊版啟動台的資料庫"
+          }
+        }
+      }
+    },
+    "找不到這張圖片，請重新選擇": {
+      "comment": "出現在 SettingsView.swift（英文：Image not found. Choose it again.）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bild nicht gefunden. Bitte erneut auswählen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image not found. Choose it again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se encuentra la imagen. Vuelve a seleccionarla."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image introuvable. Choisissez-la à nouveau."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagine non trovata. Selezionala di nuovo."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像が見つかりません。もう一度選択してください"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미지를 찾을 수 없습니다. 다시 선택하세요"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afbeelding niet gevonden. Kies deze opnieuw."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imagem não encontrada. Selecione-a novamente."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Изображение не найдено. Выберите его снова."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Görüntü bulunamadı. Yeniden seçin."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到这张图片，请重新选择"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到這張圖片，請重新選擇"
           }
         }
       }

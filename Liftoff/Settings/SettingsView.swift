@@ -348,6 +348,10 @@ private struct AppearanceSettings: View {
                     Text("模糊桌布（最省電）").tag(BackgroundStyle.wallpaper)
                     Text("即時模糊（透出視窗）").tag(BackgroundStyle.liveBlur)
                     Text("自選圖片").tag(BackgroundStyle.customImage)
+                    Text("內建背景").tag(BackgroundStyle.preset)
+                }
+                if settings.backgroundStyle == .preset {
+                    PresetPicker(selection: $settings.presetWallpaper)
                 }
                 if settings.backgroundStyle == .customImage {
                     LabeledContent("圖片") {
@@ -369,8 +373,11 @@ private struct AppearanceSettings: View {
                     }
                 }
                 if settings.backgroundStyle != .liveBlur {
-                    LabeledContent("模糊程度") {
-                        Slider(value: $settings.blurRadius, in: 0...100) { Text("模糊程度") }.labelsHidden()
+                    // 內建背景是平滑漸層，模糊沒有可見效果
+                    if settings.backgroundStyle != .preset {
+                        LabeledContent("模糊程度") {
+                            Slider(value: $settings.blurRadius, in: 0...100) { Text("模糊程度") }.labelsHidden()
+                        }
                     }
                     LabeledContent("變暗程度") {
                         Slider(value: $settings.dimming, in: 0...0.8) { Text("變暗程度") }.labelsHidden()
@@ -408,6 +415,41 @@ private struct AppearanceSettings: View {
             Log.ui.error("自選背景圖複製失敗：\(error.localizedDescription, privacy: .public)")
             return false
         }
+    }
+}
+
+/// 內建背景的縮圖選擇器：一排排小色塊，選中的加上強調色外框。
+private struct PresetPicker: View {
+    @Binding var selection: String
+
+    /// 縮圖只畫一次（10 張 120×76，共約 360KB），設定頁重繪時不必重畫
+    private static let thumbnails: [String: CGImage] = Dictionary(uniqueKeysWithValues: WallpaperPreset.all.compactMap { preset in
+        preset.render(width: 120, height: 76).map { (preset.id, $0) }
+    })
+
+    var body: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5), spacing: 10) {
+            ForEach(WallpaperPreset.all) { preset in
+                let selected = preset.id == WallpaperPreset.named(selection).id
+                Button { selection = preset.id } label: {
+                    Group {
+                        if let image = Self.thumbnails[preset.id] {
+                            Image(decorative: image, scale: 2).resizable()
+                        } else {
+                            Color.gray
+                        }
+                    }
+                    .aspectRatio(120.0 / 76, contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 6)
+                            .strokeBorder(selected ? Color.accentColor : Color.primary.opacity(0.15), lineWidth: selected ? 2.5 : 1)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
 

@@ -290,7 +290,7 @@ final class AppCoordinator {
             self?.scheduleIconSync()
         }
         observe({ [settings] in settings.iconAppearance }) { [weak self] _ in self?.syncIcons() }
-        observe({ [settings] in "\(settings.backgroundStyle.rawValue)|\(settings.blurRadius)|\(settings.dimming)|\(settings.customImagePath ?? "")" }) { [weak self] _ in
+        observe({ [settings] in "\(settings.backgroundStyle.rawValue)|\(settings.blurRadius)|\(settings.dimming)|\(settings.customImagePath ?? "")|\(settings.presetWallpaper)" }) { [weak self] _ in
             self?.scheduleBackgroundRefresh()
         }
         observe({ [settings] in settings.hiddenApps }) { [weak self] hidden in

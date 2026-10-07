@@ -18,6 +18,8 @@ nonisolated enum BackgroundStyle: String, CaseIterable, Codable, Sendable {
     case liveBlur
     /// 自選圖片 + 模糊
     case customImage
+    /// 內建漸層或純色（`WallpaperPreset`）
+    case preset
 }
 
 /// App 名稱文字顏色。
@@ -92,6 +94,8 @@ final class AppSettings {
     var dimming: Double { didSet { defaults.set(dimming, forKey: Key.dimming) } }
     /// 自選背景圖片路徑
     var customImagePath: String? { didSet { defaults.set(customImagePath, forKey: Key.customImagePath) } }
+    /// 選用的內建背景（`WallpaperPreset.id`）
+    var presetWallpaper: String { didSet { defaults.set(presetWallpaper, forKey: Key.presetWallpaper) } }
     /// 是否蓋住 Dock 與選單列（false 時 Dock 與選單列浮在啟動台之上，和經典啟動台一樣可見）
     var coversDock: Bool { didSet { defaults.set(coversDock, forKey: Key.coversDock) } }
     /// 再次打開時回到上次的頁面
@@ -169,6 +173,7 @@ final class AppSettings {
         static let showsLabels = "showsLabels", labelColor = "labelColor", iconAppearance = "iconAppearance"
         static let compactMargins = "compactMargins", backgroundStyle = "backgroundStyle", blurRadius = "blurRadius"
         static let dimming = "dimming", customImagePath = "customImagePath", coversDock = "coversDock"
+        static let presetWallpaper = "presetWallpaper"
         static let remembersPage = "remembersPage", hotKey = "hotKey", hotCorner = "hotCorner"
         static let pinchGesture = "pinchGesture", displayTarget = "displayTarget", windowPreview = "windowPreview"
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
@@ -184,6 +189,7 @@ final class AppSettings {
             Key.labelColor: LabelColorMode.auto.rawValue, Key.iconAppearance: IconAppearance.system.rawValue,
             Key.compactMargins: false, Key.backgroundStyle: BackgroundStyle.wallpaper.rawValue,
             Key.blurRadius: 45.0, Key.dimming: 0.22, Key.coversDock: true, Key.remembersPage: true,
+            Key.presetWallpaper: WallpaperPreset.defaultID,
             Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
             Key.windowPreview: true, Key.previewDelay: 0.5, Key.showsDockIcon: true, Key.showsMenuBarIcon: true,
         ])
@@ -199,6 +205,7 @@ final class AppSettings {
         blurRadius = defaults.double(forKey: Key.blurRadius)
         dimming = defaults.double(forKey: Key.dimming)
         customImagePath = defaults.string(forKey: Key.customImagePath)
+        presetWallpaper = defaults.string(forKey: Key.presetWallpaper) ?? WallpaperPreset.defaultID
         coversDock = defaults.bool(forKey: Key.coversDock)
         remembersPage = defaults.bool(forKey: Key.remembersPage)
         if let data = defaults.data(forKey: Key.hotKey) {

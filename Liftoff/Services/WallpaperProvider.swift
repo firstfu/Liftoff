@@ -20,6 +20,19 @@ nonisolated struct PreparedBackground: @unchecked Sendable {
 }
 
 final class WallpaperProvider {
+    /// 背景圖的來源：圖片檔（桌布或自選圖片）或內建背景。
+    private enum Source: Sendable {
+        case file(URL)
+        case preset(WallpaperPreset)
+
+        var description: String {
+            switch self {
+            case .file(let url): url.path
+            case .preset(let preset): "內建背景 \(preset.id)"
+            }
+        }
+    }
+
     private struct CacheKey: Hashable {
         let displayID: CGDirectDisplayID
         let source: String
@@ -44,7 +57,7 @@ final class WallpaperProvider {
     func background(
         for screen: NSScreen, settings: AppSettings, onReady: @escaping @MainActor (PreparedBackground) -> Void
     ) -> PreparedBackground? {
-        guard let (key, url) = cacheKey(for: screen, settings: settings) else { return nil }
+        guard let (key, source) = cacheKey(for: screen, settings: settings) else { return nil }
         if let cached = cache[key] { return cached }
         if inFlight[key] != nil {
             inFlight[key]?.append(onReady)
@@ -59,12 +72,15 @@ final class WallpaperProvider {
         Task { [weak self] in
             let start = ContinuousClock.now
             let prepared = await Task.detached(priority: .userInitiated) {
-                Self.render(url: url, screenSize: size, backingScale: scale, blurRadius: blur, dimming: dim)
+                switch source {
+                case .file(let url): Self.render(url: url, screenSize: size, backingScale: scale, blurRadius: blur, dimming: dim)
+                case .preset(let preset): Self.render(preset: preset, screenSize: size, backingScale: scale, dimming: dim)
+                }
             }.value
             guard let self else { return }
             let waiters = self.inFlight.removeValue(forKey: key) ?? []
             guard let prepared else {
-                Log.ui.error("背景圖產生失敗：\(url.path, privacy: .public)")
+                Log.ui.error("背景圖產生失敗：\(source.description, privacy: .public)")
                 return
             }
             // 同一螢幕只留最新的一張，避免換桌布後舊圖一直占記憶體
@@ -96,25 +112,39 @@ final class WallpaperProvider {
         }
     }
 
-    private func cacheKey(for screen: NSScreen, settings: AppSettings) -> (CacheKey, URL)? {
+    private func cacheKey(for screen: NSScreen, settings: AppSettings) -> (CacheKey, Source)? {
         let url: URL?
         switch settings.backgroundStyle {
         case .liveBlur: return nil
         case .wallpaper: url = NSWorkspace.shared.desktopImageURL(for: screen)
         case .customImage: url = settings.customImagePath.map { URL(fileURLWithPath: $0) }
+        case .preset:
+            let preset = WallpaperPreset.named(settings.presetWallpaper)
+            return (key(screen: screen, settings: settings, source: "preset:\(preset.id)", blur: 0), .preset(preset))
         }
         guard let url, !url.hasDirectoryPath else { return nil }
         let modified = (try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate)?
             .timeIntervalSinceReferenceDate ?? 0
-        let key = CacheKey(
+        let blur = Int((settings.blurRadius * 10).rounded())
+        return (key(screen: screen, settings: settings, source: "\(url.path)|\(modified)", blur: blur), .file(url))
+    }
+
+    /// 組快取鍵。
+    /// - Parameters:
+    ///   - screen: 目標螢幕
+    ///   - settings: 使用者設定（取壓暗程度）
+    ///   - source: 來源識別（檔案路徑加修改時間，或內建背景 id）
+    ///   - blur: 模糊程度 ×10（內建背景不模糊，固定 0，拖動模糊滑桿不必重算）
+    /// - Returns: 快取鍵
+    private func key(screen: NSScreen, settings: AppSettings, source: String, blur: Int) -> CacheKey {
+        CacheKey(
             displayID: screen.displayID,
-            source: "\(url.path)|\(modified)",
-            blur: Int((settings.blurRadius * 10).rounded()),
+            source: source,
+            blur: blur,
             dim: Int((settings.dimming * 100).rounded()),
             aspect: Int((screen.frame.width / max(screen.frame.height, 1) * 1000).rounded()),
             scale: Int((screen.backingScaleFactor * 100).rounded())
         )
-        return (key, url)
     }
 
     // MARK: - 影像處理（背景執行緒）
@@ -160,6 +190,21 @@ final class WallpaperProvider {
               let output = BackgroundRenderer.render(
                   thumbnail: thumbnail, screenSize: screenSize, blurRadius: isClear ? 0 : blurRadius, dimming: dimming
               ) else { return nil }
+        return PreparedBackground(image: output.image, luminance: output.luminance)
+    }
+
+    /// 畫內建背景 → 壓暗 → 算平均亮度。漸層沒有細節，用重度模糊時的低解析度即可。
+    /// - Parameters:
+    ///   - preset: 內建背景
+    ///   - screenSize: 螢幕點數大小
+    ///   - backingScale: 螢幕倍率
+    ///   - dimming: 壓暗程度 0…1
+    /// - Returns: 算好的背景；尺寸無效時為 nil
+    nonisolated static func render(preset: WallpaperPreset, screenSize: CGSize, backingScale: Double, dimming: Double) -> PreparedBackground? {
+        let p = pixelsPerPoint(screenSize: screenSize, backingScale: backingScale, blurRadius: .infinity)
+        guard let image = preset.render(width: Int((screenSize.width * p).rounded()), height: Int((screenSize.height * p).rounded())),
+              let output = BackgroundRenderer.render(thumbnail: image, screenSize: screenSize, blurRadius: 0, dimming: dimming)
+        else { return nil }
         return PreparedBackground(image: output.image, luminance: output.luminance)
     }
 

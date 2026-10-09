@@ -110,7 +110,7 @@ Requires **macOS 26 or later**, Apple silicon or Intel.
 
 ### Updating
 
-Replace `Liftoff.app` in `/Applications` with the new one, or run `brew upgrade --cask liftoff` once the tap is updated. Builds are ad-hoc signed, so macOS treats each version as a new app: you click **Open Anyway** once, and Screen Recording and Accessibility must be switched on again (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
+Replace `Liftoff.app` in `/Applications` with the new one, or run `brew upgrade --cask liftoff` once the tap is updated. Since 1.2.1, releases are signed with the same certificate every time, so Screen Recording and Accessibility stay allowed after an update; you may still need to click **Open Anyway** once for the new version. Updating from 1.2.0 or earlier needs one last re-allow (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
 To hear about new versions: choose **Check for Updates…** in the menu bar menu or in Settings, turn on **Check for updates weekly** in Settings (off by default), or use **Watch → Custom → Releases** on this page.
 
 ## Permissions at a glance
@@ -139,7 +139,7 @@ Check that **Screen & System Audio Recording** (needed for the previews) and, op
 <details>
 <summary><b>Do I lose permissions when I update?</b></summary>
 
-Yes, with the ad-hoc signed releases: macOS sees each version as a new app, so Screen Recording and Accessibility have to be allowed again. Building it yourself with your own certificate avoids this — see [`Config/Signing.xcconfig`](Config/Signing.xcconfig).
+No, not since 1.2.1: releases are signed with the same certificate, so macOS recognizes each update as the same app and keeps Screen Recording and Accessibility. Updating from 1.2.0 or earlier needs one last re-allow. If you build it yourself, sign with your own certificate to get the same behavior — see [`Config/Signing.xcconfig`](Config/Signing.xcconfig).
 </details>
 
 <details>

@@ -64,7 +64,7 @@ It works from a built-in table of 1,000+ popular Mac apps (including apps popula
 - **Import your old Launchpad layout**, or start fresh with Smart Organize
 - Open it any way you like: hotkey (<kbd>⌃⌘L</kbd> by default), thumb-and-three-finger pinch, a hot corner, the Dock icon, or `open liftoff://toggle`
 - Pages, folders (drag to merge), drag to reorder, keyboard navigation
-- Blurred wallpaper (lowest power), live blur, or your own image; adjustable icon size, label size and colors
+- Blurred or sharp wallpaper (blurred uses the least power), live blur, built-in gradients and solid colors, or your own image; adjustable icon size, label size and colors
 - Multi-display aware · hide apps · uninstall apps with leftovers · back up and restore your layout
 - 13 languages, following your system language
 

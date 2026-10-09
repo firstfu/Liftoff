@@ -64,7 +64,7 @@ Tahmine değil, 1.000'den fazla popüler Mac uygulamasını (Çin, Japonya, Kore
 - **Eski Launchpad düzeninizi içe aktarın** ya da Akıllı Düzenleme ile sıfırdan başlayın
 - Dilediğiniz gibi açın: kısayol tuşu (varsayılan <kbd>⌃⌘L</kbd>), başparmak ve üç parmakla sıkıştırma, sıcak köşe, Dock simgesi ya da `open liftoff://toggle`
 - Sayfalar, klasörler (birleştirmek için sürükleyin), sürükleyerek sıralama, klavyeyle gezinme
-- Bulanık duvar kâğıdı (en düşük güç tüketimi), canlı bulanıklık ya da kendi görseliniz; ayarlanabilir simge boyutu, etiket boyutu ve renkler
+- Bulanık ya da net duvar kâğıdı (bulanık olan en az gücü tüketir), canlı bulanıklık, yerleşik renk geçişleri ve düz renkler ya da kendi görseliniz; ayarlanabilir simge boyutu, etiket boyutu ve renkler
 - Çoklu ekran desteği · uygulamaları gizleme · artıklarıyla birlikte uygulama silme · düzeni yedekleme ve geri yükleme
 - Sistem dilinizi izleyen 13 dil desteği
 
@@ -108,7 +108,7 @@ Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`
 
 ### Güncelleme
 
-`/Applications` içindeki `Liftoff.app` dosyasını yenisiyle değiştirin. Derlemeler ad-hoc imzalıdır; bu yüzden macOS her sürümü yeni bir uygulama sayar: **Yine de Aç** düğmesine bir kez tıklarsınız ve Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinlerini yeniden açmanız gerekir (bir anahtar açık görünüp de işe yaramıyorsa, Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin).
+`/Applications` içindeki `Liftoff.app` dosyasını yenisiyle değiştirin. 1.2.1'den beri tüm sürümler aynı sertifikayla imzalanır; bu yüzden güncellemeden sonra Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinleri korunur. Yeni sürümü ilk açtığınızda **Yine de Aç** düğmesine bir kez daha tıklamanız gerekebilir. 1.2.0 veya daha eski bir sürümden güncelliyorsanız izinleri son bir kez yeniden vermeniz gerekir (bir anahtar açık görünüp de işe yaramıyorsa, Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin).
 Yeni sürümlerden haberdar olmak için: menü çubuğu menüsünde ya da Ayarlar'da **Güncellemeleri Denetle…** seçeneğini kullanın, Ayarlar'da **Güncellemeleri haftalık denetle** seçeneğini açın (varsayılan olarak kapalı) veya bu sayfada **Watch → Custom → Releases** yolunu izleyin.
 
 ## Hızlı izin özeti
@@ -137,7 +137,7 @@ Sistem Ayarları → Gizlilik ve Güvenlik bölümünde Liftoff için **Ekran ve
 <details>
 <summary><b>Güncelleyince izinleri kaybeder miyim?</b></summary>
 
-Evet, ad-hoc imzalı sürümlerde: macOS her sürümü yeni bir uygulama olarak görür, bu yüzden Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinleri yeniden verilmelidir. Kendi sertifikanızla kendiniz derlerseniz bundan kurtulursunuz; bkz. [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+Hayır, 1.2.1'den beri kaybetmezsiniz: sürümler aynı sertifikayla imzalanır, bu yüzden macOS her güncellemeyi aynı uygulama olarak tanır ve Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinlerini korur. 1.2.0 veya daha eski bir sürümden güncelliyorsanız izinleri son bir kez yeniden vermeniz gerekir. Kendiniz derlerseniz, kendi sertifikanızla imzalayarak aynı sonucu alırsınız; bkz. [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

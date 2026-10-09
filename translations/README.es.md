@@ -62,7 +62,7 @@ Funciona con una tabla integrada de más de 1.000 apps populares para Mac (inclu
 - **Importa tu antigua disposición del Launchpad**, o empieza de cero con la Organización inteligente
 - Ábrelo como prefieras: atajo de teclado (<kbd>⌃⌘L</kbd> por defecto), gesto de pellizco con el pulgar y tres dedos, una esquina activa, el icono del Dock o `open liftoff://toggle`
 - Páginas, carpetas (arrastra para combinar), arrastrar para reordenar y navegación con el teclado
-- Fondo de pantalla desenfocado (el de menor consumo), desenfoque en vivo o tu propia imagen; tamaño de iconos, tamaño de etiquetas y colores ajustables
+- Fondo de pantalla desenfocado o nítido (el desenfocado es el de menor consumo), desenfoque en vivo, degradados y colores sólidos integrados o tu propia imagen; tamaño de iconos, tamaño de etiquetas y colores ajustables
 - Compatible con varias pantallas · oculta apps · desinstala apps y sus archivos residuales · copia de seguridad y restauración de tu disposición
 - 13 idiomas, según el idioma del sistema
 
@@ -106,7 +106,7 @@ Requiere **macOS 26 o posterior**, Apple silicon o Intel.
 
 ### Actualizar
 
-Sustituye `Liftoff.app` en `/Applications` por la nueva versión. Las compilaciones tienen firma ad hoc, así que macOS trata cada versión como una app nueva: haces clic una vez en **Abrir igualmente**, y hay que volver a activar Grabación de pantalla y del audio del sistema y Accesibilidad (si un interruptor parece activado pero no hace nada, quita Liftoff de la lista con **−** y vuelve a añadirlo).
+Sustituye `Liftoff.app` en `/Applications` por la nueva versión. Desde la 1.2.1, todas las versiones se firman con el mismo certificado, así que Grabación de pantalla y del audio del sistema y Accesibilidad siguen permitidos tras actualizar; puede que tengas que hacer clic una vez en **Abrir igualmente** la primera vez que abras la nueva versión. Si actualizas desde la 1.2.0 o anterior, hay que volver a permitirlos una última vez (si un interruptor parece activado pero no hace nada, quita Liftoff de la lista con **−** y vuelve a añadirlo).
 Para enterarte de las nuevas versiones: elige **Buscar actualizaciones…** en el menú de la barra de menús o en los ajustes, activa **Buscar actualizaciones cada semana** en los ajustes (desactivado por defecto), o usa **Watch → Custom → Releases** en esta página.
 
 ## Permisos de un vistazo
@@ -135,7 +135,7 @@ Comprueba que **Grabación de pantalla y del audio del sistema** (necesaria para
 <details>
 <summary><b>¿Pierdo los permisos al actualizar?</b></summary>
 
-Sí, con las versiones de firma ad hoc: macOS ve cada versión como una app nueva, así que hay que volver a permitir Grabación de pantalla y del audio del sistema y Accesibilidad. Compilarlo tú mismo con tu propio certificado lo evita; consulta [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+No, desde la 1.2.1: las versiones se firman con el mismo certificado, así que macOS reconoce cada actualización como la misma app y conserva Grabación de pantalla y del audio del sistema y Accesibilidad. Si actualizas desde la 1.2.0 o anterior, hay que volver a permitirlos una última vez. Si lo compilas tú mismo, firmarlo con tu propio certificado consigue lo mismo; consulta [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

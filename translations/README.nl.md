@@ -64,7 +64,7 @@ Het werkt met een ingebouwde tabel van meer dan 1.000 populaire Mac-apps (waaron
 - **Importeer je oude Launchpad-indeling**, of begin met een schone lei en Slim ordenen
 - Open het zoals jij wilt: met een toetscombinatie (standaard <kbd>⌃⌘L</kbd>), door met duim en drie vingers te knijpen, via een interactieve hoek, via het symbool in het Dock of met `open liftoff://toggle`
 - Pagina's, mappen (sleep om samen te voegen), slepen om te herschikken, bediening met het toetsenbord
-- Vervaagde achtergrond (zuinigst), live vervaging of je eigen afbeelding; instelbare symboolgrootte, labelgrootte en kleuren
+- Vervaagde of scherpe achtergrond (vervaagd is het zuinigst), live vervaging, ingebouwde kleurverlopen en effen kleuren of je eigen afbeelding; instelbare symboolgrootte, labelgrootte en kleuren
 - Ondersteunt meerdere beeldschermen · apps verbergen · apps verwijderen inclusief overgebleven bestanden · je indeling back-uppen en terugzetten
 - 13 talen, volgens de taal van je systeem
 
@@ -108,7 +108,7 @@ Vereist **macOS 26 of nieuwer**, Apple silicon of Intel.
 
 ### Updaten
 
-Vervang `Liftoff.app` in `/Applications` door de nieuwe. Builds zijn ad-hoc ondertekend, dus macOS behandelt elke versie als een nieuwe app: je klikt één keer op **Open toch**, en Scherm- en systeemaudio-opname en Toegankelijkheid moeten opnieuw worden ingeschakeld (als een schakelaar aan lijkt te staan maar niets doet, verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe).
+Vervang `Liftoff.app` in `/Applications` door de nieuwe. Sinds 1.2.1 worden alle releases met hetzelfde certificaat ondertekend, dus Scherm- en systeemaudio-opname en Toegankelijkheid blijven na een update toegestaan; de eerste keer dat je de nieuwe versie opent, moet je mogelijk nog één keer op **Open toch** klikken. Bij een update vanaf 1.2.0 of ouder moet je ze nog één laatste keer toestaan (als een schakelaar aan lijkt te staan maar niets doet, verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe).
 Om nieuwe versies te volgen: kies **Zoek naar updates…** in het menu in de menubalk of in de instellingen, schakel **Wekelijks op updates controleren** in de instellingen in (standaard uit), of gebruik **Watch → Custom → Releases** op deze pagina.
 
 ## Toegang in het kort
@@ -137,7 +137,7 @@ Controleer of **Scherm- en systeemaudio-opname** (nodig voor de weergaven) en ev
 <details>
 <summary><b>Raak ik de toegang kwijt als ik update?</b></summary>
 
-Ja, bij de ad-hoc ondertekende releases: macOS ziet elke versie als een nieuwe app, dus Scherm- en systeemaudio-opname en Toegankelijkheid moeten opnieuw worden toegestaan. Zelf bouwen met je eigen certificaat voorkomt dit; zie [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+Nee, niet meer sinds 1.2.1: de releases zijn met hetzelfde certificaat ondertekend, dus macOS herkent elke update als dezelfde app en behoudt Scherm- en systeemaudio-opname en Toegankelijkheid. Bij een update vanaf 1.2.0 of ouder moet je ze nog één laatste keer toestaan. Bouw je zelf, onderteken dan met je eigen certificaat voor hetzelfde resultaat; zie [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

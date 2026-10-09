@@ -62,7 +62,7 @@ Le classement repose sur une table intégrée de plus de 1 000 apps Mac populair
 - **Importez l’ancienne disposition de votre Launchpad**, ou repartez de zéro avec l’Organisation intelligente
 - Ouvrez-le comme vous voulez : raccourci clavier (<kbd>⌃⌘L</kbd> par défaut), pincement pouce + trois doigts, un coin actif, l’icône du Dock ou `open liftoff://toggle`
 - Pages, dossiers (glissez pour fusionner), réorganisation par glisser-déposer, navigation au clavier
-- Fond d’écran flou (le plus économe en énergie), flou en direct ou votre propre image ; taille des icônes, taille des légendes et couleurs réglables
+- Fond d’écran flou ou net (le flou est le plus économe en énergie), flou en direct, dégradés et couleurs unies intégrés ou votre propre image ; taille des icônes, taille des légendes et couleurs réglables
 - Gestion de plusieurs moniteurs · masquage d’apps · désinstallation d’apps avec leurs fichiers résiduels · sauvegarde et restauration de votre disposition
 - 13 langues, selon la langue du système
 
@@ -106,7 +106,7 @@ Nécessite **macOS 26 ou version ultérieure**, Apple silicon ou Intel.
 
 ### Mise à jour
 
-Remplacez `Liftoff.app` dans `/Applications` par la nouvelle version. Les versions sont signées ad hoc : macOS considère donc chaque version comme une nouvelle app. Vous cliquez une fois sur **Ouvrir quand même**, et Enregistrement de l’écran et des sons du système ainsi qu’Accessibilité doivent être réactivés (si un réglage semble activé mais ne fait rien, retirez Liftoff de la liste avec **−** puis ajoutez-le de nouveau).
+Remplacez `Liftoff.app` dans `/Applications` par la nouvelle version. Depuis la 1.2.1, toutes les versions sont signées avec le même certificat : Enregistrement de l’écran et des sons du système ainsi qu’Accessibilité restent donc autorisés après une mise à jour. Il faudra peut-être cliquer une fois sur **Ouvrir quand même** au premier lancement de la nouvelle version. Depuis la 1.2.0 ou une version antérieure, il faut les autoriser une dernière fois (si un réglage semble activé mais ne fait rien, retirez Liftoff de la liste avec **−** puis ajoutez-le de nouveau).
 Pour être informé des nouvelles versions : choisissez **Rechercher les mises à jour…** dans le menu de la barre des menus ou dans les réglages, activez **Rechercher les mises à jour chaque semaine** dans les réglages (désactivé par défaut), ou utilisez **Watch → Custom → Releases** sur cette page.
 
 ## Aperçu des autorisations
@@ -135,7 +135,7 @@ Vérifiez que **Enregistrement de l’écran et des sons du système** (nécessa
 <details>
 <summary><b>Perd-on les autorisations lors d’une mise à jour ?</b></summary>
 
-Oui, avec les versions signées ad hoc : macOS considère chaque version comme une nouvelle app, donc Enregistrement de l’écran et des sons du système et Accessibilité doivent être autorisés de nouveau. Compiler l’app vous-même avec votre propre certificat évite cela — voir [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+Non, plus depuis la 1.2.1 : les versions sont signées avec le même certificat, donc macOS reconnaît chaque mise à jour comme la même app et conserve Enregistrement de l’écran et des sons du système et Accessibilité. Depuis la 1.2.0 ou une version antérieure, il faut les autoriser une dernière fois. Si vous compilez l’app vous-même, signez-la avec votre propre certificat pour obtenir le même résultat — voir [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

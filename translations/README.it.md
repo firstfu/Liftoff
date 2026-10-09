@@ -62,7 +62,7 @@ Funziona a partire da una tabella integrata con oltre 1.000 app Mac molto diffus
 - **Importa il layout del vecchio Launchpad**, oppure riparti da zero con l'Organizzazione smart
 - Aprilo come preferisci: scorciatoia da tastiera (<kbd>⌃⌘L</kbd> per impostazione predefinita), pizzico con pollice e tre dita, un angolo attivo, l'icona nel Dock oppure `open liftoff://toggle`
 - Pagine, cartelle (trascina per unire), trascinamento per riordinare, navigazione da tastiera
-- Sfondo sfocato (consumo minimo), sfocatura in tempo reale o un'immagine tua; dimensione di icone ed etichette e colori regolabili
+- Sfondo sfocato o nitido (quello sfocato ha il consumo minimo), sfocatura in tempo reale, sfumature e tinte unite integrate o un'immagine tua; dimensione di icone ed etichette e colori regolabili
 - Supporto multi-schermo · nascondi app · disinstalla app insieme ai file residui · backup e ripristino del layout
 - 13 lingue, in base alla lingua del sistema
 
@@ -106,7 +106,7 @@ Richiede **macOS 26 o versioni successive**, Apple silicon o Intel.
 
 ### Aggiornamento
 
-Sostituisci `Liftoff.app` in `/Applications` con la nuova versione. Le build sono firmate ad-hoc, quindi macOS considera ogni versione una nuova app: fai clic una volta su **Apri comunque**, e Registrazione schermo e audio di sistema e Accessibilità vanno riattivati (se un interruttore sembra attivo ma non fa nulla, rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo).
+Sostituisci `Liftoff.app` in `/Applications` con la nuova versione. Dalla 1.2.1 tutte le release sono firmate con lo stesso certificato, quindi Registrazione schermo e audio di sistema e Accessibilità restano consentite dopo l’aggiornamento; alla prima apertura della nuova versione potrebbe servire ancora un clic su **Apri comunque**. Se aggiorni dalla 1.2.0 o precedenti, vanno concesse un’ultima volta (se un interruttore sembra attivo ma non fa nulla, rimuovi Liftoff dall’elenco con **−** e aggiungilo di nuovo).
 Per sapere delle nuove versioni: scegli **Verifica aggiornamenti…** nel menu della barra dei menu o nelle impostazioni, attiva **Verifica aggiornamenti ogni settimana** nelle impostazioni (disattivato per impostazione predefinita), oppure usa **Watch → Custom → Releases** in questa pagina.
 
 ## Permessi in sintesi
@@ -135,7 +135,7 @@ Controlla che **Registrazione schermo e audio di sistema** (necessaria per le an
 <details>
 <summary><b>Perdo i permessi quando aggiorno?</b></summary>
 
-Sì, con le release firmate ad-hoc: macOS vede ogni versione come una nuova app, quindi Registrazione schermo e audio di sistema e Accessibilità vanno concesse di nuovo. Compilandolo tu stesso con il tuo certificato lo eviti: vedi [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+No, non dalla 1.2.1: le release sono firmate con lo stesso certificato, quindi macOS riconosce ogni aggiornamento come la stessa app e mantiene Registrazione schermo e audio di sistema e Accessibilità. Se aggiorni dalla 1.2.0 o precedenti, vanno concesse un’ultima volta. Se lo compili tu stesso, firmandolo con il tuo certificato ottieni lo stesso risultato: vedi [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

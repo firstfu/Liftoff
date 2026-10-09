@@ -62,7 +62,7 @@ Grundlage ist eine eingebaute Tabelle mit über 1.000 beliebten Mac-Apps (darunt
 - **Alte Launchpad-Anordnung importieren** oder mit „Intelligent organisieren“ ganz neu starten
 - Öffne es, wie du willst: Tastenkurzbefehl (standardmäßig <kbd>⌃⌘L</kbd>), Zusammenziehen mit Daumen und drei Fingern, eine aktive Ecke, das Dock-Symbol oder `open liftoff://toggle`
 - Seiten, Ordner (zum Zusammenführen ziehen), Umsortieren per Drag-and-drop, Tastaturnavigation
-- Unscharfes Hintergrundbild (am sparsamsten), Live-Unschärfe oder ein eigenes Bild; Symbolgröße, Beschriftungsgröße und Farben einstellbar
+- Unscharfes oder scharfes Hintergrundbild (unscharf ist am sparsamsten), Live-Unschärfe, eingebaute Verläufe und Volltonfarben oder ein eigenes Bild; Symbolgröße, Beschriftungsgröße und Farben einstellbar
 - Mehrere Displays werden unterstützt · Apps ausblenden · Apps samt Restdateien deinstallieren · Anordnung sichern und wiederherstellen
 - 13 Sprachen, passend zur Systemsprache
 
@@ -106,7 +106,7 @@ Erfordert **macOS 26 oder neuer**, Apple Silicon oder Intel.
 
 ### Aktualisieren
 
-Ersetze `Liftoff.app` in `/Applications` durch die neue Version. Die Builds sind ad-hoc signiert, deshalb behandelt macOS jede Version als neue App: Du klickst einmal auf **Dennoch öffnen**, und Aufnahme von Bildschirm & Systemaudio sowie Bedienungshilfen müssen erneut aktiviert werden (sieht ein Schalter aktiv aus, bewirkt aber nichts, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu).
+Ersetze `Liftoff.app` in `/Applications` durch die neue Version. Seit 1.2.1 werden alle Releases mit demselben Zertifikat signiert, deshalb bleiben Aufnahme von Bildschirm & Systemaudio sowie Bedienungshilfen nach einem Update erlaubt; beim ersten Öffnen der neuen Version musst du eventuell noch einmal auf **Dennoch öffnen** klicken. Beim Update von 1.2.0 oder älter musst du ein letztes Mal neu erlauben (sieht ein Schalter aktiv aus, bewirkt aber nichts, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu).
 Um von neuen Versionen zu erfahren: Wähle **Nach Updates suchen…** im Menü in der Menüleiste oder in den Einstellungen, aktiviere in den Einstellungen **Wöchentlich nach Updates suchen** (standardmäßig aus) oder nutze **Watch → Custom → Releases** auf dieser Seite.
 
 ## Berechtigungen im Überblick
@@ -135,7 +135,7 @@ Prüfe, ob in Systemeinstellungen → Datenschutz & Sicherheit für Liftoff **Au
 <details>
 <summary><b>Verliere ich Berechtigungen, wenn ich aktualisiere?</b></summary>
 
-Ja, bei den ad-hoc signierten Releases: macOS sieht jede Version als neue App, deshalb müssen Aufnahme von Bildschirm & Systemaudio und Bedienungshilfen erneut erlaubt werden. Wenn du die App selbst mit deinem eigenen Zertifikat baust, bleibt das erspart – siehe [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
+Nein, seit 1.2.1 nicht mehr: Die Releases sind mit demselben Zertifikat signiert, deshalb erkennt macOS jedes Update als dieselbe App und behält Aufnahme von Bildschirm & Systemaudio und Bedienungshilfen bei. Beim Update von 1.2.0 oder älter musst du ein letztes Mal neu erlauben. Wenn du die App selbst baust, erreichst du dasselbe, indem du mit deinem eigenen Zertifikat signierst – siehe [`Config/Signing.xcconfig`](../Config/Signing.xcconfig).
 </details>
 
 <details>

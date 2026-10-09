@@ -143,6 +143,8 @@ final class LaunchpadWindowController {
     private let hostingView: NSHostingView<LaunchpadRootView>
     /// 搜尋列是純 AppKit（見 SearchBarView）：打字完全不經過 SwiftUI 排版
     private let searchBar: SearchBarView
+    /// 右上角的設定按鈕（見 SettingsButtonView）
+    private let settingsButton: SettingsButtonView
     private var searchLoop: RenderLoop?
     let renderer: GridRenderer
     private var hideGeneration = 0
@@ -170,6 +172,7 @@ final class LaunchpadWindowController {
         // 視窗大小由我們決定，不讓 SwiftUI 內容反過來撐大視窗
         hostingView.sizingOptions = []
         searchBar = SearchBarView(model: model)
+        settingsButton = SettingsButtonView(model: model)
 
         container.wantsLayer = true
         backgroundView.autoresizingMask = [.width, .height]
@@ -183,6 +186,7 @@ final class LaunchpadWindowController {
         hostingView.wantsLayer = true
         contentView.addSubview(hostingView)
         contentView.addSubview(searchBar)
+        contentView.addSubview(settingsButton)
         panel.contentView = container
         renderer.start()
         // 搜尋列位置跟著版面（螢幕大小、邊距設定）走
@@ -632,13 +636,20 @@ final class LaunchpadWindowController {
         return (grid, milliseconds(since: mark))
     }
 
-    /// 依版面把搜尋列置中於上方。
+    /// 依版面把搜尋列置中於上方，設定按鈕放在同一列右側。
     private func positionSearchBar() {
         let metrics = model.metrics
         let size = SearchBarView.size
         let frame = CGRect(x: (metrics.containerSize.width - size.width) / 2, y: metrics.searchBarY - size.height / 2,
                            width: size.width, height: size.height)
         if searchBar.frame != frame { searchBar.frame = frame }
+
+        // 設定按鈕：和搜尋列同一條水平線，右緣對齊最右一欄圖示的右緣
+        let buttonSize = SettingsButtonView.size
+        let iconRight = metrics.gridRect.maxX - (metrics.cellSize.width - metrics.iconSize) / 2
+        let buttonFrame = CGRect(x: iconRight - buttonSize.width, y: metrics.searchBarY - buttonSize.height / 2,
+                                 width: buttonSize.width, height: buttonSize.height)
+        if settingsButton.frame != buttonFrame { settingsButton.frame = buttonFrame }
     }
 
     /// 立即讓 SwiftUI 套用狀態變更並完成排版（自我測試量測「狀態改變 → 畫面更新」的主執行緒成本）。

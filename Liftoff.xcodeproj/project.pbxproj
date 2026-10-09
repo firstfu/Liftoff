@@ -45,6 +45,7 @@
 		7756455E33BEB6CD40E44F8A /* SearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDDB63B1795F23EC48EC634 /* SearchIndex.swift */; };
 		779DA7471A10C4E85DBEAEDF /* PinchRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */; };
 		7867B174A31F7C0A73CDE7F0 /* LaunchpadWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */; };
+		7ADBC426B9EF609B8E69CE64 /* SettingsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A02BB0895C51A13D06643C /* SettingsButtonView.swift */; };
 		7E9648CDF146DC21780ADB81 /* PinchReleaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A159D9CC16347F223D820EE /* PinchReleaseTests.swift */; };
 		7FDC438970AAEF896301DA62 /* AppCategories.json in Resources */ = {isa = PBXBuildFile; fileRef = 56C4C3487EBCC0124539CD30 /* AppCategories.json */; };
 		842AC7F7CEA81209133FA381 /* LaunchpadRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A913D365C8BE25925F47B4FB /* LaunchpadRootView.swift */; };
@@ -107,6 +108,7 @@
 		216237218CD1A6433B060B7A /* IconStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconStore.swift; sourceTree = "<group>"; };
 		225A0FE55E7491CE3468D35D /* ThumbnailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailService.swift; sourceTree = "<group>"; };
 		24E75248F58676E236D3D843 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
+		29A02BB0895C51A13D06643C /* SettingsButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButtonView.swift; sourceTree = "<group>"; };
 		2B5EACF8CA9D58F7085C7B18 /* UpdateCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCheckerTests.swift; sourceTree = "<group>"; };
 		30A5C73F519E457F6C77D9ED /* TrackpadGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadGesture.swift; sourceTree = "<group>"; };
 		365775DB9A7DCE73F3E5A622 /* WindowActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowActions.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */,
 				7D5F3C8F2F261CCC8DB820A8 /* PagerState.swift */,
 				74ADFF8A5AF7F7A2B6B6A662 /* SearchBarView.swift */,
+				29A02BB0895C51A13D06643C /* SettingsButtonView.swift */,
 				F34B6E640E2BF85FDCEAC065 /* WindowPreviewModel.swift */,
 				3976A50B0A3ABB3892EA7489 /* WindowPreviewView.swift */,
 			);
@@ -543,6 +546,7 @@
 				2B8DA14F682B2B93A7DD8404 /* SelfTest+Demo.swift in Sources */,
 				981E5930550298F967C3F98F /* SelfTest+Preview.swift in Sources */,
 				C3AD5065A1845FD17E5EFFA1 /* SelfTest.swift in Sources */,
+				7ADBC426B9EF609B8E69CE64 /* SettingsButtonView.swift in Sources */,
 				65505F64207B8892D5F248D7 /* SettingsHost.swift in Sources */,
 				9AC04757250DDA907F8D4D95 /* SettingsIPC.swift in Sources */,
 				7040EB7E080CB8943600CEC5 /* SettingsProcess.swift in Sources */,

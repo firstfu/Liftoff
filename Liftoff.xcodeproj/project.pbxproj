@@ -25,6 +25,7 @@
 		2F90542619EA107CF1BC828A /* WallpaperPresets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC1D4C11A9692CB3D6BE25A /* WallpaperPresets.swift */; };
 		343A006FB3924496FE20AFB6 /* Uninstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF77B24B8606185953AA5FD6 /* Uninstaller.swift */; };
 		37DA33B692EBE1397D635757 /* HotKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878DC2F83884EB8189CFA663 /* HotKeyService.swift */; };
+		3BB8B6874BCFFFC4BF7363BD /* PagerScrollTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A762B9A900097F86768A16D /* PagerScrollTests.swift */; };
 		3E5BC09296E73837C5E7DD63 /* PrivateAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A117943E3A057C260C6A994 /* PrivateAPI.swift */; };
 		43DC4C6C9205E5A6BED5C50D /* DockHandoff.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B5F4848F953F3EBBEEDF0C /* DockHandoff.swift */; };
 		4688EDF0BAE0EBC1B7C3244B /* HotCornerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3749034448766A416452E0 /* HotCornerService.swift */; };
@@ -123,6 +124,7 @@
 		5F5AB48B2798A4BF7E257285 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		63C5753B79000E7683F59D7D /* SearchIndexTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexTests.swift; sourceTree = "<group>"; };
 		6A117943E3A057C260C6A994 /* PrivateAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateAPI.swift; sourceTree = "<group>"; };
+		6A762B9A900097F86768A16D /* PagerScrollTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollTests.swift; sourceTree = "<group>"; };
 		6B253794BF109AFA8BB4B710 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72D0D6A2E7C32B47EAC2919C /* LaunchpadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadModel.swift; sourceTree = "<group>"; };
 		74ADFF8A5AF7F7A2B6B6A662 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				41D74CA77F980139C456C1C8 /* LaunchpadImporterTests.swift */,
 				CE4D25EFA1BCB6AFDD92A3D7 /* LayoutTests.swift */,
 				E2A198A07C1B025351B68798 /* LocalizationTests.swift */,
+				6A762B9A900097F86768A16D /* PagerScrollTests.swift */,
 				05ADDCD75D91D4D0B1326EEE /* PinchIntentTests.swift */,
 				5A159D9CC16347F223D820EE /* PinchReleaseTests.swift */,
 				4381D50B82214B6E91047993 /* RenderingTests.swift */,
@@ -484,6 +487,7 @@
 				DE42BDC9A8D5E30303852158 /* LaunchpadImporterTests.swift in Sources */,
 				EE60B20481291DA089E14F87 /* LayoutTests.swift in Sources */,
 				E7AF01F27AF13F6DFC2EB60D /* LocalizationTests.swift in Sources */,
+				3BB8B6874BCFFFC4BF7363BD /* PagerScrollTests.swift in Sources */,
 				AC0188CEC36BED35592492F4 /* PinchIntentTests.swift in Sources */,
 				7E9648CDF146DC21780ADB81 /* PinchReleaseTests.swift in Sources */,
 				549E847C8A76998CC5D21402 /* RenderingTests.swift in Sources */,

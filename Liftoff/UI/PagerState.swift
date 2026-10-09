@@ -5,6 +5,7 @@
 //  翻頁狀態與輸入處理：
 //  - 觸控板雙指橫滑：頁面 1:1 跟手，放開時依位移與速度決定翻頁，以彈簧動畫歸位
 //  - 滑鼠滾輪（非連續捲動）：每一格翻一頁，並有冷卻時間避免一次滾太多頁
+//  - 平滑捲動的滾輪（Logi Options+、Mos 等，連續捲動但沒有手勢 phase）：累積到門檻翻一頁，同一串只翻一次
 //  - 觸控板直向滑動：累積到門檻翻一頁
 //  - 滑鼠在空白處按住左右拖：與觸控板相同的跟手與放開判斷（經典啟動台可用滑鼠拖動翻頁）
 //  所有捲動事件在 NSPanel.sendEvent 就攔下直接送到這裡，不經過 SwiftUI 的捲動系統。
@@ -30,6 +31,10 @@ final class PagerState {
     @ObservationIgnored private var verticalAccumulator: CGFloat = 0
     @ObservationIgnored private var verticalFlipped = false
     @ObservationIgnored private var lastWheelFlip = ContinuousClock.now - .seconds(1)
+    /// 平滑捲動：本串事件累積的位移、是否已翻過頁、上一個事件的時間（間隔夠久才算新的一串）
+    @ObservationIgnored private var smoothAccumulator: CGFloat = 0
+    @ObservationIgnored private var smoothFlipped = false
+    @ObservationIgnored private var lastSmoothEvent = ContinuousClock.now - .seconds(1)
     /// 最近的位移樣本（時間, dx），估算放開瞬間的速度
     @ObservationIgnored private var samples: [(time: TimeInterval, dx: CGFloat)] = []
 
@@ -57,7 +62,11 @@ final class PagerState {
     /// - Returns: 是否已處理
     func handleScroll(_ event: NSEvent, pageCount: Int) -> Bool {
         guard pageCount > 0 else { return false }
-        if event.hasPreciseScrollingDeltas {
+        if event.hasPreciseScrollingDeltas, event.phase.isEmpty, event.momentumPhase.isEmpty {
+            // 連續捲動卻沒有任何 phase：不是手指手勢，是平滑捲動工具改寫過的滾輪（issue #11）。
+            // 交給 handleTrackpad 會因 phase 為空被整個略過，滾輪就完全翻不了頁
+            handleSmoothWheel(event, pageCount: pageCount)
+        } else if event.hasPreciseScrollingDeltas {
             handleTrackpad(event, pageCount: pageCount)
         } else {
             handleWheel(event, pageCount: pageCount)
@@ -157,5 +166,22 @@ final class PagerState {
         guard abs(delta) > 0.1, ContinuousClock.now - lastWheelFlip > .milliseconds(260) else { return }
         lastWheelFlip = .now
         go(to: page + (delta < 0 ? 1 : -1), pageCount: pageCount)
+    }
+
+    /// 平滑捲動的滾輪：一格會被拆成持續數百毫秒的一串小位移，
+    /// 用冷卻時間判斷會一格翻兩頁，所以改成「累積過門檻翻一頁、停頓 150ms 後才算下一串」。
+    private func handleSmoothWheel(_ event: NSEvent, pageCount: Int) {
+        let now = ContinuousClock.now
+        if now - lastSmoothEvent > .milliseconds(150) {
+            smoothAccumulator = 0
+            smoothFlipped = false
+        }
+        lastSmoothEvent = now
+        guard !smoothFlipped else { return }
+        let delta = abs(event.scrollingDeltaY) > abs(event.scrollingDeltaX) ? event.scrollingDeltaY : event.scrollingDeltaX
+        smoothAccumulator += delta
+        guard abs(smoothAccumulator) > 12 else { return }
+        smoothFlipped = true
+        go(to: page + (smoothAccumulator < 0 ? 1 : -1), pageCount: pageCount)
     }
 }

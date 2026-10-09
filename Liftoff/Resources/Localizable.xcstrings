@@ -673,6 +673,89 @@
       "comment": "出現在 DockHandoff.swift, ItemCell.swift, WindowPreviewView.swift（英文：Liftoff）",
       "shouldTranslate": false
     },
+    "Liftoff 沒有回應，請稍後再試": {
+      "comment": "出現在 SettingsProcess.swift：設定頁請主程式改版面但 5 秒內沒回覆（英文：Liftoff isn't responding. Try again later.）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff antwortet nicht. Bitte versuche es später erneut."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff isn't responding. Try again later."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff no responde. Inténtalo de nuevo más tarde."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff ne répond pas. Réessayez plus tard."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff non risponde. Riprova più tardi."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff が応答しません。しばらくしてからもう一度お試しください。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff가 응답하지 않습니다. 나중에 다시 시도해 주세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff reageert niet. Probeer het later opnieuw."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Liftoff não está respondendo. Tente novamente mais tarde."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff не отвечает. Повторите попытку позже."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff yanıt vermiyor. Lütfen daha sonra tekrar deneyin."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff 没有响应，请稍后再试"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff 沒有回應，請稍後再試"
+          }
+        }
+      }
+    },
     "WebKit 資料": {
       "comment": "出現在 Uninstaller.swift（英文：WebKit Data）",
       "localizations": {

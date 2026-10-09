@@ -2,8 +2,9 @@
 //  SettingsView.swift
 //  Liftoff
 //
-//  設定視窗（SwiftUI Settings 場景）：一般、觸發方式、外觀、視窗預覽、佈局。
-//  所有選項直接綁定 AppSettings，修改即時生效（協調者會觀察變化並套用）。
+//  設定視窗的內容：一般、觸發方式、外觀、視窗預覽、佈局。
+//  跑在獨立的設定 process（見 `SettingsProcess.swift`）：選項直接綁定 AppSettings，寫進 UserDefaults 後
+//  主程式以 KVO 收到並套用；改版面、備份等只有主程式能做的事經由 `SettingsContext` 請主程式執行。
 //
 
 import SwiftUI
@@ -15,8 +16,9 @@ private enum SettingsPane: CaseIterable, Identifiable {
 
     var id: Self { self }
 
-    /// 與字串目錄既有的 key 相同，沿用原本的 13 語言翻譯
-    var title: LocalizedStringKey {
+    /// 與字串目錄既有的 key 相同，沿用原本的 13 語言翻譯。
+    /// 用 `LocalizedStringResource` 而非 `LocalizedStringKey`：視窗標題要在 SwiftUI 之外轉成 String
+    var title: LocalizedStringResource {
         switch self {
         case .general: "一般"
         case .trigger: "觸發方式"
@@ -65,7 +67,10 @@ private struct SettingsIconTile: View {
 
 /// 設定視窗：仿 macOS 26「系統設定」的側邊欄＋分組表單版型，而不是舊式的工具列分頁。
 struct SettingsView: View {
-    let coordinator: AppCoordinator
+    let context: SettingsContext
+    /// 目前分頁標題改變時呼叫（含第一次出現），由 `SettingsWindowController` 設成視窗標題。
+    /// 為什麼要回呼：`NSHostingController` 不會把 navigationTitle 帶到 NSWindow，視窗會顯示「未命名」
+    var onTitleChange: (String) -> Void = { _ in }
     @State private var selection: SettingsPane = .general
 
     var body: some View {
@@ -82,19 +87,22 @@ struct SettingsView: View {
             .toolbar(removing: .sidebarToggle)
         } detail: {
             detail
-                .navigationTitle(selection.title)
+                .navigationTitle(Text(selection.title))
         }
         .frame(width: 760, height: 620)
+        .onChange(of: selection, initial: true) { _, pane in
+            onTitleChange(String(localized: pane.title))
+        }
     }
 
     @ViewBuilder
     private var detail: some View {
         switch selection {
-        case .general: GeneralSettings(settings: coordinator.settings, updates: coordinator.updates)
-        case .trigger: TriggerSettings(coordinator: coordinator, settings: coordinator.settings)
-        case .appearance: AppearanceSettings(settings: coordinator.settings)
-        case .preview: PreviewSettings(settings: coordinator.settings, permissions: coordinator.permissions)
-        case .layout: LayoutSettings(coordinator: coordinator, settings: coordinator.settings)
+        case .general: GeneralSettings(settings: context.settings, updates: context.updates)
+        case .trigger: TriggerSettings(context: context, settings: context.settings)
+        case .appearance: AppearanceSettings(settings: context.settings)
+        case .preview: PreviewSettings(settings: context.settings, permissions: context.permissions)
+        case .layout: LayoutSettings(context: context, settings: context.settings)
         }
     }
 }
@@ -188,16 +196,16 @@ private struct UpdateRow: View {
 // MARK: - 觸發方式
 
 private struct TriggerSettings: View {
-    let coordinator: AppCoordinator
+    let context: SettingsContext
     @Bindable var settings: AppSettings
 
     var body: some View {
         Form {
             Section("快速鍵") {
                 LabeledContent("打開/收起啟動台") {
-                    HotKeyRecorder(combo: $settings.hotKey, hotKeys: coordinator.hotKeys)
+                    HotKeyRecorder(combo: $settings.hotKey, onRecordingChange: context.setHotKeyRecording)
                 }
-                if !coordinator.hotKeyRegistered {
+                if !context.hotKeyRegistered {
                     Label("這組快速鍵已被其他 App 占用，請換一組。", systemImage: "exclamationmark.triangle")
                         .foregroundStyle(.orange)
                 }
@@ -522,7 +530,7 @@ private struct PermissionRow: View {
 // MARK: - 佈局
 
 private struct LayoutSettings: View {
-    let coordinator: AppCoordinator
+    let context: SettingsContext
     @Bindable var settings: AppSettings
     @State private var backups: [LayoutStore.Backup] = []
     @State private var pendingAction: PendingAction?
@@ -547,19 +555,17 @@ private struct LayoutSettings: View {
                 Button("匯入舊版啟動台的排列…") { pendingAction = .importLegacy }
                     .disabled(LaunchpadImporter.databaseURL == nil)
                 Button("智慧整理…") {
-                    organizePlan = OrganizePlan(entries: coordinator.catalog.entries, hidden: settings.hiddenApps, classifier: .bundled())
+                    organizePlan = OrganizePlan(entries: context.catalog.entries, hidden: settings.hiddenApps, classifier: .bundled())
                 }
                 Button("依名稱重新排列…") { pendingAction = .alphabetical }
                 Button("填滿各頁空位") {
-                    coordinator.layoutStore.update { $0.compact(capacity: settings.pageCapacity) }
-                    message = String(localized: "已整理頁面")
+                    run(.compact, success: String(localized: "已整理頁面"))
                 }
                 if let message { Text(message).font(.callout).foregroundStyle(.secondary) }
             }
             Section("備份") {
                 Button("立即備份目前排列") {
-                    _ = try? coordinator.layoutStore.createBackup()
-                    reloadBackups()
+                    run(.backup, success: nil)
                 }
                 ForEach(backups) { backup in
                     HStack {
@@ -567,7 +573,7 @@ private struct LayoutSettings: View {
                         Spacer()
                         Button("還原") { pendingAction = .restore(backup) }
                         Button(role: .destructive) {
-                            coordinator.layoutStore.deleteBackup(backup)
+                            context.deleteBackup(backup)
                             reloadBackups()
                         } label: { Image(systemName: "trash") }
                             .buttonStyle(.borderless)
@@ -580,10 +586,10 @@ private struct LayoutSettings: View {
                 }
                 ForEach(settings.hiddenApps.sorted(), id: \.self) { id in
                     HStack {
-                        if let image = coordinator.icons.icon(for: id).cgImage {
-                            Image(decorative: image, scale: 1).resizable().frame(width: 20, height: 20)
+                        if let image = context.icon(for: id) {
+                            Image(nsImage: image).resizable().frame(width: 20, height: 20)
                         }
-                        Text(coordinator.catalog.entry(id)?.name ?? id)
+                        Text(context.name(for: id))
                         Spacer()
                         Button("恢復顯示") { settings.hiddenApps.remove(id) }
                     }
@@ -607,7 +613,7 @@ private struct LayoutSettings: View {
         .onAppear(perform: reloadBackups)
         .sheet(isPresented: Binding(get: { organizePlan != nil }, set: { if !$0 { organizePlan = nil } })) {
             if let plan = organizePlan {
-                OrganizePreview(plan: plan, coordinator: coordinator) { applyOrganize(plan) } onCancel: { organizePlan = nil }
+                OrganizePreview(plan: plan, context: context) { applyOrganize() } onCancel: { organizePlan = nil }
             }
         }
         .alert(item: $pendingAction) { action in
@@ -628,42 +634,39 @@ private struct LayoutSettings: View {
         }
     }
 
+    /// 版面指令都由主程式執行（它持有版面並負責存檔，且會先自動備份），這裡只送出請求並顯示結果。
     private func perform(_ action: PendingAction) {
-        let store = coordinator.layoutStore
-        let entries = coordinator.catalog.entries
-        let capacity = settings.pageCapacity
-        _ = try? store.createBackup()
-        do {
-            switch action {
-            case .importLegacy:
-                guard let url = LaunchpadImporter.databaseURL else { return }
-                let imported = try LaunchpadImporter.read(at: url)
-                store.replace(with: LaunchpadImporter.makeLayout(from: imported, entries: entries, hidden: settings.hiddenApps, capacity: capacity))
-                message = String(localized: "已匯入舊版啟動台的排列")
-            case .alphabetical:
-                store.replace(with: .alphabetical(entries: entries, capacity: capacity, hidden: settings.hiddenApps))
-                message = String(localized: "已依名稱重新排列")
-            case .restore(let backup):
-                try store.restore(backup, entries: entries, hidden: settings.hiddenApps, capacity: capacity)
-                message = String(localized: "已還原")
-            }
-        } catch {
-            message = error.localizedDescription
+        switch action {
+        case .importLegacy: run(.importLegacy, success: String(localized: "已匯入舊版啟動台的排列"))
+        case .alphabetical: run(.alphabetical, success: String(localized: "已依名稱重新排列"))
+        case .restore(let backup): run(.restore, argument: backup.url.path, success: String(localized: "已還原"))
         }
-        reloadBackups()
     }
 
-    /// 套用智慧整理（先自動備份目前排列）。
-    private func applyOrganize(_ plan: OrganizePlan) {
-        _ = try? coordinator.layoutStore.createBackup()
-        coordinator.layoutStore.replace(with: plan.layout(capacity: settings.pageCapacity))
+    /// 套用智慧整理：主程式以同一份 App 清單與分類表重算，結果與預覽相同（先自動備份目前排列）。
+    private func applyOrganize() {
         organizePlan = nil
-        message = String(localized: "已智慧整理，原本的排列已備份")
-        reloadBackups()
+        run(.organize, success: String(localized: "已智慧整理，原本的排列已備份"))
+    }
+
+    /// 請主程式執行版面指令，完成後顯示結果並重新列出備份。
+    /// - Parameters:
+    ///   - command: 版面指令
+    ///   - argument: 指令參數（還原時為備份檔路徑）
+    ///   - success: 成功時顯示的訊息；nil 表示不顯示
+    private func run(_ command: SettingsIPC.Command, argument: String? = nil, success: String?) {
+        Task {
+            if let error = await context.perform(command, argument: argument) {
+                message = error
+            } else if let success {
+                message = success
+            }
+            reloadBackups()
+        }
     }
 
     private func reloadBackups() {
-        backups = coordinator.layoutStore.backups()
+        backups = context.backups()
     }
 
     private func addDirectory() {
@@ -678,11 +681,11 @@ private struct LayoutSettings: View {
 }
 
 #Preview("設定") {
-    SettingsView(coordinator: AppCoordinator.shared)
+    SettingsView(context: SettingsContext(settings: .shared, hostPID: nil))
 }
 
 #Preview("觸發方式") {
-    TriggerSettings(coordinator: AppCoordinator.shared, settings: AppSettings.shared)
+    TriggerSettings(context: SettingsContext(settings: .shared, hostPID: nil), settings: AppSettings.shared)
         .frame(width: 560, height: 520)
 }
 
@@ -692,7 +695,7 @@ private struct LayoutSettings: View {
 }
 
 #Preview("佈局") {
-    LayoutSettings(coordinator: AppCoordinator.shared, settings: AppSettings.shared)
+    LayoutSettings(context: SettingsContext(settings: .shared, hostPID: nil), settings: AppSettings.shared)
         .frame(width: 560, height: 620)
 }
 
@@ -701,7 +704,7 @@ private struct LayoutSettings: View {
 /// 智慧整理的預覽：列出每個資料夾會收哪些 App、哪些留在外面，確認後才套用。
 struct OrganizePreview: View {
     let plan: OrganizePlan
-    let coordinator: AppCoordinator
+    let context: SettingsContext
     let onApply: () -> Void
     let onCancel: () -> Void
 
@@ -752,8 +755,8 @@ struct OrganizePreview: View {
                 ForEach(apps, id: \.self) { id in
                     VStack(spacing: 4) {
                         ZStack(alignment: .topTrailing) {
-                            if let image = coordinator.icons.icon(for: id).cgImage {
-                                Image(decorative: image, scale: 1).resizable().frame(width: 40, height: 40)
+                            if let image = context.icon(for: id) {
+                                Image(nsImage: image).resizable().frame(width: 40, height: 40)
                             } else {
                                 Color.clear.frame(width: 40, height: 40)
                             }
@@ -763,7 +766,7 @@ struct OrganizePreview: View {
                                     .offset(x: 4, y: -4)
                             }
                         }
-                        Text(coordinator.catalog.entry(id)?.name ?? id)
+                        Text(context.name(for: id))
                             .font(.caption).lineLimit(2).multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)

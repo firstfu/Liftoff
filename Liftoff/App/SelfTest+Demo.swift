@@ -148,7 +148,9 @@ enum DemoShots {
         sheet.titlebarAppearsTransparent = true
         sheet.titleVisibility = .hidden
         for button in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] { sheet.standardWindowButton(button)?.isHidden = true }
-        sheet.contentView = NSHostingView(rootView: OrganizePreview(plan: plan, coordinator: coordinator, onApply: {}, onCancel: {}))
+        // 只用來畫畫面：不連主程式（hostPID nil），名稱與圖示取自磁碟上的 App 索引
+        let context = SettingsContext(settings: coordinator.settings, hostPID: nil)
+        sheet.contentView = NSHostingView(rootView: OrganizePreview(plan: plan, context: context, onApply: {}, onCancel: {}))
         sheet.center()
         sheet.orderFrontRegardless()
         try? await Task.sleep(for: .milliseconds(900))

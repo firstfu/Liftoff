@@ -3,7 +3,7 @@
 //  Liftoff
 //
 //  快速鍵錄製按鈕：點一下進入錄製，按下想要的組合鍵（至少一個修飾鍵，或 F 功能鍵）即完成；Esc 取消。
-//  錄製期間暫停全域快速鍵，避免按到現有組合時直接觸發啟動台。
+//  錄製期間請主程式暫停全域快速鍵，避免按到現有組合時直接觸發啟動台（快速鍵由主程式註冊，設定頁在另一個 process）。
 //
 
 import AppKit
@@ -12,7 +12,8 @@ import SwiftUI
 
 struct HotKeyRecorder: View {
     @Binding var combo: HotKeyCombo?
-    let hotKeys: HotKeyService
+    /// 開始錄製時以 true、結束（含取消）時以 false 呼叫；呼叫端據此暫停或恢復全域快速鍵
+    let onRecordingChange: (Bool) -> Void
     @State private var isRecording = false
     @State private var monitor: Any?
 
@@ -45,7 +46,7 @@ struct HotKeyRecorder: View {
 
     private func start() {
         isRecording = true
-        hotKeys.unregister()
+        onRecordingChange(true)
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             let flags = event.modifierFlags.intersection([.command, .option, .control, .shift])
             if event.keyCode == UInt16(kVK_Escape), flags.isEmpty {
@@ -70,8 +71,8 @@ struct HotKeyRecorder: View {
         monitor = nil
         if isRecording {
             isRecording = false
-            // 錄製結束（無論是否變更）都重新註冊目前的快速鍵
-            hotKeys.register(combo)
+            // 錄製結束（無論是否變更）都請主程式依目前設定重新註冊
+            onRecordingChange(false)
         }
     }
 }

@@ -70,83 +70,88 @@ final class AppSettings {
     static let shared = AppSettings()
 
     @ObservationIgnored private let defaults: UserDefaults
+    /// 正在依另一個 process 寫入的值重新讀取：這期間屬性變動不寫回，
+    /// 否則快速拖動滑桿時，這邊寫回的舊值會蓋掉對方剛寫的新值（兩邊來回跳動）
+    @ObservationIgnored private var isReloading = false
+    @ObservationIgnored private var externalObserver: DefaultsObserver?
+    @ObservationIgnored private var reloadTask: Task<Void, Never>?
 
     // MARK: 版面與外觀
 
     /// 每頁欄數
-    var columns: Int { didSet { defaults.set(columns, forKey: Key.columns) } }
+    var columns: Int { didSet { save(columns, forKey: Key.columns) } }
     /// 每頁列數
-    var rows: Int { didSet { defaults.set(rows, forKey: Key.rows) } }
+    var rows: Int { didSet { save(rows, forKey: Key.rows) } }
     /// 圖示大小倍率（1.0 = 依格子大小自動計算的標準尺寸）
-    var iconScale: Double { didSet { defaults.set(iconScale, forKey: Key.iconScale) } }
+    var iconScale: Double { didSet { save(iconScale, forKey: Key.iconScale) } }
     /// App 名稱字級（pt）
-    var labelFontSize: Double { didSet { defaults.set(labelFontSize, forKey: Key.labelFontSize) } }
-    var showsLabels: Bool { didSet { defaults.set(showsLabels, forKey: Key.showsLabels) } }
-    var labelColor: LabelColorMode { didSet { defaults.set(labelColor.rawValue, forKey: Key.labelColor) } }
-    var iconAppearance: IconAppearance { didSet { defaults.set(iconAppearance.rawValue, forKey: Key.iconAppearance) } }
+    var labelFontSize: Double { didSet { save(labelFontSize, forKey: Key.labelFontSize) } }
+    var showsLabels: Bool { didSet { save(showsLabels, forKey: Key.showsLabels) } }
+    var labelColor: LabelColorMode { didSet { save(labelColor.rawValue, forKey: Key.labelColor) } }
+    var iconAppearance: IconAppearance { didSet { save(iconAppearance.rawValue, forKey: Key.iconAppearance) } }
     /// 緊湊模式：縮小頁面四周留白
-    var compactMargins: Bool { didSet { defaults.set(compactMargins, forKey: Key.compactMargins) } }
+    var compactMargins: Bool { didSet { save(compactMargins, forKey: Key.compactMargins) } }
 
-    var backgroundStyle: BackgroundStyle { didSet { defaults.set(backgroundStyle.rawValue, forKey: Key.backgroundStyle) } }
+    var backgroundStyle: BackgroundStyle { didSet { save(backgroundStyle.rawValue, forKey: Key.backgroundStyle) } }
     /// 背景模糊半徑（0–100）
-    var blurRadius: Double { didSet { defaults.set(blurRadius, forKey: Key.blurRadius) } }
+    var blurRadius: Double { didSet { save(blurRadius, forKey: Key.blurRadius) } }
     /// 背景變暗程度（0–0.8）
-    var dimming: Double { didSet { defaults.set(dimming, forKey: Key.dimming) } }
+    var dimming: Double { didSet { save(dimming, forKey: Key.dimming) } }
     /// 自選背景圖片路徑
-    var customImagePath: String? { didSet { defaults.set(customImagePath, forKey: Key.customImagePath) } }
+    var customImagePath: String? { didSet { save(customImagePath, forKey: Key.customImagePath) } }
     /// 選用的內建背景（`WallpaperPreset.id`）
-    var presetWallpaper: String { didSet { defaults.set(presetWallpaper, forKey: Key.presetWallpaper) } }
+    var presetWallpaper: String { didSet { save(presetWallpaper, forKey: Key.presetWallpaper) } }
     /// 是否蓋住 Dock 與選單列（false 時 Dock 與選單列浮在啟動台之上，和經典啟動台一樣可見）
-    var coversDock: Bool { didSet { defaults.set(coversDock, forKey: Key.coversDock) } }
+    var coversDock: Bool { didSet { save(coversDock, forKey: Key.coversDock) } }
     /// 再次打開時回到上次的頁面
-    var remembersPage: Bool { didSet { defaults.set(remembersPage, forKey: Key.remembersPage) } }
+    var remembersPage: Bool { didSet { save(remembersPage, forKey: Key.remembersPage) } }
 
     // MARK: 觸發方式
 
     var hotKey: HotKeyCombo? {
         didSet {
             if let hotKey, let data = try? JSONEncoder().encode(hotKey) {
-                defaults.set(data, forKey: Key.hotKey)
+                save(data, forKey: Key.hotKey)
             } else {
-                defaults.set(Data(), forKey: Key.hotKey)
+                save(Data(), forKey: Key.hotKey)
             }
         }
     }
-    var hotCorner: HotCorner { didSet { defaults.set(hotCorner.rawValue, forKey: Key.hotCorner) } }
+    var hotCorner: HotCorner { didSet { save(hotCorner.rawValue, forKey: Key.hotCorner) } }
     /// 觸控板四/五指捏合開啟、張開關閉
-    var pinchGesture: Bool { didSet { defaults.set(pinchGesture, forKey: Key.pinchGesture) } }
-    var displayTarget: DisplayTarget { didSet { defaults.set(displayTarget.rawValue, forKey: Key.displayTarget) } }
+    var pinchGesture: Bool { didSet { save(pinchGesture, forKey: Key.pinchGesture) } }
+    var displayTarget: DisplayTarget { didSet { save(displayTarget.rawValue, forKey: Key.displayTarget) } }
 
     // MARK: 視窗縮圖預覽
 
-    var windowPreview: Bool { didSet { defaults.set(windowPreview, forKey: Key.windowPreview) } }
+    var windowPreview: Bool { didSet { save(windowPreview, forKey: Key.windowPreview) } }
     /// 游標停在執行中 App 上多久顯示預覽（秒）
-    var previewDelay: Double { didSet { defaults.set(previewDelay, forKey: Key.previewDelay) } }
+    var previewDelay: Double { didSet { save(previewDelay, forKey: Key.previewDelay) } }
 
     // MARK: 一般
 
     /// Dock 與選單列圖示至少要留一個，否則使用者找不到入口：關掉其中一個時若另一個也是關的，自動把另一個打開。
     var showsDockIcon: Bool {
         didSet {
-            defaults.set(showsDockIcon, forKey: Key.showsDockIcon)
+            save(showsDockIcon, forKey: Key.showsDockIcon)
             if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
         }
     }
     var showsMenuBarIcon: Bool {
         didSet {
-            defaults.set(showsMenuBarIcon, forKey: Key.showsMenuBarIcon)
+            save(showsMenuBarIcon, forKey: Key.showsMenuBarIcon)
             if !showsMenuBarIcon && !showsDockIcon { showsDockIcon = true }
         }
     }
     /// 隱藏的 App（識別鍵）
-    var hiddenApps: Set<String> { didSet { defaults.set(Array(hiddenApps).sorted(), forKey: Key.hiddenApps) } }
+    var hiddenApps: Set<String> { didSet { save(Array(hiddenApps).sorted(), forKey: Key.hiddenApps) } }
     /// 額外掃描的資料夾（外接硬碟、自訂位置）
-    var extraDirectories: [String] { didSet { defaults.set(extraDirectories, forKey: Key.extraDirectories) } }
+    var extraDirectories: [String] { didSet { save(extraDirectories, forKey: Key.extraDirectories) } }
 
     /// 每週自動向 GitHub 查詢新版本（預設關閉，符合「不主動連網」的承諾）
-    var autoChecksForUpdates: Bool { didSet { defaults.set(autoChecksForUpdates, forKey: Key.autoChecksForUpdates) } }
+    var autoChecksForUpdates: Bool { didSet { save(autoChecksForUpdates, forKey: Key.autoChecksForUpdates) } }
     /// 上次成功查詢新版本的時間
-    var lastUpdateCheck: Date? { didSet { defaults.set(lastUpdateCheck, forKey: Key.lastUpdateCheck) } }
+    var lastUpdateCheck: Date? { didSet { save(lastUpdateCheck, forKey: Key.lastUpdateCheck) } }
 
     /// 開機自動啟動（直接讀寫 SMAppService，不另存）
     var launchAtLogin: Bool {
@@ -179,6 +184,13 @@ final class AppSettings {
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
         static let hiddenApps = "hiddenApps", extraDirectories = "extraDirectories"
         static let autoChecksForUpdates = "autoChecksForUpdates", lastUpdateCheck = "lastUpdateCheck"
+        /// 跨 process 同步要觀察的 key（新增設定時記得加進來，並在 `reload()` 補上讀取）
+        static let all = [
+            columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins,
+            backgroundStyle, blurRadius, dimming, customImagePath, presetWallpaper, coversDock, remembersPage,
+            hotKey, hotCorner, pinchGesture, displayTarget, windowPreview, previewDelay, showsDockIcon,
+            showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, lastUpdateCheck,
+        ]
     }
 
     /// - Parameter defaults: 測試可注入獨立的 UserDefaults
@@ -208,12 +220,7 @@ final class AppSettings {
         presetWallpaper = defaults.string(forKey: Key.presetWallpaper) ?? WallpaperPreset.defaultID
         coversDock = defaults.bool(forKey: Key.coversDock)
         remembersPage = defaults.bool(forKey: Key.remembersPage)
-        if let data = defaults.data(forKey: Key.hotKey) {
-            // 空資料代表使用者刻意清除了快速鍵
-            hotKey = data.isEmpty ? nil : (try? JSONDecoder().decode(HotKeyCombo.self, from: data))
-        } else {
-            hotKey = .defaultCombo
-        }
+        hotKey = Self.readHotKey(defaults)
         hotCorner = HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none
         pinchGesture = defaults.bool(forKey: Key.pinchGesture)
         displayTarget = DisplayTarget(rawValue: defaults.string(forKey: Key.displayTarget) ?? "") ?? .mouse
@@ -229,11 +236,105 @@ final class AppSettings {
         if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
     }
 
+    /// 寫入 UserDefaults（依另一個 process 的值重新讀取期間略過）。
+    private func save(_ value: Any?, forKey key: String) {
+        guard !isReloading else { return }
+        defaults.set(value, forKey: key)
+    }
+
+    // MARK: - 跨 process 同步
+
+    /// 開始接收其他 process（主程式／設定 process）寫入的設定：以 KVO 觀察每個 key，有變動就重新讀取。
+    /// 主程式與設定 process 共用同一個 UserDefaults 網域，系統會把別的 process 的寫入以 KVO 通知過來（實測約 30ms）。
+    func startExternalSync() {
+        guard externalObserver == nil else { return }
+        externalObserver = DefaultsObserver(defaults: defaults, keys: Key.all) { [weak self] in
+            Task { @MainActor in self?.scheduleReload() }
+        }
+    }
+
+    /// 連續變動（拖滑桿）只在停下 50ms 後讀一次。
+    private func scheduleReload() {
+        reloadTask?.cancel()
+        reloadTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(50))
+            guard !Task.isCancelled else { return }
+            self?.reload()
+        }
+    }
+
+    /// 依 UserDefaults 目前的值更新屬性；只改有差異的，避免觸發不必要的觀察者（圖示重畫、背景重算）。
+    func reload() {
+        isReloading = true
+        defer { isReloading = false }
+        func update<T: Equatable>(_ keyPath: ReferenceWritableKeyPath<AppSettings, T>, _ value: T) {
+            if self[keyPath: keyPath] != value { self[keyPath: keyPath] = value }
+        }
+        update(\.columns, defaults.integer(forKey: Key.columns))
+        update(\.rows, defaults.integer(forKey: Key.rows))
+        update(\.iconScale, defaults.double(forKey: Key.iconScale))
+        update(\.labelFontSize, defaults.double(forKey: Key.labelFontSize))
+        update(\.showsLabels, defaults.bool(forKey: Key.showsLabels))
+        update(\.labelColor, LabelColorMode(rawValue: defaults.string(forKey: Key.labelColor) ?? "") ?? .auto)
+        update(\.iconAppearance, IconAppearance(rawValue: defaults.string(forKey: Key.iconAppearance) ?? "") ?? .system)
+        update(\.compactMargins, defaults.bool(forKey: Key.compactMargins))
+        update(\.backgroundStyle, BackgroundStyle(rawValue: defaults.string(forKey: Key.backgroundStyle) ?? "") ?? .wallpaper)
+        update(\.blurRadius, defaults.double(forKey: Key.blurRadius))
+        update(\.dimming, defaults.double(forKey: Key.dimming))
+        update(\.customImagePath, defaults.string(forKey: Key.customImagePath))
+        update(\.presetWallpaper, defaults.string(forKey: Key.presetWallpaper) ?? WallpaperPreset.defaultID)
+        update(\.coversDock, defaults.bool(forKey: Key.coversDock))
+        update(\.remembersPage, defaults.bool(forKey: Key.remembersPage))
+        update(\.hotKey, Self.readHotKey(defaults))
+        update(\.hotCorner, HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none)
+        update(\.pinchGesture, defaults.bool(forKey: Key.pinchGesture))
+        update(\.displayTarget, DisplayTarget(rawValue: defaults.string(forKey: Key.displayTarget) ?? "") ?? .mouse)
+        update(\.windowPreview, defaults.bool(forKey: Key.windowPreview))
+        update(\.previewDelay, defaults.double(forKey: Key.previewDelay))
+        update(\.showsDockIcon, defaults.bool(forKey: Key.showsDockIcon))
+        update(\.showsMenuBarIcon, defaults.bool(forKey: Key.showsMenuBarIcon))
+        update(\.hiddenApps, Set(defaults.stringArray(forKey: Key.hiddenApps) ?? []))
+        update(\.extraDirectories, defaults.stringArray(forKey: Key.extraDirectories) ?? [])
+        update(\.autoChecksForUpdates, defaults.bool(forKey: Key.autoChecksForUpdates))
+        update(\.lastUpdateCheck, defaults.object(forKey: Key.lastUpdateCheck) as? Date)
+    }
+
+    /// 讀取快速鍵：沒存過用預設值，空資料代表使用者刻意清除。
+    private static func readHotKey(_ defaults: UserDefaults) -> HotKeyCombo? {
+        guard let data = defaults.data(forKey: Key.hotKey) else { return .defaultCombo }
+        return data.isEmpty ? nil : (try? JSONDecoder().decode(HotKeyCombo.self, from: data))
+    }
+
     /// 還原外觀相關設定為預設值。
     func resetAppearance() {
         columns = 7; rows = 5; iconScale = 1.0; labelFontSize = 13; showsLabels = true
         labelColor = .auto; iconAppearance = .system; compactMargins = false
         backgroundStyle = .wallpaper; blurRadius = 45; dimming = 0.22; coversDock = true
+    }
+}
+
+/// 以 KVO 觀察 UserDefaults 的多個 key（含其他 process 的寫入），任一變動就呼叫 `onChange`。
+/// KVO 回呼可能在任意執行緒，呼叫端自行切回主執行緒。
+private final class DefaultsObserver: NSObject {
+    // UserDefaults 本身可跨執行緒使用；deinit 不在 MainActor 上，需標成 nonisolated(unsafe) 才能移除觀察
+    nonisolated(unsafe) private let defaults: UserDefaults
+    private let keys: [String]
+    private let onChange: @Sendable () -> Void
+
+    init(defaults: UserDefaults, keys: [String], onChange: @escaping @Sendable () -> Void) {
+        self.defaults = defaults
+        self.keys = keys
+        self.onChange = onChange
+        super.init()
+        for key in keys { defaults.addObserver(self, forKeyPath: key, options: [], context: nil) }
+    }
+
+    deinit {
+        for key in keys { defaults.removeObserver(self, forKeyPath: key) }
+    }
+
+    nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        onChange()
     }
 }
 

@@ -75,6 +75,8 @@ final class AppCoordinator {
         // 在開始觀察設定之前：改指向副本不必觸發一次背景重算
         WallpaperLibrary.adoptLegacyPath(in: settings)
         observeSettings()
+        // 設定頁在另一個 process 寫入 UserDefaults，以 KVO 接收後更新，上面的觀察者就會套用
+        settings.startExternalSync()
         updates.applyAutoCheckSetting()
         applyActivationPolicy()
         phase("settings")
@@ -154,36 +156,63 @@ final class AppCoordinator {
 
     // MARK: - 設定視窗
 
+    /// 設定 process 的管理者（設定頁跑在另一個 process，見 `SettingsIPC.swift`）
+    private lazy var settingsHost = SettingsHost(actions: .init(
+        perform: { [weak self] command, argument in try self?.performLayoutCommand(command, argument: argument) },
+        pauseHotKey: { [weak self] in self?.hotKeys.unregister() },
+        resumeHotKey: { [weak self] in
+            guard let self else { return }
+            // 設定 process 剛寫入的新組合可能還沒經 KVO 同步過來，先主動讀一次
+            self.settings.reload()
+            self.hotKeyRegistered = self.hotKeys.register(self.settings.hotKey)
+        },
+        hotKeyRegistered: { [weak self] in self?.hotKeyRegistered ?? true },
+        openURL: { [weak self] url in self?.handle(url: url) }
+    ))
+
+    /// 打開設定視窗（已開著就帶到最前）；會先收起啟動台。
     func openSettings() {
         hide(reason: .settings)
-        NSApp.activate()
-        // SwiftUI 的 Settings 場景沒有公開的 AppKit 開啟方式：直接觸發 App 選單裡系統產生的「設定…」項目
-        if let item = NSApp.mainMenu?.items.first?.submenu?.items.first(where: { $0.keyEquivalent == "," }),
-           let action = item.action {
-            NSApp.sendAction(action, to: item.target, from: item)
-        }
-        bringSettingsToFront()
+        settingsHost.open()
     }
 
-    /// 把設定視窗強制帶到最前並成為 key window。
-    ///
-    /// 為什麼要補這一步：`NSApp.activate()` 在 macOS 14+ 是協作式啟用，從選單列／Dock／URL／啟動台收起後呼叫時，
-    /// 系統可能不讓我們變成前景，SwiftUI 的 Settings 視窗就會開在其他 App 後面。
-    /// 視窗由 SwiftUI 非同步建立，第一次呼叫時可能還不存在，所以隔一小段時間再補一次。
-    private func bringSettingsToFront() {
-        Task { @MainActor in
-            for delay in [Duration.zero, .milliseconds(150)] {
-                try? await Task.sleep(for: delay)
-                guard let window = NSApp.windows.first(where: {
-                    $0 !== controller.panel && $0.isVisible && $0.canBecomeKey && $0.level == .normal
-                }) else { continue }
-                NSApp.activate()
-                // 私有 API 可指定視窗前置；不可用時（回 false）退回公開 API
-                _ = SkyLight.focus(pid: ProcessInfo.processInfo.processIdentifier, windowID: CGWindowID(window.windowNumber))
-                window.makeKeyAndOrderFront(nil)
-                window.orderFrontRegardless()
-            }
+    /// 執行設定頁送來的版面指令。會改動排列的指令都先自動備份目前排列，設定頁的提示文字也是這樣寫的。
+    /// - Parameters:
+    ///   - command: 版面指令
+    ///   - argument: 指令參數（還原時為備份檔路徑）
+    /// - Throws: 匯入、讀取備份失敗時的錯誤
+    private func performLayoutCommand(_ command: SettingsIPC.Command, argument: String?) throws {
+        let entries = catalog.entries
+        let hidden = settings.hiddenApps
+        let capacity = settings.pageCapacity
+        switch command {
+        case .compact:
+            layoutStore.update { $0.compact(capacity: capacity) }
+        case .backup:
+            try layoutStore.createBackup()
+        case .alphabetical:
+            _ = try? layoutStore.createBackup()
+            layoutStore.replace(with: .alphabetical(entries: entries, capacity: capacity, hidden: hidden))
+        case .importLegacy:
+            guard let url = LaunchpadImporter.databaseURL else { return }
+            _ = try? layoutStore.createBackup()
+            let imported = try LaunchpadImporter.read(at: url)
+            layoutStore.replace(with: LaunchpadImporter.makeLayout(from: imported, entries: entries, hidden: hidden, capacity: capacity))
+        case .organize:
+            _ = try? layoutStore.createBackup()
+            let plan = OrganizePlan(entries: entries, hidden: hidden, classifier: .bundled())
+            layoutStore.replace(with: plan.layout(capacity: capacity))
+        case .restore:
+            guard let argument else { return }
+            // 只接受備份資料夾裡的檔案：請求來自 distributed notification，任何本機程式都送得出來
+            guard let backup = layoutStore.backups().first(where: { $0.url.path == argument }) else { return }
+            _ = try? layoutStore.createBackup()
+            try layoutStore.restore(backup, entries: entries, hidden: hidden, capacity: capacity)
+        default:
+            return
         }
+        // 設定頁改的版面要立刻落地：使用者可能接著就關掉設定或結束 App
+        layoutStore.saveNow()
     }
 
     // MARK: - 觸發方式
@@ -276,6 +305,7 @@ final class AppCoordinator {
         observe({ [settings] in settings.hotKey }) { [weak self] combo in
             guard let self else { return }
             self.hotKeyRegistered = self.hotKeys.register(combo)
+            self.settingsHost.broadcastState()
         }
         observe({ [settings] in settings.hotCorner }) { [weak self] corner in self?.hotCorners.configure(corner) }
         observe({ [settings] in settings.autoChecksForUpdates }) { [weak self] _ in self?.updates.applyAutoCheckSetting() }

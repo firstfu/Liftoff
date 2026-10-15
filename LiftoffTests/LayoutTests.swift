@@ -104,6 +104,19 @@ struct LayoutTests {
         #expect(layout.pages == [apps("a", "x", "new")])
     }
 
+    @Test func reconcilePlacesNewAppsInFirstPageWithSpace() {
+        // issue #13：第一頁有空位時，新 App 不該跑到最後一頁
+        var layout = Layout(pages: [apps("a", "b"), apps("c", "d", "e")])
+        layout.reconcile(installed: ["a", "b", "c", "d", "e", "n1", "n2"], hidden: [], capacity: 3)
+        #expect(layout.pages == [apps("a", "b", "n1"), apps("c", "d", "e"), apps("n2")])
+    }
+
+    @Test func reconcileFillsSpaceLeftByRemovedApps() {
+        var layout = Layout(pages: [apps("a", "gone", "b"), apps("c")])
+        layout.reconcile(installed: ["a", "b", "c", "new"], hidden: [], capacity: 3)
+        #expect(layout.pages == [apps("a", "b", "new"), apps("c")])
+    }
+
     @Test func reconcileRemovesDuplicates() {
         var layout = Layout(pages: [[.app("a"), .folder(FolderData(name: "F", apps: ["a", "b", "c"]))]])
         layout.reconcile(installed: ["a", "b", "c"], hidden: [], capacity: 10)

@@ -272,7 +272,8 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
 
     // MARK: - 與已安裝 App 同步
 
-    /// 讓版面與實際安裝的 App 一致：移除已刪除或隱藏的 App、去除重複、補上新安裝的 App（加在最後）。
+    /// 讓版面與實際安裝的 App 一致：移除已刪除或隱藏的 App、去除重複、補上新安裝的 App
+    /// （放進第一個還有空位的頁面尾端，各頁都滿才開新頁）。
     /// - Parameters:
     ///   - installed: 已安裝 App 的識別鍵（新 App 依此順序補上）
     ///   - hidden: 使用者隱藏的 App
@@ -305,8 +306,14 @@ nonisolated struct Layout: Codable, Hashable, Sendable {
 
         let missing = installed.filter { valid.contains($0) && !seen.contains($0) }
         if !missing.isEmpty {
+            // 先整理成合法版面，空位的判斷才準（容量可能剛變小、移除 App 後可能留下空白頁）
+            normalize(capacity: capacity)
             if pages.isEmpty { pages.append([]) }
-            pages[pages.count - 1].append(contentsOf: missing.map { LayoutItem.app($0) })
+            // 新 App 補進第一個還有空位的頁面（issue #13），全滿才接在最後一頁、由 normalize 溢到新頁
+            for id in missing {
+                let target = capacity > 0 ? pages.firstIndex { $0.count < capacity } : nil
+                pages[target ?? pages.count - 1].append(.app(id))
+            }
         }
         normalize(capacity: capacity)
         return self != original

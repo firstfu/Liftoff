@@ -74,15 +74,15 @@ struct LaunchpadImporterTests {
             entry("com.apple.mail", "郵件", bundle: "com.apple.mail"),
             entry("com.apple.Notes", "備忘錄", bundle: "com.apple.notes"),   // 大小寫不同也要對得到
             entry("calc", "計算機", bundle: nil),                             // 沒有 bundle ID 時以名稱對應
-            entry("com.new.app", "New", bundle: "com.new.app"),             // 舊版沒有 → 補在最後
+            entry("com.new.app", "New", bundle: "com.new.app"),             // 舊版沒有 → 補進第一個有空位的頁面
         ]
         let layout = LaunchpadImporter.makeLayout(from: try LaunchpadImporter.read(at: url), entries: entries, hidden: [], capacity: 10)
         #expect(layout.pages.count == 2)
         let folder = try #require(layout.pages[0].first?.folder)
         #expect(folder.name == "工作")
         #expect(folder.apps == ["com.apple.mail", "com.apple.Notes"])
-        #expect(layout.pages[0].dropFirst().map(\.id) == ["com.apple.Safari"])
-        #expect(layout.pages[1].map(\.id) == ["calc", "com.new.app"])
+        #expect(layout.pages[0].dropFirst().map(\.id) == ["com.apple.Safari", "com.new.app"])
+        #expect(layout.pages[1].map(\.id) == ["calc"])
     }
 
     @Test func missingDatabaseThrows() {

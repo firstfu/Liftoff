@@ -98,7 +98,7 @@ struct SettingsView: View {
     @ViewBuilder
     private var detail: some View {
         switch selection {
-        case .general: GeneralSettings(settings: context.settings, updates: context.updates)
+        case .general: GeneralSettings(context: context, settings: context.settings, updates: context.updates)
         case .trigger: TriggerSettings(context: context, settings: context.settings)
         case .appearance: AppearanceSettings(settings: context.settings)
         case .preview: PreviewSettings(settings: context.settings, permissions: context.permissions)
@@ -110,13 +110,14 @@ struct SettingsView: View {
 // MARK: - 一般
 
 private struct GeneralSettings: View {
+    let context: SettingsContext
     @Bindable var settings: AppSettings
     let updates: UpdateChecker
 
     var body: some View {
         Form {
             Section {
-                AboutHeader()
+                AboutHeader(onQuit: context.quitLiftoff)
             }
             Section {
                 Toggle("登入時自動啟動", isOn: $settings.launchAtLogin)
@@ -152,7 +153,10 @@ private struct GeneralSettings: View {
 }
 
 /// 一般頁最上方的 App 識別卡：圖示＋名稱＋版本（仿系統設定頂端的帳號卡），取代原本「關於」裡一行純文字的版本號。
+/// 右側的「結束 Liftoff」：選單列圖示被瀏海遮住或關掉時，更新前要先結束舊版只能開活動監視器（issue #14）。
 private struct AboutHeader: View {
+    var onQuit: () -> Void
+
     var body: some View {
         HStack(spacing: 14) {
             Image(nsImage: NSApp.applicationIconImage)
@@ -164,6 +168,7 @@ private struct AboutHeader: View {
                     .font(.callout).foregroundStyle(.secondary)
             }
             Spacer()
+            Button("結束 Liftoff", action: onQuit)
         }
         .padding(.vertical, 2)
     }

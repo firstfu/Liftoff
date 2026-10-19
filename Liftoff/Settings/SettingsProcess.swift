@@ -69,6 +69,16 @@ final class SettingsContext {
         }
     }
 
+    /// 結束 Liftoff：請主程式結束，設定 process 會在主程式結束後跟著結束（`SettingsProcess.start` 的 `hostWatch`）。
+    /// 沒有主程式時（Xcode 預覽）直接結束自己。
+    func quitLiftoff() {
+        guard hostPID != nil else {
+            NSApp.terminate(nil)
+            return
+        }
+        send(.quit)
+    }
+
     /// App 圖示：直接向系統取，不經過主程式的圖示快取（避免寫入不同尺寸的快取檔）。
     func icon(for id: String) -> NSImage? {
         catalog.entry(id).map { NSWorkspace.shared.icon(forFile: $0.resolvedPath) }

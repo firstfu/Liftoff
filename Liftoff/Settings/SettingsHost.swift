@@ -109,6 +109,9 @@ final class SettingsHost {
             if let argument, let url = URL(string: argument) { actions.openURL(url) }
         case .focus:
             break
+        case .quit:
+            // 走正常結束流程，`applicationWillTerminate` 會還原系統捏合手勢等收尾
+            NSApp.terminate(nil)
         case .compact, .alphabetical, .importLegacy, .organize, .backup, .restore:
             var reply: [String: Any] = [SettingsIPC.Field.command: raw]
             if let id = info[SettingsIPC.Field.id] as? String { reply[SettingsIPC.Field.id] = id }

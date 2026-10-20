@@ -53,6 +53,7 @@
 		905B9385F24AAAE0A62AC392 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38C2AB14EBF1DD08B80992F /* Layout.swift */; };
 		91340679E901EDACA294B7FB /* LaunchpadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72D0D6A2E7C32B47EAC2919C /* LaunchpadModel.swift */; };
 		955BDB5BDC0BA90FB6DC1A67 /* AppClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BF532652F987C3A3BB6AED /* AppClassifier.swift */; };
+		96D7B948351B7CBE858E2270 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 612082CE6F5AEBA2D6426EAD /* Sparkle */; };
 		9746C3D4079623E4B0A9909F /* GridMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94CFF12926C8BDC952DBBFE /* GridMetrics.swift */; };
 		979F5BA8F73041A0C3EBA9FD /* WindowSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE9CF46797CED7C69C04A20 /* WindowSearchTests.swift */; };
 		981E5930550298F967C3F98F /* SelfTest+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0016CC1E27FFCA3B6207BB31 /* SelfTest+Preview.swift */; };
@@ -73,6 +74,7 @@
 		C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E75248F58676E236D3D843 /* Permissions.swift */; };
 		CB7A5B6140AF2101ACA78FC6 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5A02512C1D12EA10EA793A /* AppInfo.swift */; };
 		CD30841F3B7582CA16B37558 /* WallpaperPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF0D09A4AB521AA9A8240CF /* WallpaperPresetTests.swift */; };
+		D1BFF8692F427ECBC3DEBE23 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D216181C82306FC7EAF1877C /* MenuBarIcon.swift */; };
 		D251E6C0DE72766B4C31B5C2 /* PagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5F3C8F2F261CCC8DB820A8 /* PagerState.swift */; };
 		DE42BDC9A8D5E30303852158 /* LaunchpadImporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D74CA77F980139C456C1C8 /* LaunchpadImporterTests.swift */; };
 		DF02BB3A53A036DDA3AF5212 /* WindowActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 365775DB9A7DCE73F3E5A622 /* WindowActions.swift */; };
@@ -157,6 +159,7 @@
 		CAF0D09A4AB521AA9A8240CF /* WallpaperPresetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperPresetTests.swift; sourceTree = "<group>"; };
 		CE4D25EFA1BCB6AFDD92A3D7 /* LayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutTests.swift; sourceTree = "<group>"; };
 		D149C029BAB8771AD6E381C1 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		D216181C82306FC7EAF1877C /* MenuBarIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
 		D24830FBD3733C269825C976 /* AppClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClassifierTests.swift; sourceTree = "<group>"; };
 		D3266004A58BC73F1EBEB60A /* DockZoneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockZoneTests.swift; sourceTree = "<group>"; };
 		D94CFF12926C8BDC952DBBFE /* GridMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridMetrics.swift; sourceTree = "<group>"; };
@@ -180,6 +183,17 @@
 		FD139C5EF21109B0CA1A824A /* SettingsProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProcess.swift; sourceTree = "<group>"; };
 		FE3749034448766A416452E0 /* HotCornerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotCornerService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7DFB1269B36FDBD52FB28605 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96D7B948351B7CBE858E2270 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		17A9843B356BBFCCA55BDF92 /* Grid */ = {
@@ -318,6 +332,7 @@
 				8043D40529768895E2760B58 /* LaunchpadModel+Input.swift */,
 				A913D365C8BE25925F47B4FB /* LaunchpadRootView.swift */,
 				BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */,
+				D216181C82306FC7EAF1877C /* MenuBarIcon.swift */,
 				7D5F3C8F2F261CCC8DB820A8 /* PagerState.swift */,
 				74ADFF8A5AF7F7A2B6B6A662 /* SearchBarView.swift */,
 				29A02BB0895C51A13D06643C /* SettingsButtonView.swift */,
@@ -401,6 +416,7 @@
 			buildPhases = (
 				A557F72BDB7B79778556A4B5 /* Sources */,
 				C3F7C55D0C6BB4B9260AF098 /* Resources */,
+				7DFB1269B36FDBD52FB28605 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -408,6 +424,7 @@
 			);
 			name = Liftoff;
 			packageProductDependencies = (
+				612082CE6F5AEBA2D6426EAD /* Sparkle */,
 			);
 			productName = Liftoff;
 			productReference = 94C7E8FE78ED021D0520D56D /* Liftoff.app */;
@@ -453,6 +470,9 @@
 			);
 			mainGroup = 848B3526876E67C431AB7EDC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				290ADC4F21165289D7BD5C50 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4BA0288C274BA4B90EBC0AEB /* Products */;
 			projectDirPath = "";
@@ -534,6 +554,7 @@
 				1B0A2F3A2F748C1B3B834EC1 /* LayoutStore.swift in Sources */,
 				5F1240E1B576C0640365A79D /* LiftoffApp.swift in Sources */,
 				F5208D41299C0728DD672738 /* Log.swift in Sources */,
+				D1BFF8692F427ECBC3DEBE23 /* MenuBarIcon.swift in Sources */,
 				D251E6C0DE72766B4C31B5C2 /* PagerState.swift in Sources */,
 				FB28B3E34AF3358F9C73C2AA /* Paths.swift in Sources */,
 				C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */,
@@ -813,6 +834,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		290ADC4F21165289D7BD5C50 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		612082CE6F5AEBA2D6426EAD /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 290ADC4F21165289D7BD5C50 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 07B76D5606EB549CB20E9200 /* Project object */;
 }

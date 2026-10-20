@@ -14,7 +14,6 @@ import Observation
 @Observable
 final class SettingsContext {
     let settings: AppSettings
-    let updates: UpdateChecker
     let permissions = Permissions()
     /// App 清單：讀主程式寫在磁碟上的索引，只用來顯示名稱與智慧整理預覽，不掃描、不監看
     let catalog = AppCatalog()
@@ -32,7 +31,6 @@ final class SettingsContext {
     init(settings: AppSettings, hostPID: pid_t?) {
         self.settings = settings
         self.hostPID = hostPID
-        updates = UpdateChecker(settings: settings)
         catalog.loadIndex()
         guard hostPID != nil else { return }
         DistributedNotificationCenter.default().addObserver(forName: SettingsIPC.replyName, object: nil, queue: .main) { [weak self] note in
@@ -77,6 +75,11 @@ final class SettingsContext {
             return
         }
         send(.quit)
+    }
+
+    /// 檢查更新：請主程式執行（Sparkle 只在主程式），結果視窗由主程式顯示。
+    func checkForUpdates() {
+        send(.checkForUpdates)
     }
 
     /// App 圖示：直接向系統取，不經過主程式的圖示快取（避免寫入不同尺寸的快取檔）。

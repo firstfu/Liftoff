@@ -57,6 +57,8 @@ nonisolated enum SettingsIPC {
         case focus
         /// 結束主程式（設定頁的「結束 Liftoff」按鈕）：主程式結束後設定 process 會因 `watchExit` 跟著結束
         case quit
+        /// 檢查更新：Sparkle 跑在主程式，結果視窗也由主程式顯示
+        case checkForUpdates
     }
 
     /// 設定 process 的參數裡帶的主程式 pid；不是設定 process 時為 nil。

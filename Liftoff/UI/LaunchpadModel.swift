@@ -99,6 +99,8 @@ final class LaunchpadModel {
     var folderSelection: Int?
 
     var openFolderID: UUID?
+    /// 有自動檢查找到的新版本：設定齒輪顯示小圓點（由 `AppCoordinator` 依 `UpdateChecker` 同步）
+    var hasUpdateBadge = false
     var isRenamingFolder = false
     var confirmation: Confirmation?
     /// 「徹底移除」確認框的內容（殘留檔清單與勾選）

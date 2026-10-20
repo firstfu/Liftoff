@@ -98,7 +98,7 @@ struct SettingsView: View {
     @ViewBuilder
     private var detail: some View {
         switch selection {
-        case .general: GeneralSettings(context: context, settings: context.settings, updates: context.updates)
+        case .general: GeneralSettings(context: context, settings: context.settings)
         case .trigger: TriggerSettings(context: context, settings: context.settings)
         case .appearance: AppearanceSettings(settings: context.settings)
         case .preview: PreviewSettings(settings: context.settings, permissions: context.permissions)
@@ -112,7 +112,6 @@ struct SettingsView: View {
 private struct GeneralSettings: View {
     let context: SettingsContext
     @Bindable var settings: AppSettings
-    let updates: UpdateChecker
 
     var body: some View {
         Form {
@@ -136,11 +135,21 @@ private struct GeneralSettings: View {
                     .foregroundStyle(.secondary)
             }
             Section("關於") {
-                UpdateRow(updates: updates)
+                if let version = settings.availableUpdateVersion {
+                    Label("有新版本：\(version)", systemImage: "arrow.down.circle.fill")
+                        .foregroundStyle(.tint)
+                }
                 Toggle("每週自動檢查更新", isOn: $settings.autoChecksForUpdates)
+                Toggle("自動下載並安裝更新", isOn: $settings.autoInstallsUpdates)
+                    .disabled(!settings.autoChecksForUpdates)
                 Text("只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。")
                     .font(.footnote).foregroundStyle(.secondary)
+                if settings.autoChecksForUpdates && settings.autoInstallsUpdates {
+                    Text("新版本下載後，會在你一段時間沒使用時自動重新啟動 Liftoff 完成安裝。")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
                 HStack {
+                    Button("檢查更新…", action: context.checkForUpdates)
                     Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
                     Spacer()
                     Button("官網") { AppInfo.open(AppInfo.website) }
@@ -171,30 +180,6 @@ private struct AboutHeader: View {
             Button("結束 Liftoff", action: onQuit)
         }
         .padding(.vertical, 2)
-    }
-}
-
-/// 「關於」裡的檢查更新列：左邊顯示結果，右邊是檢查或下載按鈕。
-private struct UpdateRow: View {
-    let updates: UpdateChecker
-
-    var body: some View {
-        HStack {
-            switch updates.status {
-            case .idle: EmptyView()
-            case .checking: Text("正在檢查…").foregroundStyle(.secondary)
-            case .upToDate: Text("已是最新版本").foregroundStyle(.secondary)
-            case .available(let version, _): Text("有新版本：\(version)")
-            case .failed: Text("無法連線到 GitHub，請稍後再試").foregroundStyle(.orange)
-            }
-            Spacer()
-            if let update = updates.availableUpdate {
-                Button("下載") { AppInfo.open(update.url) }
-            } else {
-                Button("檢查更新…") { Task { await updates.check() } }
-                    .disabled(updates.status == .checking)
-            }
-        }
     }
 }
 

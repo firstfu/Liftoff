@@ -150,8 +150,11 @@ final class AppSettings {
 
     /// 每週自動向 GitHub 查詢新版本（預設關閉，符合「不主動連網」的承諾）
     var autoChecksForUpdates: Bool { didSet { save(autoChecksForUpdates, forKey: Key.autoChecksForUpdates) } }
-    /// 上次成功查詢新版本的時間
-    var lastUpdateCheck: Date? { didSet { save(lastUpdateCheck, forKey: Key.lastUpdateCheck) } }
+    /// 自動檢查找到、還沒給使用者看過的新版本號。不是使用者設定，是主程式寫給設定頁看的狀態
+    /// （Sparkle 只在主程式）；主程式每次啟動先清掉，避免殘留舊值
+    var availableUpdateVersion: String? { didSet { save(availableUpdateVersion, forKey: Key.availableUpdateVersion) } }
+    /// 自動下載更新並在閒置時重新啟動安裝（預設關閉；需搭配 `autoChecksForUpdates`）
+    var autoInstallsUpdates: Bool { didSet { save(autoInstallsUpdates, forKey: Key.autoInstallsUpdates) } }
 
     /// 開機自動啟動（直接讀寫 SMAppService，不另存）
     var launchAtLogin: Bool {
@@ -183,13 +186,15 @@ final class AppSettings {
         static let pinchGesture = "pinchGesture", displayTarget = "displayTarget", windowPreview = "windowPreview"
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
         static let hiddenApps = "hiddenApps", extraDirectories = "extraDirectories"
-        static let autoChecksForUpdates = "autoChecksForUpdates", lastUpdateCheck = "lastUpdateCheck"
+        static let autoChecksForUpdates = "autoChecksForUpdates", autoInstallsUpdates = "autoInstallsUpdates"
+        static let availableUpdateVersion = "availableUpdateVersion"
         /// 跨 process 同步要觀察的 key（新增設定時記得加進來，並在 `reload()` 補上讀取）
         static let all = [
             columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins,
             backgroundStyle, blurRadius, dimming, customImagePath, presetWallpaper, coversDock, remembersPage,
             hotKey, hotCorner, pinchGesture, displayTarget, windowPreview, previewDelay, showsDockIcon,
-            showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, lastUpdateCheck,
+            showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, autoInstallsUpdates,
+            availableUpdateVersion,
         ]
     }
 
@@ -231,7 +236,8 @@ final class AppSettings {
         hiddenApps = Set(defaults.stringArray(forKey: Key.hiddenApps) ?? [])
         extraDirectories = defaults.stringArray(forKey: Key.extraDirectories) ?? []
         autoChecksForUpdates = defaults.bool(forKey: Key.autoChecksForUpdates)
-        lastUpdateCheck = defaults.object(forKey: Key.lastUpdateCheck) as? Date
+        autoInstallsUpdates = defaults.bool(forKey: Key.autoInstallsUpdates)
+        availableUpdateVersion = defaults.string(forKey: Key.availableUpdateVersion)
         // 舊版本可能已存成兩個都關；補上不變式
         if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
     }
@@ -296,7 +302,8 @@ final class AppSettings {
         update(\.hiddenApps, Set(defaults.stringArray(forKey: Key.hiddenApps) ?? []))
         update(\.extraDirectories, defaults.stringArray(forKey: Key.extraDirectories) ?? [])
         update(\.autoChecksForUpdates, defaults.bool(forKey: Key.autoChecksForUpdates))
-        update(\.lastUpdateCheck, defaults.object(forKey: Key.lastUpdateCheck) as? Date)
+        update(\.autoInstallsUpdates, defaults.bool(forKey: Key.autoInstallsUpdates))
+        update(\.availableUpdateVersion, defaults.string(forKey: Key.availableUpdateVersion))
     }
 
     /// 讀取快速鍵：沒存過用預設值，空資料代表使用者刻意清除。

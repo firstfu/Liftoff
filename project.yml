@@ -9,6 +9,11 @@ options:
 configFiles:
   Debug: Config/Signing.xcconfig
   Release: Config/Signing.xcconfig
+packages:
+  # App 內更新（issue #6）。沒有 Developer ID／公證，安全性靠 Sparkle 的 EdDSA 簽名，見 docs/context/reference/modules/updates.md
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.10.0
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -36,12 +41,22 @@ targets:
         LSApplicationCategoryType: public.app-category.productivity
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: "© 2026 firstfu"
+        # Sparkle：自動檢查預設關（也不跳詢問）、每週一次；更新檔須通過 EdDSA 簽名驗證才解壓
+        SUFeedURL: https://firstfu.github.io/Liftoff/appcast.xml
+        SUPublicEDKey: etYhDvQB9vFZMwUiulgeX9Hvuw+jyDG7ZO1RaoM+AAk=
+        SUEnableAutomaticChecks: false
+        SUScheduledCheckInterval: 604800
+        SUVerifyUpdateBeforeExtraction: true
         CFBundleURLTypes:
           - CFBundleURLName: com.firstfu.Liftoff
             CFBundleURLSchemes: [liftoff]
+    dependencies:
+      - package: Sparkle
     entitlements:
       path: Liftoff/Resources/Liftoff.entitlements
-      properties: {}
+      properties:
+        # 自簽憑證沒有 Team ID，hardened runtime 的 Library Validation 會拒絕載入 Sparkle.framework（實測 dyld：different Team IDs）
+        com.apple.security.cs.disable-library-validation: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.firstfu.Liftoff

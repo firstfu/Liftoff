@@ -19,8 +19,11 @@ struct LiftoffApp: App {
 
     var body: some Scene {
         // 設定頁跑在另一個 process（見 SettingsProcess.swift），那個 process 不顯示選單列圖示
-        MenuBarExtra("Liftoff", systemImage: "square.grid.3x3.fill", isInserted: SettingsProcess.isActive ? .constant(false) : $settings.showsMenuBarIcon) {
+        MenuBarExtra(isInserted: SettingsProcess.isActive ? .constant(false) : $settings.showsMenuBarIcon) {
             MenuContent()
+        } label: {
+            // 設定 process 不碰 AppCoordinator（會把整套啟動台服務建起來）
+            Image(nsImage: MenuBarIcon.image(badged: !SettingsProcess.isActive && AppCoordinator.shared.updates.availableVersion != nil))
         }
         .commands {
             CommandGroup(replacing: .appSettings) {
@@ -119,10 +122,10 @@ private struct MenuContent: View {
         Button("設定…") { AppCoordinator.shared.openSettings() }
             .keyboardShortcut(",")
         Divider()
-        if let update = AppCoordinator.shared.updates.availableUpdate {
-            Button("有新版本：\(update.version)…") { AppInfo.open(update.url) }
+        if let version = AppCoordinator.shared.updates.availableVersion {
+            Button("有新版本：\(version)…") { AppCoordinator.shared.updates.checkForUpdates() }
         } else {
-            Button("檢查更新…") { Task { await AppCoordinator.shared.updates.checkAndAnnounce() } }
+            Button("檢查更新…") { AppCoordinator.shared.updates.checkForUpdates() }
         }
         Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
         Divider()

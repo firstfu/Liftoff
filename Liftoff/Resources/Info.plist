@@ -39,5 +39,15 @@
 	<string>26.0</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 firstfu</string>
+	<key>SUEnableAutomaticChecks</key>
+	<false/>
+	<key>SUFeedURL</key>
+	<string>https://firstfu.github.io/Liftoff/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>etYhDvQB9vFZMwUiulgeX9Hvuw+jyDG7ZO1RaoM+AAk=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>604800</integer>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
 </dict>
 </plist>

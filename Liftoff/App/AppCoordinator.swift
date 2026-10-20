@@ -77,7 +77,9 @@ final class AppCoordinator {
         observeSettings()
         // 設定頁在另一個 process 寫入 UserDefaults，以 KVO 接收後更新，上面的觀察者就會套用
         settings.startExternalSync()
-        updates.applyAutoCheckSetting()
+        updates.canRestartQuietly = { [weak self] in self?.controller.isVisible == false }
+        settings.availableUpdateVersion = nil
+        updates.start()
         applyActivationPolicy()
         phase("settings")
 
@@ -167,7 +169,8 @@ final class AppCoordinator {
             self.hotKeyRegistered = self.hotKeys.register(self.settings.hotKey)
         },
         hotKeyRegistered: { [weak self] in self?.hotKeyRegistered ?? true },
-        openURL: { [weak self] url in self?.handle(url: url) }
+        openURL: { [weak self] url in self?.handle(url: url) },
+        checkForUpdates: { [weak self] in self?.updates.checkForUpdates() }
     ))
 
     /// 打開設定視窗（已開著就帶到最前）；會先收起啟動台。
@@ -308,7 +311,11 @@ final class AppCoordinator {
             self.settingsHost.broadcastState()
         }
         observe({ [settings] in settings.hotCorner }) { [weak self] corner in self?.hotCorners.configure(corner) }
-        observe({ [settings] in settings.autoChecksForUpdates }) { [weak self] _ in self?.updates.applyAutoCheckSetting() }
+        observe({ [settings] in [settings.autoChecksForUpdates, settings.autoInstallsUpdates] }) { [weak self] _ in self?.updates.applySettings() }
+        observe({ [updates] in updates.availableVersion }) { [weak self] version in
+            self?.model.hasUpdateBadge = version != nil
+            self?.settings.availableUpdateVersion = version
+        }
         observe({ [settings] in settings.pinchGesture }) { [weak self] _ in self?.applyGesture() }
         observe({ [settings] in settings.showsDockIcon }) { [weak self] _ in self?.applyActivationPolicy() }
         observe({ [settings] in settings.pageCapacity }) { [weak self] capacity in

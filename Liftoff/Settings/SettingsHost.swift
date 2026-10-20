@@ -17,6 +17,8 @@ final class SettingsHost {
         var resumeHotKey: () -> Void
         var hotKeyRegistered: () -> Bool
         var openURL: (URL) -> Void
+        /// 檢查更新（Sparkle 只在主程式）
+        var checkForUpdates: () -> Void
     }
 
     private let actions: Actions
@@ -109,6 +111,8 @@ final class SettingsHost {
             if let argument, let url = URL(string: argument) { actions.openURL(url) }
         case .focus:
             break
+        case .checkForUpdates:
+            actions.checkForUpdates()
         case .quit:
             // 走正常結束流程，`applicationWillTerminate` 會還原系統捏合手勢等收尾
             NSApp.terminate(nil)

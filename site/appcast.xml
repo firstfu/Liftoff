@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Liftoff</title>
+    <!-- 由 scripts/appcast.sh 產生，新版本加在最上面 -->
+    <item>
+      <title>1.4.0</title>
+      <pubDate>Tue, 20 Oct 2026 05:07:46 +0000</pubDate>
+      <sparkle:version>15</sparkle:version>
+      <sparkle:shortVersionString>1.4.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/firstfu/Liftoff/releases/tag/v1.4.0</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/firstfu/Liftoff/releases/download/v1.4.0/Liftoff.zip" type="application/octet-stream" sparkle:edSignature="fReP7L0t2JMlskQcmePk+z5FVYnZ+4pzYiwk/6kLiyR673Qw7sBeSNCswZXnL5qUb/i0vcrQ63dIB0cJclzQDQ==" length="4288053" />
+    </item>
+  </channel>
+</rss>

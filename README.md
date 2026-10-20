@@ -83,8 +83,8 @@ Measured on a real Mac by the app itself (`scripts/selftest.sh` reproduces the n
 
 ## Privacy
 
-Liftoff makes **no network connections** unless you ask it to check for updates. Window thumbnails are captured and shown locally and never leave your Mac.
-The only connection it can make is the update check: one request to the GitHub API to read the latest version number, sent only when you click **Check for Updates…** or turn on **Check for updates weekly** in Settings (off by default). No data about you is sent.
+Liftoff doesn't collect or send any data about you. Window thumbnails are captured and shown locally and never leave your Mac.
+The only network connection it makes is for updates: once a week it reads the update feed on GitHub Pages and, if there's a new version, downloads it from GitHub Releases. Turn off **Check for updates weekly** in Settings and Liftoff won't go online unless you click **Check for Updates…**.
 
 Don't take my word for it: the code that uses each permission is in [`Liftoff/Preview`](Liftoff/Preview) (Screen Recording: thumbnails; Accessibility: listing and switching windows) and [`Liftoff/Services`](Liftoff/Services) (hotkey, hot corner, trackpad gesture, and the update check in `UpdateChecker.swift`). Little Snitch or LuLu will confirm it too.
 
@@ -111,7 +111,7 @@ Requires **macOS 26 or later**, Apple silicon or Intel.
 ### Updating
 
 Replace `Liftoff.app` in `/Applications` with the new one, or run `brew upgrade --cask liftoff` once the tap is updated. Since 1.2.1, releases are signed with the same certificate every time, so Screen Recording and Accessibility stay allowed after an update; you may still need to click **Open Anyway** once for the new version. Updating from 1.2.0 or earlier needs one last re-allow (if a switch looks on but does nothing, remove Liftoff from the list with **−** and add it back).
-To hear about new versions: choose **Check for Updates…** in the menu bar menu or in Settings, turn on **Check for updates weekly** in Settings (off by default), or use **Watch → Custom → Releases** on this page.
+Liftoff updates itself: by default it checks weekly, downloads new versions in the background and installs them when you're away. You can turn this off in Settings or choose **Check for Updates…** anytime. Versions 1.3.3 and earlier need one manual update first.
 
 ## Permissions at a glance
 
@@ -164,7 +164,6 @@ I won't build these until real people ask for them. If one matters to you, 👍 
 
 - [Your own Smart Organize rules](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
 - [Command-line / scripting control](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
-- [Install updates inside the app](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
 - [Sync your layout between Macs](https://github.com/firstfu/Liftoff/issues?q=is%3Aissue+label%3Aconsidering)
 
 ## Languages

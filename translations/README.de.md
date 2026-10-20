@@ -81,8 +81,8 @@ Von der App selbst auf einem echten Mac gemessen (mit `scripts/selftest.sh` kann
 
 ## Datenschutz
 
-Liftoff baut **keine Netzwerkverbindungen** auf, es sei denn, du bittest es, nach Updates zu suchen. Fensterminiaturen werden lokal aufgenommen und angezeigt und verlassen deinen Mac nie.
-Die einzige mögliche Verbindung ist die Update-Prüfung: eine Anfrage an die GitHub-API, um die neueste Versionsnummer zu lesen. Sie wird nur gesendet, wenn du auf **Nach Updates suchen…** klickst oder in den Einstellungen **Wöchentlich nach Updates suchen** aktivierst (standardmäßig aus). Es werden keine Daten über dich gesendet.
+Liftoff sammelt und sendet keine Daten über dich. Fenstervorschauen werden nur auf deinem Mac erstellt und angezeigt und verlassen ihn nie.
+Die einzige Netzwerkverbindung dient Updates: Einmal pro Woche liest Liftoff die Update-Liste auf GitHub Pages und lädt eine neue Version, falls vorhanden, von GitHub Releases. Schaltest du in den Einstellungen **Wöchentlich nach Updates suchen** aus, geht Liftoff nur online, wenn du auf **Nach Updates suchen…** klickst.
 
 Du musst mir das nicht einfach glauben: Der Code, der die jeweilige Berechtigung nutzt, liegt in [`Liftoff/Preview`](../Liftoff/Preview) (Aufnahme von Bildschirm & Systemaudio: Miniaturen; Bedienungshilfen: Fenster auflisten und wechseln) und [`Liftoff/Services`](../Liftoff/Services) (Tastenkurzbefehl, aktive Ecke, Trackpad-Geste und die Update-Prüfung in `UpdateChecker.swift`). Auch Little Snitch oder LuLu bestätigen es dir.
 
@@ -107,7 +107,7 @@ Erfordert **macOS 26 oder neuer**, Apple Silicon oder Intel.
 ### Aktualisieren
 
 Ersetze `Liftoff.app` in `/Applications` durch die neue Version. Seit 1.2.1 werden alle Releases mit demselben Zertifikat signiert, deshalb bleiben Aufnahme von Bildschirm & Systemaudio sowie Bedienungshilfen nach einem Update erlaubt; beim ersten Öffnen der neuen Version musst du eventuell noch einmal auf **Dennoch öffnen** klicken. Beim Update von 1.2.0 oder älter musst du ein letztes Mal neu erlauben (sieht ein Schalter aktiv aus, bewirkt aber nichts, entferne Liftoff mit **−** aus der Liste und füge es wieder hinzu).
-Um von neuen Versionen zu erfahren: Wähle **Nach Updates suchen…** im Menü in der Menüleiste oder in den Einstellungen, aktiviere in den Einstellungen **Wöchentlich nach Updates suchen** (standardmäßig aus) oder nutze **Watch → Custom → Releases** auf dieser Seite.
+Liftoff aktualisiert sich selbst: Standardmäßig sucht es wöchentlich nach Updates, lädt neue Versionen im Hintergrund und installiert sie, während du deinen Mac nicht benutzt. Du kannst das in den Einstellungen ausschalten oder jederzeit **Nach Updates suchen…** wählen. Versionen bis 1.3.3 musst du einmal von Hand aktualisieren.
 
 ## Berechtigungen im Überblick
 

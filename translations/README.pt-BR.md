@@ -83,8 +83,8 @@ Medido pelo próprio app em um Mac de verdade (`scripts/selftest.sh` reproduz os
 
 ## Privacidade
 
-O Liftoff **não faz nenhuma conexão de rede**, a menos que você peça para buscar atualizações. As miniaturas das janelas são capturadas e exibidas localmente e nunca saem do seu Mac.
-A única conexão possível é a busca de atualizações: uma requisição à API do GitHub para ler o número da versão mais recente, enviada somente quando você clica em **Buscar Atualizações…** ou ativa **Verificar atualizações toda semana** nos Ajustes (desativado por padrão). Nenhum dado sobre você é enviado.
+O Liftoff não coleta nem envia nenhum dado sobre você. As miniaturas das janelas são capturadas e exibidas localmente e nunca saem do seu Mac.
+A única conexão de rede que ele faz é para atualizações: uma vez por semana ele lê a lista de atualizações no GitHub Pages e, se houver uma versão nova, a baixa do GitHub Releases. Desative **Verificar atualizações toda semana** nos Ajustes e o Liftoff só se conectará se você clicar em **Buscar Atualizações…**.
 
 Não precisa acreditar na minha palavra: o código que usa cada permissão está em [`Liftoff/Preview`](../Liftoff/Preview) (Gravação do Áudio do Sistema e da Tela: miniaturas; Acessibilidade: listar e alternar janelas) e em [`Liftoff/Services`](../Liftoff/Services) (atalho de teclado, canto ativo, gesto no trackpad e a busca de atualizações em `UpdateChecker.swift`). O Little Snitch ou o LuLu também confirmam.
 
@@ -109,7 +109,7 @@ Requer **macOS 26 ou posterior**, Apple silicon ou Intel.
 ### Atualizando
 
 Substitua o `Liftoff.app` em `/Applications` pela nova versão. Desde a 1.2.1, todas as versões são assinadas com o mesmo certificado, então a Gravação do Áudio do Sistema e da Tela e a Acessibilidade continuam permitidas após a atualização; na primeira vez que abrir a nova versão, talvez você ainda precise clicar em **Abrir Mesmo Assim**. Ao atualizar a partir da 1.2.0 ou anterior, é preciso permitir uma última vez (se um botão parecer ativado mas não funcionar, remova o Liftoff da lista com **−** e adicione-o novamente).
-Para ficar sabendo de novas versões: escolha **Buscar Atualizações…** no menu da barra de menus ou nos Ajustes, ative **Verificar atualizações toda semana** nos Ajustes (desativado por padrão) ou use **Watch → Custom → Releases** nesta página.
+O Liftoff se atualiza sozinho: por padrão, ele verifica toda semana, baixa as novas versões em segundo plano e as instala quando você não está usando o Mac. Você pode desativar isso nos Ajustes ou escolher **Buscar Atualizações…** a qualquer momento. Versões 1.3.3 e anteriores precisam de uma atualização manual primeiro.
 
 ## Permissões em resumo
 

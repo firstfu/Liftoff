@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="meta_title">Liftoff — The Launchpad that macOS 26 took away</title>
-<meta name="description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. Offline by default." data-i18n-attr="content:meta_desc">
+<meta name="description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No tracking." data-i18n-attr="content:meta_desc">
 <link rel="canonical" href="https://firstfu.github.io/Liftoff/">
 <link rel="icon" href="assets/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Liftoff — The Launchpad that macOS 26 took away">
-<meta property="og:description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. Offline by default.">
+<meta property="og:description" content="A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No tracking.">
 <meta property="og:image" content="https://firstfu.github.io/Liftoff/assets/social-preview.png">
 <meta property="og:url" content="https://firstfu.github.io/Liftoff/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://firstfu.github.io/Liftoff/assets/social-preview.png">
 <meta name="theme-color" content="#0e1118">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Liftoff","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 26 or later","description":"A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. Offline by default.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://www.gnu.org/licenses/gpl-3.0.html","url":"https://firstfu.github.io/Liftoff/","downloadUrl":"https://github.com/firstfu/Liftoff/releases/latest","image":"https://firstfu.github.io/Liftoff/assets/social-preview.png"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Liftoff","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 26 or later","description":"A free, open-source Launchpad replacement for macOS 26+. Live window previews, window-title search, one-click Smart Organize. No tracking.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://www.gnu.org/licenses/gpl-3.0.html","url":"https://firstfu.github.io/Liftoff/","downloadUrl":"https://github.com/firstfu/Liftoff/releases/latest","image":"https://firstfu.github.io/Liftoff/assets/social-preview.png"}
 </script>
 <style>
 :root{--bg:#0e1118;--bg2:#161b26;--card:#1a2030;--text:#eef1f7;--muted:#a3adc2;--accent:#6aa5ff;--accent-ink:#06142e;--line:rgba(255,255,255,.09)}
@@ -83,7 +83,7 @@ ol li::before{content:counter(s);position:absolute;left:0;top:12px;width:34px;he
     <a class="btn primary" href="https://github.com/firstfu/Liftoff/releases/latest" data-i18n="cta_download">Download for macOS 26+</a>
     <a class="btn ghost" href="https://github.com/firstfu/Liftoff" data-i18n="cta_github">View on GitHub</a>
   </div>
-  <p class="note" data-i18n="hero_note">Free · Open source (GPLv3) · Offline by default · 13 languages</p>
+  <p class="note" data-i18n="hero_note">Free · Open source (GPLv3) · No tracking · 13 languages</p>
   <div class="demo"><video autoplay muted loop playsinline preload="metadata" poster="assets/grid.jpg" aria-label="Liftoff demo"><source src="assets/hero.mp4" type="video/mp4"></video></div>
 </div>
 <section id="features" class="alt"><div class="wrap">
@@ -94,7 +94,7 @@ ol li::before{content:counter(s);position:absolute;left:0;top:12px;width:34px;he
   <div class="grid">
     <div class="card"><h3 data-i18n="f4_title">Drag to the Dock</h3><p data-i18n="f4_text">Drag an app straight from the grid into the Dock. Import your old Launchpad layout, or start fresh.</p></div>
     <div class="card"><h3 data-i18n="f5_title">Built for speed</h3><p data-i18n="f5_text">Opens in under 3 ms, never drops a frame while paging, and uses 0% CPU when idle.</p></div>
-    <div class="card"><h3 data-i18n="f6_title">Private by design</h3><p data-i18n="f6_text">Liftoff makes no network connections unless you ask it to check for updates. Window thumbnails never leave your Mac, and every line of code is open for you to read.</p></div>
+    <div class="card"><h3 data-i18n="f6_title">Private by design</h3><p data-i18n="f6_text">Liftoff collects nothing about you. Its only network use is checking for updates, which you can turn off. Window thumbnails never leave your Mac, and every line of code is open for you to read.</p></div>
   </div>
 </div></section>
 <section><div class="wrap"><div class="stats">
@@ -108,7 +108,7 @@ ol li::before{content:counter(s);position:absolute;left:0;top:12px;width:34px;he
   <ol>
     <li data-i18n="step1">Download Liftoff.zip and unzip it.</li><li data-i18n="step2">Move Liftoff.app to your Applications folder.</li><li data-i18n="step3">Open it. If macOS blocks it, go to System Settings → Privacy & Security and click Open Anyway.</li><li data-i18n="step4">Allow Accessibility and Screen & System Audio Recording when asked. Thumbnails are processed locally only. If Liftoff isn't in the list at all (macOS doesn't always add it for you), click + below the list and choose Liftoff in Applications.</li>
   </ol>
-  <p class="fine" data-i18n="install_note">Requires macOS 26 or later. Builds are not notarized yet, so macOS asks you to re-enable permissions after each update.</p>
+  <p class="fine" data-i18n="install_note">Requires macOS 26 or later. Builds are not notarized yet, so the first launch needs Open Anyway; after that, Liftoff updates itself and keeps its permissions.</p>
 </div></section>
 <section><div class="wrap"><h2 data-i18n="lang_title">Speaks your language</h2><p class="langs" data-i18n="lang_text">English, 繁體中文, 简体中文, 日本語, 한국어, Deutsch, Français, Español, Português, Italiano, Русский, Türkçe, Nederlands.</p></div></section>
 <section class="alt final"><div class="wrap"><div class="cta"><a class="btn primary" href="https://github.com/firstfu/Liftoff/releases/latest" data-i18n="cta_final">Get Liftoff</a><a class="btn ghost" href="https://github.com/firstfu/Liftoff" data-i18n="cta_github">View on GitHub</a></div></div></section>

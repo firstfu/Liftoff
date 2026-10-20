@@ -83,8 +83,8 @@ Uygulamanın kendisi tarafından gerçek bir Mac'te ölçüldü (`scripts/selfte
 
 ## Gizlilik
 
-Liftoff, siz güncelleme denetlemesini istemedikçe **hiçbir ağ bağlantısı kurmaz**. Pencere küçük resimleri yerelde yakalanır, yerelde gösterilir ve Mac'inizden asla çıkmaz.
-Kurabileceği tek bağlantı güncelleme denetimidir: en son sürüm numarasını okumak için GitHub API'sine tek bir istek gider ve yalnızca **Güncellemeleri Denetle…** düğmesine tıkladığınızda ya da Ayarlar'da **Güncellemeleri haftalık denetle** seçeneğini açtığınızda (varsayılan olarak kapalı) gönderilir. Hakkınızda hiçbir veri gönderilmez.
+Liftoff sizinle ilgili hiçbir veri toplamaz veya göndermez. Pencere küçük resimleri yalnızca Mac’inizde yakalanır ve gösterilir, asla dışarı çıkmaz.
+Yaptığı tek ağ bağlantısı güncellemeler içindir: haftada bir GitHub Pages’teki güncelleme listesini okur ve yeni bir sürüm varsa GitHub Releases’ten indirir. Ayarlar’da **Güncellemeleri haftalık denetle** seçeneğini kapatırsanız, **Güncellemeleri Denetle…** düğmesini tıklamadığınız sürece Liftoff internete bağlanmaz.
 
 Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`](../Liftoff/Preview) içinde (Ekran Kaydı: küçük resimler; Erişilebilirlik: pencereleri listeleme ve değiştirme) ve [`Liftoff/Services`](../Liftoff/Services) içinde (kısayol tuşu, sıcak köşe, izleme dörtgeni hareketi ve `UpdateChecker.swift` içindeki güncelleme denetimi). Little Snitch ya da LuLu da bunu doğrulayacaktır.
 
@@ -109,7 +109,7 @@ Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`
 ### Güncelleme
 
 `/Applications` içindeki `Liftoff.app` dosyasını yenisiyle değiştirin. 1.2.1'den beri tüm sürümler aynı sertifikayla imzalanır; bu yüzden güncellemeden sonra Ekran ve Sistem Sesi Kaydı ile Erişilebilirlik izinleri korunur. Yeni sürümü ilk açtığınızda **Yine de Aç** düğmesine bir kez daha tıklamanız gerekebilir. 1.2.0 veya daha eski bir sürümden güncelliyorsanız izinleri son bir kez yeniden vermeniz gerekir (bir anahtar açık görünüp de işe yaramıyorsa, Liftoff'ı listeden **−** ile kaldırıp yeniden ekleyin).
-Yeni sürümlerden haberdar olmak için: menü çubuğu menüsünde ya da Ayarlar'da **Güncellemeleri Denetle…** seçeneğini kullanın, Ayarlar'da **Güncellemeleri haftalık denetle** seçeneğini açın (varsayılan olarak kapalı) veya bu sayfada **Watch → Custom → Releases** yolunu izleyin.
+Liftoff kendini günceller: varsayılan olarak haftada bir denetler, yeni sürümleri arka planda indirir ve Mac’inizi kullanmadığınızda yükler. Bunu Ayarlar’da kapatabilir ya da istediğiniz zaman **Güncellemeleri Denetle…** seçeneğini kullanabilirsiniz. 1.3.3 ve önceki sürümlerin önce bir kez elle güncellenmesi gerekir.
 
 ## Hızlı izin özeti
 

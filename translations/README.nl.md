@@ -83,8 +83,8 @@ Gemeten op een echte Mac door de app zelf (met `scripts/selftest.sh` reproduceer
 
 ## Privacy
 
-Liftoff maakt **geen netwerkverbindingen**, tenzij je vraagt om op updates te controleren. Miniaturen van vensters worden lokaal vastgelegd en getoond en verlaten je Mac nooit.
-De enige verbinding die het kan maken is de updatecontrole: één verzoek aan de GitHub-API om het nieuwste versienummer te lezen, alleen verstuurd als je op **Zoek naar updates…** klikt of **Wekelijks op updates controleren** inschakelt in de instellingen (standaard uit). Er worden geen gegevens over jou verstuurd.
+Liftoff verzamelt of verstuurt geen gegevens over jou. Venstervoorbeelden worden alleen op je Mac gemaakt en getoond en verlaten je Mac nooit.
+De enige netwerkverbinding is voor updates: één keer per week leest Liftoff de updatelijst op GitHub Pages en downloadt een nieuwe versie, als die er is, van GitHub Releases. Zet **Wekelijks op updates controleren** uit in de instellingen en Liftoff gaat alleen online als je op **Zoek naar updates…** klikt.
 
 Je hoeft me niet op mijn woord te geloven: de code die elke toegang gebruikt staat in [`Liftoff/Preview`](../Liftoff/Preview) (Schermopname: miniaturen; Toegankelijkheid: vensters opvragen en wisselen) en in [`Liftoff/Services`](../Liftoff/Services) (toetscombinatie, interactieve hoek, trackpadgebaar en de updatecontrole in `UpdateChecker.swift`). Ook Little Snitch of LuLu bevestigt het.
 
@@ -109,7 +109,7 @@ Vereist **macOS 26 of nieuwer**, Apple silicon of Intel.
 ### Updaten
 
 Vervang `Liftoff.app` in `/Applications` door de nieuwe. Sinds 1.2.1 worden alle releases met hetzelfde certificaat ondertekend, dus Scherm- en systeemaudio-opname en Toegankelijkheid blijven na een update toegestaan; de eerste keer dat je de nieuwe versie opent, moet je mogelijk nog één keer op **Open toch** klikken. Bij een update vanaf 1.2.0 of ouder moet je ze nog één laatste keer toestaan (als een schakelaar aan lijkt te staan maar niets doet, verwijder Liftoff dan met **−** uit de lijst en voeg het opnieuw toe).
-Om nieuwe versies te volgen: kies **Zoek naar updates…** in het menu in de menubalk of in de instellingen, schakel **Wekelijks op updates controleren** in de instellingen in (standaard uit), of gebruik **Watch → Custom → Releases** op deze pagina.
+Liftoff werkt zichzelf bij: standaard controleert het wekelijks, downloadt nieuwe versies op de achtergrond en installeert ze wanneer je je Mac niet gebruikt. Je kunt dit uitzetten in de instellingen of op elk moment **Zoek naar updates…** kiezen. Versies 1.3.3 en ouder moet je eerst één keer handmatig bijwerken.
 
 ## Toegang in het kort
 

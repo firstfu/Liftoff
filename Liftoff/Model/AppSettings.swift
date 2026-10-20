@@ -148,12 +148,12 @@ final class AppSettings {
     /// 額外掃描的資料夾（外接硬碟、自訂位置）
     var extraDirectories: [String] { didSet { save(extraDirectories, forKey: Key.extraDirectories) } }
 
-    /// 每週自動向 GitHub 查詢新版本（預設關閉，符合「不主動連網」的承諾）
+    /// 每週自動向 GitHub 查詢新版本（預設開啟；使用者關掉後 Liftoff 就不會自己連網）
     var autoChecksForUpdates: Bool { didSet { save(autoChecksForUpdates, forKey: Key.autoChecksForUpdates) } }
     /// 自動檢查找到、還沒給使用者看過的新版本號。不是使用者設定，是主程式寫給設定頁看的狀態
     /// （Sparkle 只在主程式）；主程式每次啟動先清掉，避免殘留舊值
     var availableUpdateVersion: String? { didSet { save(availableUpdateVersion, forKey: Key.availableUpdateVersion) } }
-    /// 自動下載更新並在閒置時重新啟動安裝（預設關閉；需搭配 `autoChecksForUpdates`）
+    /// 自動下載更新並在閒置時重新啟動安裝（預設開啟；需搭配 `autoChecksForUpdates`）
     var autoInstallsUpdates: Bool { didSet { save(autoInstallsUpdates, forKey: Key.autoInstallsUpdates) } }
 
     /// 開機自動啟動（直接讀寫 SMAppService，不另存）
@@ -209,6 +209,7 @@ final class AppSettings {
             Key.presetWallpaper: WallpaperPreset.defaultID,
             Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
             Key.windowPreview: true, Key.previewDelay: 0.5, Key.showsDockIcon: true, Key.showsMenuBarIcon: true,
+            Key.autoChecksForUpdates: true, Key.autoInstallsUpdates: true,
         ])
         columns = defaults.integer(forKey: Key.columns)
         rows = defaults.integer(forKey: Key.rows)

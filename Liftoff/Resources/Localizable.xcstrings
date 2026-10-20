@@ -2752,85 +2752,85 @@
         }
       }
     },
-    "只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。": {
-      "comment": "出現在 SettingsView.swift（英文：Only asks GitHub for the latest version number and sends no data. Off by default.）",
+    "只會向 GitHub 查詢最新版本並下載更新，不送出任何資料；關閉後除非你按「檢查更新」，Liftoff 不會連網。": {
+      "comment": "出現在 SettingsView.swift（英文：Only contacts GitHub to check for and download updates, and sends no data. When off, Liftoff never goes online unless you click Check for Updates.）",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fragt bei GitHub nur die neueste Versionsnummer ab und sendet keine Daten. Standardmäßig aus."
+            "value": "Fragt nur GitHub nach Updates und lädt sie, ohne Daten zu senden. Ist dies aus, geht Liftoff nur online, wenn du „Nach Updates suchen“ klickst."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Only asks GitHub for the latest version number and sends no data. Off by default."
+            "value": "Only contacts GitHub to check for and download updates, and sends no data. When off, Liftoff never goes online unless you click Check for Updates."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Solo consulta a GitHub el número de la última versión y no envía ningún dato. Desactivado por defecto."
+            "value": "Solo contacta con GitHub para buscar y descargar actualizaciones, sin enviar ningún dato. Si está desactivado, Liftoff nunca se conecta salvo que hagas clic en Buscar actualizaciones."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Interroge uniquement GitHub pour connaître la dernière version, sans envoyer aucune donnée. Désactivé par défaut."
+            "value": "Contacte uniquement GitHub pour rechercher et télécharger les mises à jour, sans envoyer aucune donnée. Désactivé, Liftoff ne se connecte jamais, sauf si vous cliquez sur Rechercher les mises à jour."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chiede a GitHub solo il numero dell'ultima versione e non invia alcun dato. Disattivato per impostazione predefinita."
+            "value": "Contatta solo GitHub per cercare e scaricare gli aggiornamenti, senza inviare alcun dato. Se disattivato, Liftoff non si connette mai a meno che tu non faccia clic su Verifica aggiornamenti."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "GitHub に最新のバージョン番号を問い合わせるだけで、データは一切送信しません。初期設定ではオフです。"
+            "value": "GitHub に最新バージョンを問い合わせてアップデートをダウンロードするだけで、データは一切送信しません。オフにすると、「アップデートを確認」をクリックしない限り Liftoff はネットワークに接続しません。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "GitHub에서 최신 버전 번호만 조회하며 어떤 데이터도 보내지 않습니다. 기본값은 꺼짐입니다."
+            "value": "GitHub에서 최신 버전을 확인하고 업데이트를 다운로드할 뿐 데이터는 전송하지 않습니다. 끄면 ‘업데이트 확인’을 클릭하지 않는 한 Liftoff는 네트워크에 연결하지 않습니다."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vraagt alleen het nieuwste versienummer op bij GitHub en verstuurt geen gegevens. Standaard uitgeschakeld."
+            "value": "Neemt alleen contact op met GitHub om updates te zoeken en te downloaden en verstuurt geen gegevens. Uitgeschakeld gaat Liftoff nooit online, tenzij je op Zoek naar updates klikt."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apenas consulta o GitHub sobre o número da versão mais recente e não envia nenhum dado. Desativado por padrão."
+            "value": "Só contata o GitHub para procurar e baixar atualizações, sem enviar nenhum dado. Desativado, o Liftoff nunca se conecta, a menos que você clique em Buscar Atualizações."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Запрашивает у GitHub только номер последней версии и не отправляет никаких данных. По умолчанию выключено."
+            "value": "Обращается только к GitHub, чтобы проверить и загрузить обновления, и не отправляет никаких данных. Если выключено, Liftoff выходит в сеть только по кнопке «Проверить наличие обновлений»."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "GitHub'dan yalnızca en son sürüm numarasını sorar, hiçbir veri göndermez. Varsayılan olarak kapalıdır."
+            "value": "Yalnızca güncellemeleri denetlemek ve indirmek için GitHub’a bağlanır, hiçbir veri göndermez. Kapalıyken siz Güncellemeleri Denetle’yi tıklamadıkça Liftoff internete bağlanmaz."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "只会向 GitHub 查询最新版本号，不发送任何数据；默认关闭。"
+            "value": "只会向 GitHub 查询最新版本并下载更新，不发送任何数据；关闭后除非你点按“检查更新”，Liftoff 不会联网。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。"
+            "value": "只會向 GitHub 查詢最新版本並下載更新，不送出任何資料；關閉後除非你按「檢查更新」，Liftoff 不會連網。"
           }
         }
       }

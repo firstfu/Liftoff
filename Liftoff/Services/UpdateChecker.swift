@@ -4,9 +4,9 @@
 //
 //  App 內更新（issue #6），交給 Sparkle。只在主程式建立；設定頁是另一個 process，透過 IPC 請主程式檢查。
 //
-//  Liftoff 對外承諾「不主動連網」，所以：
-//  - 自動檢查預設關（Info.plist 的 SUEnableAutomaticChecks = NO，也讓 Sparkle 不跳「要不要自動檢查」的詢問）；
-//    使用者在設定頁打開後才定期讀 appcast（https://firstfu.github.io/Liftoff/appcast.xml）。
+//  - 預設每週自動檢查、背景下載並在使用者閒置時安裝（Info.plist 的 SUEnableAutomaticChecks／SUAutomaticallyUpdate = YES，
+//    也讓 Sparkle 不跳「要不要自動檢查」的詢問）；只讀 appcast（https://firstfu.github.io/Liftoff/appcast.xml）與下載 zip。
+//  - 使用者在設定頁關掉自動檢查後，除非自己按「檢查更新…」，Liftoff 不會連網。
 //  - 不送系統資訊（Sparkle 的 system profiling 預設關，我們不開）。
 //  - 開關的唯一事實源是 `AppSettings`（兩個 process 共用並同步），這裡只負責套用到 Sparkle。
 //

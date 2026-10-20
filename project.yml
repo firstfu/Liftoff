@@ -41,10 +41,12 @@ targets:
         LSApplicationCategoryType: public.app-category.productivity
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: "© 2026 firstfu"
-        # Sparkle：自動檢查預設關（也不跳詢問）、每週一次；更新檔須通過 EdDSA 簽名驗證才解壓
+        # Sparkle：預設每週自動檢查並在背景下載安裝（實際開關由 AppSettings 套用；寫在這裡也讓 Sparkle 不跳「要不要自動檢查」的詢問）；
+        # 更新檔須通過 EdDSA 簽名驗證才解壓
         SUFeedURL: https://firstfu.github.io/Liftoff/appcast.xml
         SUPublicEDKey: etYhDvQB9vFZMwUiulgeX9Hvuw+jyDG7ZO1RaoM+AAk=
-        SUEnableAutomaticChecks: false
+        SUEnableAutomaticChecks: true
+        SUAutomaticallyUpdate: true
         SUScheduledCheckInterval: 604800
         SUVerifyUpdateBeforeExtraction: true
         CFBundleURLTypes:

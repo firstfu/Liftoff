@@ -135,21 +135,25 @@ private struct GeneralSettings: View {
                     .foregroundStyle(.secondary)
             }
             Section("關於") {
-                if let version = settings.availableUpdateVersion {
-                    Label("有新版本：\(version)", systemImage: "arrow.down.circle.fill")
-                        .foregroundStyle(.tint)
+                // 「檢查更新…」單獨放這一列：放進底下那排連結按鈕，俄文會被截斷
+                HStack {
+                    if let version = settings.availableUpdateVersion {
+                        Label("有新版本：\(version)", systemImage: "arrow.down.circle.fill")
+                            .foregroundStyle(.tint)
+                    }
+                    Spacer()
+                    Button("檢查更新…", action: context.checkForUpdates)
                 }
                 Toggle("每週自動檢查更新", isOn: $settings.autoChecksForUpdates)
                 Toggle("自動下載並安裝更新", isOn: $settings.autoInstallsUpdates)
                     .disabled(!settings.autoChecksForUpdates)
-                Text("只會向 GitHub 查詢最新版本號，不送出任何資料；預設關閉。")
+                Text("只會向 GitHub 查詢最新版本並下載更新，不送出任何資料；關閉後除非你按「檢查更新」，Liftoff 不會連網。")
                     .font(.footnote).foregroundStyle(.secondary)
                 if settings.autoChecksForUpdates && settings.autoInstallsUpdates {
                     Text("新版本下載後，會在你一段時間沒使用時自動重新啟動 Liftoff 完成安裝。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 HStack {
-                    Button("檢查更新…", action: context.checkForUpdates)
                     Button("回報問題…") { AppInfo.open(AppInfo.reportProblemURL) }
                     Spacer()
                     Button("官網") { AppInfo.open(AppInfo.website) }

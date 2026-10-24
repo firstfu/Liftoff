@@ -30,6 +30,7 @@ final class AppCoordinator {
     let updates = UpdateChecker(settings: AppSettings.shared)
     let hotKeys = HotKeyService()
     let hotCorners = HotCornerService()
+    private let multitouchWatcher = MultitouchDeviceWatcher()
 
     private(set) lazy var model = LaunchpadModel(
         settings: settings, catalog: catalog, layoutStore: layoutStore, icons: icons, running: running, usage: usage
@@ -230,12 +231,20 @@ final class AppCoordinator {
 
     private func applyGesture() {
         guard settings.pinchGesture else {
+            multitouchWatcher.stop()
             TrackpadGesture.shared.stop()
             SystemGesture.restoreSystemPinch()
             return
         }
         // 兩套手勢同時作用會一起觸發，所以我們接手時先關掉系統的
         SystemGesture.disableSystemPinch()
+        startPinchTracking()
+        // 回呼綁在裝置物件上，系統重建觸控板裝置後要重新註冊，否則捏合從此沒反應
+        multitouchWatcher.onDeviceAppeared = { [weak self] in self?.startPinchTracking() }
+        multitouchWatcher.start()
+    }
+
+    private func startPinchTracking() {
         TrackpadGesture.shared.start { event in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated { AppCoordinator.shared.handlePinch(event) }

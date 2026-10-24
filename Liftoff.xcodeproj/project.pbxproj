@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01C051C85141533032F74E4D /* MultitouchDeviceWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06DFC4640E9EF1276C6B2832 /* MultitouchDeviceWatcher.swift */; };
 		01E5A1C61F94950651FC30AF /* BackgroundRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9683709034D8C85CCF265165 /* BackgroundRendererTests.swift */; };
 		038AE01DAA2C38143AE272E1 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7637BF7533195E06087011 /* AppSettings.swift */; };
 		0514A8F36F3A6D78D7A200F0 /* WindowEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F03BD58EF321E2ABA25BCC9A /* WindowEnumerator.swift */; };
@@ -102,6 +103,7 @@
 		0016CC1E27FFCA3B6207BB31 /* SelfTest+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfTest+Preview.swift"; sourceTree = "<group>"; };
 		02E077D59A2F669D59094A02 /* GridRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridRenderer.swift; sourceTree = "<group>"; };
 		05ADDCD75D91D4D0B1326EEE /* PinchIntentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchIntentTests.swift; sourceTree = "<group>"; };
+		06DFC4640E9EF1276C6B2832 /* MultitouchDeviceWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchDeviceWatcher.swift; sourceTree = "<group>"; };
 		09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRenderer.swift; sourceTree = "<group>"; };
 		0CE5B45B2370CF04FDAFED69 /* LabelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStore.swift; sourceTree = "<group>"; };
 		0FC1D4C11A9692CB3D6BE25A /* WallpaperPresets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperPresets.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				FE3749034448766A416452E0 /* HotCornerService.swift */,
 				878DC2F83884EB8189CFA663 /* HotKeyService.swift */,
 				216237218CD1A6433B060B7A /* IconStore.swift */,
+				06DFC4640E9EF1276C6B2832 /* MultitouchDeviceWatcher.swift */,
 				9AFAFED5398A1653D4F1C360 /* PinchIntent.swift */,
 				1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */,
 				4831AC82590FE6D49B3A4F32 /* RunningApps.swift */,
@@ -555,6 +558,7 @@
 				5F1240E1B576C0640365A79D /* LiftoffApp.swift in Sources */,
 				F5208D41299C0728DD672738 /* Log.swift in Sources */,
 				D1BFF8692F427ECBC3DEBE23 /* MenuBarIcon.swift in Sources */,
+				01C051C85141533032F74E4D /* MultitouchDeviceWatcher.swift in Sources */,
 				D251E6C0DE72766B4C31B5C2 /* PagerState.swift in Sources */,
 				FB28B3E34AF3358F9C73C2AA /* Paths.swift in Sources */,
 				C4AE7D3F57BBFB6BED482871 /* Permissions.swift in Sources */,

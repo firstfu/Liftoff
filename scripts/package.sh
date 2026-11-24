@@ -23,7 +23,7 @@ if [[ $MODE == release ]] && ! security find-identity -p codesigning | grep -q "
 fi
 
 xcodebuild -project Liftoff.xcodeproj -scheme Liftoff -configuration Release -derivedDataPath build \
-  -destination 'platform=macOS' build -quiet
+  -destination 'generic/platform=macOS' ONLY_ACTIVE_ARCH=NO build -quiet
 
 rm -rf dist && mkdir -p dist
 ditto build/Build/Products/Release/Liftoff.app dist/Liftoff.app

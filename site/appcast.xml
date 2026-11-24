@@ -4,6 +4,15 @@
     <title>Liftoff</title>
     <!-- 由 scripts/appcast.sh 產生，新版本加在最上面 -->
     <item>
+      <title>1.5.0</title>
+      <pubDate>Tue, 24 Nov 2026 14:36:12 +0000</pubDate>
+      <sparkle:version>18</sparkle:version>
+      <sparkle:shortVersionString>1.5.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/firstfu/Liftoff/releases/tag/v1.5.0</sparkle:fullReleaseNotesLink>
+      <enclosure url="https://github.com/firstfu/Liftoff/releases/download/v1.5.0/Liftoff.zip" type="application/octet-stream" sparkle:edSignature="g1DhNTXsBMyWMikZmz9gqKfvtgXBi/MYjMRACh6lspTacmYb8EQ9xyZc2jQsfbfD47WRrerSPm10fCQvW2PvAw==" length="4344810" />
+    </item>
+    <item>
       <title>1.4.2</title>
       <pubDate>Sat, 24 Oct 2026 22:57:49 +0000</pubDate>
       <sparkle:version>17</sparkle:version>

@@ -257,6 +257,13 @@ final class GridRenderer {
         }
         let panel = model.folderPanelFrame(for: folder)
         let metrics = model.folderGridMetrics
+        let folderDark = model.folderLabelsAreDark
+        let glassAppearance: NSAppearance.Name = folderDark ? .aqua : .darkAqua
+        if folderGlass.appearance?.name != glassAppearance {
+            folderGlass.appearance = NSAppearance(named: glassAppearance)
+            // 淺色玻璃不加白色淡染（會發灰）；深色玻璃維持白色 0.1（黑色 0.28 太暗，使用者反映過）
+            folderGlass.tintColor = folderDark ? nil : NSColor.white.withAlphaComponent(0.1)
+        }
         let metricsChanged = metrics != lastFolderMetrics
         lastFolderMetrics = metrics
 
@@ -281,7 +288,7 @@ final class GridRenderer {
                 folderCells[appID] = cell
             }
             configureIcon(cell.icon, for: .app(appID))
-            cell.setLabel(metrics.showsLabels ? labels.image(for: model.title(for: .app(appID)), dark: false, style: style) : nil,
+            cell.setLabel(metrics.showsLabels ? labels.image(for: model.title(for: .app(appID)), dark: folderDark, style: style) : nil,
                           scale: backingScale)
             let frame = metrics.cellFrame(offset % capacity)
             let target = CGPoint(x: CGFloat(offset / capacity) * panel.width + frame.midX, y: frame.midY)
@@ -299,7 +306,7 @@ final class GridRenderer {
                 isDragged: draggedID == appID,
                 isRunning: running.contains(appID)
             )
-            if state != cell.state || metricsChanged { cell.apply(state, labelsDark: false, animated: model.isShown) }
+            if state != cell.state || metricsChanged { cell.apply(state, labelsDark: folderDark, animated: model.isShown) }
         }
         for (id, cell) in folderCells where !alive.contains(id) {
             cell.removeFromSuperlayer()

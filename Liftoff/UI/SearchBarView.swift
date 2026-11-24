@@ -14,12 +14,24 @@ import AppKit
 final class SearchBarView: NSView, NSTextFieldDelegate {
     /// 整個搜尋列的大小（膠囊本身）
     static let size = CGSize(width: 240, height: 32)
+    /// 視窗模式（上方一列大字搜尋，同內建「App」視窗）的高度
+    static let headerHeight: CGFloat = 40
+
+    /// 視窗模式：拿掉膠囊、放大字級、靠左，寬度由外部決定
+    var headerStyle = false {
+        didSet {
+            guard headerStyle != oldValue else { return }
+            applyStyle()
+        }
+    }
 
     private let model: LaunchpadModel
     private let glass = NSGlassEffectView()
     private let icon = NSImageView()
     private let field = NSTextField()
     private let clearButton = NSButton()
+    /// 輸入框與圖示的容器：膠囊樣式時放在玻璃裡，視窗模式時直接放在本 view
+    private let content = NSView()
     private var loops: [RenderLoop] = []
     private var lastFocusRequest = 0
 
@@ -33,13 +45,13 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
         glass.autoresizingMask = [.width, .height]
         addSubview(glass)
 
-        let content = NSView(frame: bounds)
+        content.frame = bounds
+        content.autoresizingMask = [.width, .height]
         glass.contentView = content
 
         icon.image = NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)?
             .withSymbolConfiguration(.init(pointSize: 13, weight: .medium))
         icon.contentTintColor = .secondaryLabelColor
-        icon.frame = CGRect(x: 12, y: (Self.size.height - 16) / 2, width: 16, height: 16)
         content.addSubview(icon)
 
         field.isBordered = false
@@ -52,8 +64,6 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
         field.cell?.wraps = false
         field.isAutomaticTextCompletionEnabled = false
         field.delegate = self
-        let fieldHeight: CGFloat = 18
-        field.frame = CGRect(x: 35, y: (Self.size.height - fieldHeight) / 2, width: Self.size.width - 35 - 30, height: fieldHeight)
         content.addSubview(field)
 
         clearButton.image = NSImage(systemSymbolName: "xmark.circle.fill", accessibilityDescription: String(localized: "清除"))
@@ -61,7 +71,6 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
         clearButton.contentTintColor = .secondaryLabelColor
         clearButton.target = self
         clearButton.action = #selector(clear)
-        clearButton.frame = CGRect(x: Self.size.width - 28, y: (Self.size.height - 18) / 2, width: 18, height: 18)
         clearButton.isHidden = true
         content.addSubview(clearButton)
 
@@ -77,6 +86,43 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
+
+    private func applyStyle() {
+        if headerStyle {
+            glass.contentView = nil
+            glass.isHidden = true
+            content.frame = bounds
+            addSubview(content)
+            icon.image = NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)?
+                .withSymbolConfiguration(.init(pointSize: 18, weight: .regular))
+            field.font = .systemFont(ofSize: 22)
+        } else {
+            content.removeFromSuperview()
+            content.frame = bounds
+            glass.isHidden = false
+            glass.contentView = content
+            icon.image = NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)?
+                .withSymbolConfiguration(.init(pointSize: 13, weight: .medium))
+            field.font = .systemFont(ofSize: 14)
+        }
+        needsLayout = true
+    }
+
+    override func layout() {
+        super.layout()
+        let height = bounds.height
+        if headerStyle {
+            let fieldHeight: CGFloat = 28
+            icon.frame = CGRect(x: 0, y: (height - 22) / 2, width: 22, height: 22)
+            field.frame = CGRect(x: 32, y: (height - fieldHeight) / 2, width: bounds.width - 32 - 28, height: fieldHeight)
+            clearButton.frame = CGRect(x: bounds.width - 20, y: (height - 18) / 2, width: 18, height: 18)
+        } else {
+            let fieldHeight: CGFloat = 18
+            icon.frame = CGRect(x: 12, y: (height - 16) / 2, width: 16, height: 16)
+            field.frame = CGRect(x: 35, y: (height - fieldHeight) / 2, width: bounds.width - 35 - 30, height: fieldHeight)
+            clearButton.frame = CGRect(x: bounds.width - 28, y: (height - 18) / 2, width: 18, height: 18)
+        }
+    }
 
     // MARK: - 與 model 同步
 

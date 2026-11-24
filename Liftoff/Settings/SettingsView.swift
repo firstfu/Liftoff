@@ -325,6 +325,13 @@ private struct AppearanceSettings: View {
 
     var body: some View {
         Form {
+            Section {
+                Picker("顯示方式", selection: $settings.displayMode) {
+                    Text("全螢幕").tag(DisplayMode.fullScreen)
+                    Text("視窗").tag(DisplayMode.window)
+                }
+                .pickerStyle(.segmented)
+            }
             Section("格線") {
                 Stepper("每頁欄數：\(settings.columns)", value: $settings.columns, in: 4...12)
                 Stepper("每頁列數：\(settings.rows)", value: $settings.rows, in: 3...8)
@@ -394,6 +401,7 @@ private struct AppearanceSettings: View {
                     }
                 }
                 Toggle("蓋住 Dock 與選單列", isOn: $settings.coversDock)
+                    .disabled(settings.displayMode == .window)
             }
             Section {
                 Button("還原預設外觀") { settings.resetAppearance() }

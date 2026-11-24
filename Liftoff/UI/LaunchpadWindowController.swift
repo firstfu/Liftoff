@@ -74,6 +74,17 @@ final class LaunchpadPanel: NSPanel {
 /// 背景圖層：靜態模糊圖或即時模糊。
 final class BackgroundView: NSView {
     private let imageLayer = CALayer()
+    /// 背景圖在本 view 內的位置。視窗模式下 view 只是螢幕中央一塊，圖仍以整個螢幕的大小擺放，
+    /// 只露出對應位置的那一塊——看起來像透過卡片看到後面的模糊桌布，也不必另外裁圖
+    var imageRect: CGRect? {
+        didSet { if imageRect != oldValue { needsLayout = true } }
+    }
+    /// 視窗模式的系統玻璃（與內建「App」視窗相同的材質，跟著系統淺色/深色）
+    private lazy var glass: NSGlassEffectView = {
+        let view = NSGlassEffectView(frame: bounds)
+        view.autoresizingMask = [.width, .height]
+        return view
+    }()
     private lazy var liveBlur: NSVisualEffectView = {
         let view = NSVisualEffectView(frame: bounds)
         view.autoresizingMask = [.width, .height]
@@ -100,13 +111,14 @@ final class BackgroundView: NSView {
         super.layout()
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        imageLayer.frame = bounds
+        imageLayer.frame = imageRect ?? bounds
         CATransaction.commit()
     }
 
     /// 顯示預先算好的背景圖。
     func show(image: CGImage) {
         if liveBlur.superview != nil { liveBlur.removeFromSuperview() }
+        if glass.superview != nil { glass.removeFromSuperview() }
         layer?.backgroundColor = NSColor.black.cgColor
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -117,11 +129,24 @@ final class BackgroundView: NSView {
 
     /// 改用即時模糊（透出後方視窗與桌面）。
     func showLiveBlur() {
+        if glass.superview != nil { glass.removeFromSuperview() }
         imageLayer.isHidden = true
         layer?.backgroundColor = NSColor.black.withAlphaComponent(0.12).cgColor
         if liveBlur.superview == nil {
             liveBlur.frame = bounds
             addSubview(liveBlur)
+        }
+    }
+
+    /// 視窗模式：系統玻璃卡片。
+    func showGlass(cornerRadius: CGFloat) {
+        if liveBlur.superview != nil { liveBlur.removeFromSuperview() }
+        imageLayer.isHidden = true
+        layer?.backgroundColor = NSColor.clear.cgColor
+        glass.cornerRadius = cornerRadius
+        if glass.superview == nil {
+            glass.frame = bounds
+            addSubview(glass)
         }
     }
 }
@@ -138,6 +163,10 @@ final class LaunchpadWindowController {
     private let wallpapers: WallpaperProvider
     private let container = NSView()
     private let backgroundView = BackgroundView(frame: .zero)
+    /// 視窗模式卡片的陰影（獨立圖層：背景要裁圓角，裁了就畫不出陰影；有 shadowPath 才不必每幀算形狀）
+    private let cardShadow = CALayer()
+    /// 視窗模式：搜尋列下方的細分隔線（同內建「App」視窗）
+    private let headerSeparator = CALayer()
     /// 內容層（格線圖層 + SwiftUI），顯示/收起時整層縮放；翻轉座標讓子 view 的 frame 與 SwiftUI 一樣以左上為原點
     private let contentView = FlippedView()
     private let hostingView: NSHostingView<LaunchpadRootView>
@@ -175,7 +204,12 @@ final class LaunchpadWindowController {
         settingsButton = SettingsButtonView(model: model)
 
         container.wantsLayer = true
-        backgroundView.autoresizingMask = [.width, .height]
+        cardShadow.shadowColor = NSColor.black.cgColor
+        cardShadow.shadowOpacity = 0
+        cardShadow.shadowRadius = 30
+        cardShadow.shadowOffset = CGSize(width: 0, height: -10)
+        cardShadow.actions = ["shadowPath": NSNull(), "shadowOpacity": NSNull(), "frame": NSNull(), "bounds": NSNull(), "position": NSNull()]
+        container.layer?.addSublayer(cardShadow)
         container.addSubview(backgroundView)
         contentView.wantsLayer = true
         container.addSubview(contentView)
@@ -186,6 +220,9 @@ final class LaunchpadWindowController {
         hostingView.wantsLayer = true
         contentView.addSubview(hostingView)
         contentView.addSubview(searchBar)
+        headerSeparator.isHidden = true
+        headerSeparator.actions = ["frame": NSNull(), "bounds": NSNull(), "position": NSNull(), "hidden": NSNull()]
+        contentView.layer?.addSublayer(headerSeparator)
         contentView.addSubview(settingsButton)
         panel.contentView = container
         renderer.start()
@@ -208,6 +245,12 @@ final class LaunchpadWindowController {
         panel.mouseHandler = { [weak self, weak model] event in
             guard let self, let model else { return false }
             if event.type == .leftMouseDragged, self.handOffToDockIfNeeded(event) { return true }
+            // 視窗模式：點卡片外面（露出的桌面）就收起；拖曳中不算（拖到 Dock 會經過卡片外）
+            if self.isWindowMode, event.type == .leftMouseDown || event.type == .rightMouseDown,
+               model.drag == nil, !self.contentView.frame.contains(event.locationInWindow) {
+                self.hide(reason: .user)
+                return true
+            }
             // NSHostingView 是翻轉座標（左上為原點），與 SwiftUI 根座標一致
             let point = self.hostingView.convert(event.locationInWindow, from: nil)
             return model.handleMouse(event, at: point, in: self.hostingView)
@@ -411,30 +454,63 @@ final class LaunchpadWindowController {
     // MARK: - 版面
 
     /// 依螢幕與覆蓋設定擺放視窗、背景與內容區。
+    private var isWindowMode: Bool { settings.displayMode == .window }
+
     private func layout(for screen: NSScreen) {
         let frame = screen.frame
         if panel.frame != frame { panel.setFrame(frame, display: false) }
         container.frame = CGRect(origin: .zero, size: frame.size)
-        backgroundView.frame = container.bounds
-        // 不覆蓋 Dock/選單列時，內容避開它們（背景仍鋪滿整個螢幕）
+        let visible = CGRect(
+            x: screen.visibleFrame.minX - frame.minX, y: screen.visibleFrame.minY - frame.minY,
+            width: screen.visibleFrame.width, height: screen.visibleFrame.height
+        )
         var content = container.bounds
-        if !settings.coversDock {
-            let visible = screen.visibleFrame
-            content = CGRect(
-                x: visible.minX - frame.minX, y: visible.minY - frame.minY,
-                width: visible.width, height: visible.height
-            )
+        if isWindowMode {
+            // 視窗模式：大小由格線推算（同 AppCoordinator.iconPixelSize，圖示貼圖才會 1:1），置中於可用區域，取整點避免發糊
+            let size = WindowModeCard.size(columns: settings.columns, rows: settings.rows, iconScale: settings.iconScale,
+                                       labelFontSize: settings.labelFontSize, showsLabels: settings.showsLabels,
+                                       available: visible.size)
+            content = CGRect(x: (visible.midX - size.width / 2).rounded(), y: (visible.midY - size.height / 2).rounded(),
+                             width: size.width, height: size.height)
+        } else if !settings.coversDock {
+            // 不覆蓋 Dock/選單列時，內容避開它們（背景仍鋪滿整個螢幕）
+            content = visible
         }
-        // 內容區鋪滿螢幕時才會被瀏海遮到；避開選單列時（visibleFrame）內容本來就在瀏海下方
-        model.topInset = settings.coversDock ? screen.safeAreaInsets.top : 0
+        applyCardStyle(content: content)
+        // 內容區鋪滿螢幕時才會被瀏海遮到；避開選單列時（visibleFrame）與視窗模式，內容本來就在瀏海下方
+        model.topInset = settings.coversDock && !isWindowMode ? screen.safeAreaInsets.top : 0
         if contentView.frame != content {
             contentView.frame = content
             let bounds = CGRect(origin: .zero, size: content.size)
             hostingView.frame = bounds
             renderer.mainView.frame = bounds
             renderer.dragView.frame = bounds
+            // 直接更新，不等 SwiftUI 回報尺寸：切換顯示方式後第一次打開，第一幀就用新的格線
+            model.containerSize = content.size
         }
         renderer.backingScale = screen.backingScaleFactor
+    }
+
+    /// 全螢幕：背景鋪滿。視窗模式：系統玻璃的圓角卡片加柔和陰影，格線裁在卡片內（否則左右兩頁會露在卡片外）。
+    private func applyCardStyle(content: CGRect) {
+        let window = isWindowMode
+        let backgroundFrame = window ? content : container.bounds
+        if backgroundView.frame != backgroundFrame { backgroundView.frame = backgroundFrame }
+        guard let layer = backgroundView.layer else { return }
+        let radius = window ? WindowModeCard.cornerRadius : 0
+        if layer.cornerRadius != radius {
+            layer.cornerRadius = radius
+            layer.cornerCurve = .continuous
+            layer.masksToBounds = window
+            renderer.mainView.layer?.masksToBounds = window
+        }
+        cardShadow.frame = backgroundFrame
+        cardShadow.shadowPath = window
+            ? CGPath(roundedRect: CGRect(origin: .zero, size: backgroundFrame.size), cornerWidth: radius, cornerHeight: radius, transform: nil)
+            : nil
+        cardShadow.shadowOpacity = window ? 0.22 : 0
+        headerSeparator.isHidden = !window
+        searchBar.headerStyle = window
     }
 
     /// 收起後在背景檢查目前螢幕的桌布是否換過（查詢桌布路徑要 2–5ms，不放在打開的路徑上）。
@@ -469,11 +545,19 @@ final class LaunchpadWindowController {
     private var lastBackground: [CGDirectDisplayID: PreparedBackground] = [:]
 
     private func apply(_ prepared: PreparedBackground) {
+        // 視窗模式用系統玻璃，背景圖只先記著（切回全螢幕時用）
+        guard !isWindowMode else { return }
         backgroundView.show(image: prepared.image)
         model.backgroundIsLight = prepared.luminance > 0.62
     }
 
     private func applyBackground(for screen: NSScreen) {
+        if isWindowMode {
+            backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius)
+            // 玻璃跟著系統外觀：淺色模式用深色字，與內建「App」視窗一致
+            model.backgroundIsLight = NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+            return
+        }
         if settings.backgroundStyle != .liveBlur, let cached = lastBackground[screen.displayID] {
             apply(cached)
             return
@@ -504,7 +588,7 @@ final class LaunchpadWindowController {
         containerLayer.add(fade, forKey: "fade")
 
         let zoom = CABasicAnimation(keyPath: "transform")
-        zoom.fromValue = NSValue(caTransform3D: scaleTransform(1.08, in: contentLayer.bounds))
+        zoom.fromValue = NSValue(caTransform3D: scaleTransform(isWindowMode ? 1.03 : 1.08, in: contentLayer.bounds))
         zoom.toValue = NSValue(caTransform3D: CATransform3DIdentity)
         zoom.duration = 0.3
         zoom.timingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.9, 0.3, 1)
@@ -524,7 +608,7 @@ final class LaunchpadWindowController {
 
         let zoom = CABasicAnimation(keyPath: "transform")
         zoom.fromValue = NSValue(caTransform3D: contentLayer.presentation()?.transform ?? CATransform3DIdentity)
-        zoom.toValue = NSValue(caTransform3D: scaleTransform(1.05, in: contentLayer.bounds))
+        zoom.toValue = NSValue(caTransform3D: scaleTransform(isWindowMode ? 1.02 : 1.05, in: contentLayer.bounds))
         zoom.duration = duration
         zoom.timingFunction = CAMediaTimingFunction(name: .easeIn)
         zoom.fillMode = .forwards
@@ -547,7 +631,8 @@ final class LaunchpadWindowController {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         containerLayer.opacity = Float(f)
-        contentLayer.transform = scaleTransform(1 + Self.zoomExtra * (1 - f), in: contentLayer.bounds)
+        let zoomExtra = isWindowMode ? Self.zoomExtra / 3 : Self.zoomExtra
+        contentLayer.transform = scaleTransform(1 + zoomExtra * (1 - f), in: contentLayer.bounds)
         CATransaction.commit()
     }
 
@@ -639,6 +724,10 @@ final class LaunchpadWindowController {
     /// 依版面把搜尋列置中於上方，設定按鈕放在同一列右側。
     private func positionSearchBar() {
         let metrics = model.metrics
+        if isWindowMode {
+            positionHeader(metrics: metrics)
+            return
+        }
         let size = SearchBarView.size
         let frame = CGRect(x: (metrics.containerSize.width - size.width) / 2, y: metrics.searchBarY - size.height / 2,
                            width: size.width, height: size.height)
@@ -650,6 +739,23 @@ final class LaunchpadWindowController {
         let buttonFrame = CGRect(x: iconRight - buttonSize.width, y: metrics.searchBarY - buttonSize.height / 2,
                                  width: buttonSize.width, height: buttonSize.height)
         if settingsButton.frame != buttonFrame { settingsButton.frame = buttonFrame }
+    }
+
+    /// 視窗模式的上方一列（同內建「App」視窗）：左邊大字搜尋、右邊設定按鈕、下方細分隔線。
+    private func positionHeader(metrics: GridMetrics) {
+        let width = metrics.containerSize.width
+        let inset = WindowModeCard.horizontalMargin
+        let buttonSize = SettingsButtonView.size
+        let barY = metrics.searchBarY
+        let buttonFrame = CGRect(x: width - inset - buttonSize.width + 6, y: barY - buttonSize.height / 2,
+                                 width: buttonSize.width, height: buttonSize.height)
+        if settingsButton.frame != buttonFrame { settingsButton.frame = buttonFrame }
+        let height = SearchBarView.headerHeight
+        let frame = CGRect(x: inset, y: barY - height / 2, width: buttonFrame.minX - inset - 8, height: height)
+        if searchBar.frame != frame { searchBar.frame = frame }
+        let line = CGRect(x: inset, y: WindowModeCard.headerHeight, width: width - inset * 2, height: 1 / max(1, renderer.backingScale))
+        if headerSeparator.frame != line { headerSeparator.frame = line }
+        headerSeparator.backgroundColor = (model.labelsAreDark ? NSColor.black.withAlphaComponent(0.12) : NSColor.white.withAlphaComponent(0.16)).cgColor
     }
 
     /// 立即讓 SwiftUI 套用狀態變更並完成排版（自我測試量測「狀態改變 → 畫面更新」的主執行緒成本）。

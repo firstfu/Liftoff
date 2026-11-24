@@ -9,6 +9,33 @@
 
 import CoreGraphics
 
+/// 視窗模式（issue #17）的卡片尺寸與版面常數：照 macOS 內建「App」視窗——
+/// 上方一列大字搜尋、細分隔線、緊密的格線、圖示約 64pt，卡片大小由格線推算而不是佔螢幕的固定比例。
+nonisolated enum WindowModeCard {
+    static let horizontalMargin: CGFloat = 22
+    /// 搜尋列那一列的高度（分隔線畫在這條線上）
+    static let headerHeight: CGFloat = 60
+    /// 格線起點（分隔線下方留一點空）
+    static let gridTop: CGFloat = 72
+    /// 頁碼點那一列
+    static let bottomMargin: CGFloat = 34
+    static let cornerRadius: CGFloat = 26
+    /// 標準格子：圖示 64pt 時的格寬與「圖示區」高度
+    private static let cellWidth: CGFloat = 110
+    private static let iconAreaHeight: CGFloat = 80
+
+    /// 卡片大小；超出可用區域時等比例縮小。
+    /// - Parameter available: 螢幕扣掉選單列與 Dock 的區域
+    static func size(columns: Int, rows: Int, iconScale: Double, labelFontSize: Double, showsLabels: Bool, available: CGSize) -> CGSize {
+        let scale = CGFloat(iconScale)
+        let labelHeight = showsLabels ? labelFontSize * 1.35 + 7 : 0
+        let width = CGFloat(max(1, columns)) * cellWidth * scale + horizontalMargin * 2
+        let height = gridTop + CGFloat(max(1, rows)) * (iconAreaHeight * scale + labelHeight) + bottomMargin
+        let fit = min(1, available.width * 0.92 / width, available.height * 0.9 / height)
+        return CGSize(width: (width * fit).rounded(), height: (height * fit).rounded())
+    }
+}
+
 nonisolated struct GridMetrics: Equatable, Sendable {
     let containerSize: CGSize
     let columns: Int
@@ -35,7 +62,9 @@ nonisolated struct GridMetrics: Equatable, Sendable {
     ///   - showsLabels: 是否顯示名稱
     ///   - compact: 緊湊模式（四周留白較少）
     ///   - topInset: 上方被硬體遮住的高度（瀏海機型的 safeAreaInsets.top；內容區已避開選單列時為 0）
-    init(containerSize: CGSize, columns: Int, rows: Int, iconScale: Double, labelFontSize: Double, showsLabels: Bool, compact: Bool, topInset: CGFloat = 0) {
+    ///   - windowed: 視窗模式（見 `WindowCard`）：固定的窄邊距，圖示大小由格子決定（倍率已反映在卡片大小上）
+    init(containerSize: CGSize, columns: Int, rows: Int, iconScale: Double, labelFontSize: Double, showsLabels: Bool, compact: Bool,
+         topInset: CGFloat = 0, windowed: Bool = false) {
         self.containerSize = containerSize
         self.columns = max(1, columns)
         self.rows = max(1, rows)
@@ -46,17 +75,17 @@ nonisolated struct GridMetrics: Equatable, Sendable {
         let width = max(containerSize.width, 200)
         let height = max(containerSize.height, 200)
         // 上方留給搜尋列、下方留給頁碼點；比例參考經典啟動台
-        let horizontalMargin = width * (compact ? 0.05 : 0.10)
-        var topMargin = compact ? 76.0 : min(118, height * 0.11)
-        let bottomMargin = compact ? 58.0 : min(96, height * 0.09)
-        var barY = compact ? 38 : max(40, topMargin * 0.42)
+        let horizontalMargin = windowed ? WindowModeCard.horizontalMargin : width * (compact ? 0.05 : 0.10)
+        var topMargin = windowed ? WindowModeCard.gridTop : compact ? 76.0 : min(118, height * 0.11)
+        let bottomMargin = windowed ? WindowModeCard.bottomMargin : compact ? 58.0 : min(96, height * 0.09)
+        var barY = windowed ? WindowModeCard.headerHeight / 2 : compact ? 38 : max(40, topMargin * 0.42)
         // 瀏海會遮住螢幕最上緣：搜尋列整個移到瀏海下方（高度 32 → 中心 = 瀏海 + 8 + 16），格線跟著下移避免與搜尋列重疊
         if topInset > 0 {
             barY = max(barY, topInset + 8 + 16)
             topMargin = max(topMargin, barY + 16 + 24)
         }
         searchBarY = barY
-        pageDotsY = height - bottomMargin * 0.52
+        pageDotsY = windowed ? height - bottomMargin / 2 : height - bottomMargin * 0.52
 
         // 格子尺寸取整點、格線原點取整點：圖示與名稱圖都是整數像素的點陣圖，
         // 只要格子落在小數座標，Core Animation 取樣時就會插值，邊緣與文字因此發糊
@@ -71,8 +100,12 @@ nonisolated struct GridMetrics: Equatable, Sendable {
         cellSize = CGSize(width: cellWidth, height: cellHeight)
 
         let labelHeight = showsLabels ? labelFontSize * 1.35 + labelSpacing : 0
-        let base = min(cellSize.width * 0.5, (cellSize.height - labelHeight) * 0.66)
-        iconSize = max(24, min(256, (base * iconScale).rounded()))
+        if windowed {
+            iconSize = max(24, min(256, min(cellSize.width * 0.58, (cellSize.height - labelHeight) * 0.8).rounded()))
+        } else {
+            let base = min(cellSize.width * 0.5, (cellSize.height - labelHeight) * 0.66)
+            iconSize = max(24, min(256, (base * iconScale).rounded()))
+        }
     }
 
     /// 直接指定格線區域與圖示大小（資料夾面板用：格子大小沿用主畫面）。

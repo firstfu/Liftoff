@@ -22,6 +22,14 @@ nonisolated enum BackgroundStyle: String, CaseIterable, Codable, Sendable {
     case preset
 }
 
+/// 啟動台的顯示方式（issue #17）。
+nonisolated enum DisplayMode: String, CaseIterable, Codable, Sendable {
+    /// 蓋滿整個螢幕（經典啟動台）
+    case fullScreen
+    /// 螢幕中央的圓角卡片，四周露出桌面
+    case window
+}
+
 /// App 名稱文字顏色。
 nonisolated enum LabelColorMode: String, CaseIterable, Codable, Sendable {
     /// 依背景亮度自動選黑或白
@@ -103,6 +111,8 @@ final class AppSettings {
     var customImagePath: String? { didSet { save(customImagePath, forKey: Key.customImagePath) } }
     /// 選用的內建背景（`WallpaperPreset.id`）
     var presetWallpaper: String { didSet { save(presetWallpaper, forKey: Key.presetWallpaper) } }
+    /// 全螢幕或視窗（見 `DisplayMode`）
+    var displayMode: DisplayMode { didSet { save(displayMode.rawValue, forKey: Key.displayMode) } }
     /// 是否蓋住 Dock 與選單列（false 時 Dock 與選單列浮在啟動台之上，和經典啟動台一樣可見）
     var coversDock: Bool { didSet { save(coversDock, forKey: Key.coversDock) } }
     /// 再次打開時回到上次的頁面
@@ -183,13 +193,14 @@ final class AppSettings {
         static let hiddenApps = "hiddenApps", extraDirectories = "extraDirectories"
         static let autoChecksForUpdates = "autoChecksForUpdates", autoInstallsUpdates = "autoInstallsUpdates"
         static let availableUpdateVersion = "availableUpdateVersion", blocksSpaceSwipe = "blocksSpaceSwipe"
+        static let displayMode = "displayMode"
         /// 跨 process 同步要觀察的 key（新增設定時記得加進來，並在 `reload()` 補上讀取）
         static let all = [
             columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins, showsRunningIndicator,
             backgroundStyle, blurRadius, dimming, customImagePath, presetWallpaper, coversDock, remembersPage,
             hotKey, hotCorner, pinchGesture, displayTarget, windowPreview, previewDelay, showsDockIcon,
             showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, autoInstallsUpdates,
-            availableUpdateVersion, blocksSpaceSwipe,
+            availableUpdateVersion, blocksSpaceSwipe, displayMode,
         ]
     }
 
@@ -200,7 +211,7 @@ final class AppSettings {
             Key.columns: 7, Key.rows: 5, Key.iconScale: 1.0, Key.labelFontSize: 13.0, Key.showsLabels: true,
             Key.labelColor: LabelColorMode.auto.rawValue, Key.iconAppearance: IconAppearance.system.rawValue,
             Key.compactMargins: false, Key.showsRunningIndicator: false, Key.backgroundStyle: BackgroundStyle.wallpaper.rawValue,
-            Key.blurRadius: 45.0, Key.dimming: 0.22, Key.coversDock: true, Key.remembersPage: true,
+            Key.blurRadius: 45.0, Key.displayMode: DisplayMode.fullScreen.rawValue, Key.dimming: 0.22, Key.coversDock: true, Key.remembersPage: true,
             Key.presetWallpaper: WallpaperPreset.defaultID,
             Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.blocksSpaceSwipe: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
             Key.windowPreview: true, Key.previewDelay: 0.5, Key.showsDockIcon: true, Key.showsMenuBarIcon: true,
@@ -221,6 +232,7 @@ final class AppSettings {
         customImagePath = defaults.string(forKey: Key.customImagePath)
         presetWallpaper = defaults.string(forKey: Key.presetWallpaper) ?? WallpaperPreset.defaultID
         coversDock = defaults.bool(forKey: Key.coversDock)
+        displayMode = DisplayMode(rawValue: defaults.string(forKey: Key.displayMode) ?? "") ?? .fullScreen
         remembersPage = defaults.bool(forKey: Key.remembersPage)
         hotKey = Self.readHotKey(defaults)
         hotCorner = HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none
@@ -287,6 +299,7 @@ final class AppSettings {
         update(\.customImagePath, defaults.string(forKey: Key.customImagePath))
         update(\.presetWallpaper, defaults.string(forKey: Key.presetWallpaper) ?? WallpaperPreset.defaultID)
         update(\.coversDock, defaults.bool(forKey: Key.coversDock))
+        update(\.displayMode, DisplayMode(rawValue: defaults.string(forKey: Key.displayMode) ?? "") ?? .fullScreen)
         update(\.remembersPage, defaults.bool(forKey: Key.remembersPage))
         update(\.hotKey, Self.readHotKey(defaults))
         update(\.hotCorner, HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none)
@@ -315,6 +328,7 @@ final class AppSettings {
         columns = 7; rows = 5; iconScale = 1.0; labelFontSize = 13; showsLabels = true
         labelColor = .auto; iconAppearance = .system; compactMargins = false; showsRunningIndicator = false
         backgroundStyle = .wallpaper; blurRadius = 45; dimming = 0.22; coversDock = true
+        displayMode = .fullScreen
     }
 }
 

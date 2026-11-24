@@ -167,7 +167,7 @@ final class LaunchpadModel {
             containerSize: containerSize, columns: settings.columns, rows: settings.rows,
             iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
             showsLabels: settings.showsLabels, compact: settings.compactMargins,
-            topInset: topInset
+            topInset: topInset, windowed: settings.displayMode == .window
         )
     }
 
@@ -218,6 +218,9 @@ final class LaunchpadModel {
         openFolderID.flatMap { layoutStore.layout.folder(id: $0) }
     }
 
+    /// 資料夾面板用深色字：全螢幕的面板固定是深色玻璃配白字；視窗模式跟著卡片（系統淺色時是淺色玻璃配深色字）
+    var folderLabelsAreDark: Bool { settings.displayMode == .window && labelsAreDark }
+
     /// App 名稱是否用深色字
     var labelsAreDark: Bool {
         switch settings.labelColor {
@@ -231,7 +234,10 @@ final class LaunchpadModel {
     /// 資料夾一頁最多放幾個 App（超過才需要翻頁；自我測試用來找多頁資料夾）
     var folderCapacityLimit: Int { folderMaxColumns * 3 }
     /// 資料夾面板最多幾欄（每頁最多 3 列，超過才翻頁）
-    private var folderMaxColumns: Int { max(3, min(settings.columns, 7)) }
+    /// 視窗模式少兩欄（最多 5）：面板與卡片同寬會整個貼滿卡片，看起來像另一張更大的卡片
+    private var folderMaxColumns: Int {
+        settings.displayMode == .window ? max(3, min(settings.columns - 2, 5)) : max(3, min(settings.columns, 7))
+    }
     /// 依開啟中資料夾的 App 數決定欄數：面板貼合內容，3 個 App 就只有 3 格寬（至少 3 欄，標題才放得下）
     var folderColumns: Int {
         let count = openFolder?.apps.count ?? 0

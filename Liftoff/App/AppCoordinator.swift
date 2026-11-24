@@ -347,7 +347,8 @@ final class AppCoordinator {
             self.layoutStore.update { $0.normalize(capacity: capacity) }
             self.scheduleIconSync()
         }
-        observe({ [settings] in [settings.iconScale, settings.labelFontSize, settings.showsLabels ? 1 : 0, settings.compactMargins ? 1 : 0] }) { [weak self] _ in
+        observe({ [settings] in [settings.iconScale, settings.labelFontSize, settings.showsLabels ? 1 : 0, settings.compactMargins ? 1 : 0,
+                                 settings.displayMode == .window ? 1 : 0] }) { [weak self] _ in
             self?.scheduleIconSync()
         }
         observe({ [settings] in settings.iconAppearance }) { [weak self] _ in self?.syncIcons() }
@@ -404,12 +405,17 @@ final class AppCoordinator {
     private func iconPixelSize(for screen: NSScreen) -> Int {
         // 容器要與 LaunchpadWindowController.layout 實際擺放的內容區一致（不蓋 Dock/選單列時是 visibleFrame），
         // 否則算出的 iconSize 會差幾個點，貼圖就不再與顯示像素 1:1
-        let container = settings.coversDock ? screen.frame.size : screen.visibleFrame.size
+        let windowed = settings.displayMode == .window
+        let container = windowed
+            ? WindowModeCard.size(columns: settings.columns, rows: settings.rows, iconScale: settings.iconScale,
+                              labelFontSize: settings.labelFontSize, showsLabels: settings.showsLabels,
+                              available: screen.visibleFrame.size)
+            : settings.coversDock ? screen.frame.size : screen.visibleFrame.size
         let metrics = GridMetrics(
             containerSize: container, columns: settings.columns, rows: settings.rows,
             iconScale: settings.iconScale, labelFontSize: settings.labelFontSize,
             showsLabels: settings.showsLabels, compact: settings.compactMargins,
-            topInset: settings.coversDock ? screen.safeAreaInsets.top : 0
+            topInset: settings.coversDock && !windowed ? screen.safeAreaInsets.top : 0, windowed: windowed
         )
         return max(32, Int((metrics.iconSize * screen.backingScaleFactor).rounded()))
     }

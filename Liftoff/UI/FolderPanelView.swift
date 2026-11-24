@@ -25,12 +25,12 @@ struct FolderPanelView: View {
             FolderTitle(model: model, folder: folder)
                 .frame(width: frame.width, height: FolderPanelStyle.titleHeight + FolderPanelStyle.padding * 0.6)
             if pages > 1 {
-                PageDots(pager: model.folderPager, count: pages, dark: false)
+                PageDots(pager: model.folderPager, count: pages, dark: model.folderLabelsAreDark)
                     .position(x: frame.width / 2, y: frame.height - 14)
             }
         }
         .frame(width: frame.width, height: frame.height)
-        .environment(\.colorScheme, .dark)
+        .environment(\.colorScheme, model.folderLabelsAreDark ? .light : .dark)
         .position(x: frame.midX, y: frame.midY)
     }
 }
@@ -63,7 +63,7 @@ private struct FolderTitle: View {
             }
         }
         .font(.system(size: 22, weight: .semibold))
-        .foregroundStyle(Color.white)
+        .foregroundStyle(model.folderLabelsAreDark ? Color.black.opacity(0.85) : Color.white)
         .frame(maxWidth: 360)
     }
 

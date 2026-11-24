@@ -278,6 +278,8 @@ final class LaunchpadWindowController {
     /// 預熱：在螢幕外先排版並繪製一次，第一次真正打開時不必等 SwiftUI 建立畫面。
     func prewarm(on screen: NSScreen) {
         layout(for: screen)
+        // 視窗模式的系統玻璃第一次建立並上屏要 8–9ms（建立 3.9ms＋WindowServer 建資源 4.6ms），一併在這裡先付掉
+        if isWindowMode { backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius) }
         hostingView.layoutSubtreeIfNeeded()
         hostingView.displayIfNeeded()
         // 以透明度 0 先上屏再收起：第一次 orderFront 要等 WindowServer 建立視窗與玻璃效果的資源（實測 10–15ms，

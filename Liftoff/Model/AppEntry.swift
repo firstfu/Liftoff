@@ -36,6 +36,9 @@ nonisolated struct AppEntry: Identifiable, Hashable, Sendable, Codable {
     var isSystemApp: Bool {
         resolvedPath.hasPrefix("/System/") || path.hasPrefix("/System/")
     }
+
+    /// Liftoff 自己（issue #17）：出現在格線裡，點一下打開設定；不提供「結束」與「徹底移除」，免得從自己裡面把自己關掉或刪掉
+    var isLiftoff: Bool { bundleID == Paths.bundleID }
 }
 
 nonisolated enum AppScanner {
@@ -144,8 +147,6 @@ nonisolated enum AppScanner {
         if plist["LSBackgroundOnly"] as? Bool == true || (plist["LSBackgroundOnly"] as? String) == "1" { return nil }
 
         let bundleID = plist["CFBundleIdentifier"] as? String
-        // 啟動台自己不必出現在啟動台裡
-        if bundleID == Paths.bundleID { return nil }
         let fileName = url.deletingPathExtension().lastPathComponent
         let displayName = FileManager.default.displayName(atPath: url.path)
         let name = displayName.hasSuffix(".app") ? String(displayName.dropLast(4)) : displayName

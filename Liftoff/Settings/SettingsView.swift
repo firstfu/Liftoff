@@ -130,9 +130,11 @@ private struct GeneralSettings: View {
                 }
                 Toggle("再次打開時回到上次的頁面", isOn: $settings.remembersPage)
             }
-            Section {
-                Label("Dock 與選單列圖示至少保留一個，避免找不到啟動台的入口。", systemImage: "info.circle")
-                    .foregroundStyle(.secondary)
+            if !settings.showsDockIcon && !settings.showsMenuBarIcon {
+                Section {
+                    Label("Dock 與選單列都不會顯示 Liftoff。之後要改設定，打開啟動台後按右上角的齒輪，或點啟動台裡的 Liftoff 圖示。", systemImage: "info.circle")
+                        .foregroundStyle(.secondary)
+                }
             }
             Section("關於") {
                 // 「檢查更新…」單獨放這一列：放進底下那排連結按鈕，俄文會被截斷

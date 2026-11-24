@@ -582,85 +582,85 @@
         }
       }
     },
-    "Dock 與選單列圖示至少保留一個，避免找不到啟動台的入口。": {
-      "comment": "出現在 SettingsView.swift（英文：Keep at least one of the Dock and menu bar icons so you can always find a way to open Liftoff.）",
+    "Dock 與選單列都不會顯示 Liftoff。之後要改設定，打開啟動台後按右上角的齒輪，或點啟動台裡的 Liftoff 圖示。": {
+      "comment": "出現在 SettingsView.swift（Dock 與選單列圖示都關掉時的提示）",
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Behalte mindestens eines der Symbole im Dock oder in der Menüleiste, damit Liftoff immer erreichbar bleibt."
+            "value": "Liftoff erscheint weder im Dock noch in der Menüleiste. Um später Einstellungen zu ändern, öffne Liftoff und klicke oben rechts auf das Zahnrad oder auf das Liftoff-Symbol darin."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep at least one of the Dock and menu bar icons so you can always find a way to open Liftoff."
+            "value": "Liftoff won’t appear in the Dock or the menu bar. To change settings later, open Liftoff and click the gear in the top-right corner, or click the Liftoff icon inside it."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mantén al menos uno de los iconos, el del Dock o el de la barra de menús, para poder abrir Liftoff siempre."
+            "value": "Liftoff no aparecerá en el Dock ni en la barra de menús. Para cambiar los ajustes más adelante, abre Liftoff y haz clic en el engranaje de la esquina superior derecha o en el icono de Liftoff que hay dentro."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Conservez au moins une des icônes du Dock et de la barre des menus pour pouvoir toujours ouvrir Liftoff."
+            "value": "Liftoff n’apparaîtra ni dans le Dock ni dans la barre des menus. Pour modifier les réglages plus tard, ouvrez Liftoff et cliquez sur la roue dentée en haut à droite, ou sur l’icône de Liftoff qu’il contient."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mantieni almeno una delle icone nel Dock e nella barra dei menu, così potrai sempre aprire Liftoff."
+            "value": "Liftoff non comparirà né nel Dock né nella barra dei menu. Per modificare le impostazioni in seguito, apri Liftoff e fai clic sull’ingranaggio in alto a destra, oppure sull’icona di Liftoff al suo interno."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Liftoffを開けなくならないよう、Dockアイコンとメニューバーアイコンの少なくとも一方は表示してください。"
+            "value": "LiftoffはDockにもメニューバーにも表示されません。あとで設定を変更するには、Liftoffを開いて右上の歯車をクリックするか、その中のLiftoffアイコンをクリックしてください。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "Liftoff를 열 방법을 찾을 수 있도록 Dock 아이콘과 메뉴 막대 아이콘 중 하나는 켜 두세요."
+            "value": "Liftoff가 Dock과 메뉴 막대에 표시되지 않습니다. 나중에 설정을 변경하려면 Liftoff를 열고 오른쪽 상단의 톱니바퀴나 그 안의 Liftoff 아이콘을 클릭하세요."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Houd minstens één van de symbolen in het Dock en de menubalk ingeschakeld, zodat je Liftoff altijd kunt openen."
+            "value": "Liftoff verschijnt niet in het Dock of de menubalk. Om later instellingen te wijzigen, open je Liftoff en klik je op het tandwiel rechtsboven, of op het Liftoff-symbool erin."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mantenha pelo menos um dos ícones, no Dock ou na barra de menus, para sempre poder abrir o Liftoff."
+            "value": "O Liftoff não aparecerá no Dock nem na barra de menus. Para alterar os ajustes depois, abra o Liftoff e clique na engrenagem no canto superior direito ou no ícone do Liftoff dentro dele."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Оставьте хотя бы один значок — в Dock или в строке меню, чтобы всегда можно было открыть Liftoff."
+            "value": "Liftoff не будет отображаться ни в Dock, ни в строке меню. Чтобы потом изменить настройки, откройте Liftoff и нажмите шестерёнку в правом верхнем углу или значок Liftoff внутри него."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Liftoff’a her zaman ulaşabilmek için Dock ve menü çubuğu simgelerinden en az biri açık kalmalıdır."
+            "value": "Liftoff, Dock’ta ve menü çubuğunda görünmeyecek. Ayarları daha sonra değiştirmek için Liftoff’u açıp sağ üst köşedeki dişliyi ya da içindeki Liftoff simgesini tıklayın."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "程序坞和菜单栏图标至少保留一个，以免找不到 Liftoff 的入口。"
+            "value": "程序坞和菜单栏都不会显示 Liftoff。之后要更改设置，打开 Liftoff 后点右上角的齿轮，或点其中的 Liftoff 图标。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dock 與選單列圖示至少保留一個，避免找不到啟動台的入口。"
+            "value": "Dock 與選單列都不會顯示 Liftoff。之後要改設定，打開啟動台後按右上角的齒輪，或點啟動台裡的 Liftoff 圖示。"
           }
         }
       }

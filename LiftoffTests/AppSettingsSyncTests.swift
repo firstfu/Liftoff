@@ -74,17 +74,21 @@ struct AppSettingsSyncTests {
         #expect(defaults.integer(forKey: "rows") == 6)
     }
 
-    /// Dock 與選單列圖示至少留一個的規則，在同步過來的值上也成立
-    @Test func reloadKeepsAtLeastOneEntryPoint() {
+    /// Dock 與選單列圖示可以都關掉（issue #17），重新讀取與重新啟動後都維持關閉
+    @Test func bothEntryIconsCanBeHidden() {
         let (defaults, name) = Self.makeDefaults()
         defer { defaults.removePersistentDomain(forName: name) }
         let host = AppSettings(defaults: defaults)
         let settingsProcess = AppSettings(defaults: defaults)
 
         settingsProcess.showsDockIcon = false
-        #expect(settingsProcess.showsMenuBarIcon)
+        settingsProcess.showsMenuBarIcon = false
+        #expect(!settingsProcess.showsDockIcon)
         host.reload()
         #expect(!host.showsDockIcon)
-        #expect(host.showsMenuBarIcon)
+        #expect(!host.showsMenuBarIcon)
+        let relaunched = AppSettings(defaults: defaults)
+        #expect(!relaunched.showsDockIcon)
+        #expect(!relaunched.showsMenuBarIcon)
     }
 }

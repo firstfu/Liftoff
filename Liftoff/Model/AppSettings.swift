@@ -134,19 +134,10 @@ final class AppSettings {
 
     // MARK: 一般
 
-    /// Dock 與選單列圖示至少要留一個，否則使用者找不到入口：關掉其中一個時若另一個也是關的，自動把另一個打開。
-    var showsDockIcon: Bool {
-        didSet {
-            save(showsDockIcon, forKey: Key.showsDockIcon)
-            if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
-        }
-    }
-    var showsMenuBarIcon: Bool {
-        didSet {
-            save(showsMenuBarIcon, forKey: Key.showsMenuBarIcon)
-            if !showsMenuBarIcon && !showsDockIcon { showsDockIcon = true }
-        }
-    }
+    /// Dock 與選單列圖示可以都關掉（issue #17）：手動打開 Liftoff 一定會顯示啟動台，
+    /// 啟動台裡有設定齒輪，點 Liftoff 自己的圖示也會打開設定，所以不會找不到入口。
+    var showsDockIcon: Bool { didSet { save(showsDockIcon, forKey: Key.showsDockIcon) } }
+    var showsMenuBarIcon: Bool { didSet { save(showsMenuBarIcon, forKey: Key.showsMenuBarIcon) } }
     /// 隱藏的 App（識別鍵）
     var hiddenApps: Set<String> { didSet { save(Array(hiddenApps).sorted(), forKey: Key.hiddenApps) } }
     /// 額外掃描的資料夾（外接硬碟、自訂位置）
@@ -245,8 +236,6 @@ final class AppSettings {
         autoChecksForUpdates = defaults.bool(forKey: Key.autoChecksForUpdates)
         autoInstallsUpdates = defaults.bool(forKey: Key.autoInstallsUpdates)
         availableUpdateVersion = defaults.string(forKey: Key.availableUpdateVersion)
-        // 舊版本可能已存成兩個都關；補上不變式
-        if !showsDockIcon && !showsMenuBarIcon { showsMenuBarIcon = true }
     }
 
     /// 寫入 UserDefaults（依另一個 process 的值重新讀取期間略過）。

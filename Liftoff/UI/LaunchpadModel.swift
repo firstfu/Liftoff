@@ -427,6 +427,12 @@ final class LaunchpadModel {
             lastLaunchRequest = id
             return
         }
+        // 點 Liftoff 自己：打開設定（Dock 與選單列圖示都關掉時，這是最好找的入口）。
+        // 照常開啟的話只會收起後又因 reopen 立刻重新顯示
+        if entry.isLiftoff {
+            requestSettings?()
+            return
+        }
         usage.recordLaunch(id)
         requestDismiss?(.launched)
         AppActions.open(entry)
@@ -497,6 +503,7 @@ final class LaunchpadModel {
     func requestUninstall(_ appID: String) {
         guard let entry = catalog.entry(appID) else { return }
         guard !entry.isSystemApp else { return showToast(String(localized: "系統 App 無法移除")) }
+        guard !entry.isLiftoff else { return }
         preview.hide()
         let plan = UninstallPlan(appID: appID)
         uninstallPlan = plan

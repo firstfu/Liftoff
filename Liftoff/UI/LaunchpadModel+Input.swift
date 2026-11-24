@@ -119,7 +119,7 @@ extension LaunchpadModel {
     /// 長按 App 圖示（0.6 秒、期間沒移動也沒進入拖曳）→ 開啟「徹底移除」。資料夾不適用。
     private func startLongPress(for hit: HitTarget) {
         longPressTask?.cancel()
-        guard case .app(let id) = hit.item, let entry = catalog.entry(id), !entry.isSystemApp else { return }
+        guard case .app(let id) = hit.item, let entry = catalog.entry(id), !entry.isSystemApp, !entry.isLiftoff else { return }
         longPressTask = Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(600))
             guard !Task.isCancelled, let self, self.press?.item.id == hit.item.id, self.drag == nil else { return }
@@ -196,7 +196,7 @@ extension LaunchpadModel {
         case .app(let id):
             let entry = catalog.entry(id)
             menu.addItem(ClosureMenuItem(String(localized: "開啟")) { [weak self] in self?.launch(id) })
-            if let app = running.application(for: id) {
+            if let app = running.application(for: id), entry?.isLiftoff != true {
                 menu.addItem(ClosureMenuItem(String(localized: "顯示所有視窗")) { [weak self] in
                     guard let self, let entry else { return }
                     self.preview.showNow(appID: id, app: app, name: entry.name, anchor: hit.iconFrame)
@@ -216,7 +216,7 @@ extension LaunchpadModel {
             }
             menu.addItem(.separator())
             menu.addItem(ClosureMenuItem(String(localized: "從啟動台隱藏")) { [weak self] in self?.hideApp(id) })
-            if let entry, !entry.isSystemApp {
+            if let entry, !entry.isSystemApp, !entry.isLiftoff {
                 menu.addItem(ClosureMenuItem(String(localized: "徹底移除…")) { [weak self] in self?.requestUninstall(id) })
             }
         case .folder(let folder):

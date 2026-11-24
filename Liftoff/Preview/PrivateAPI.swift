@@ -28,7 +28,7 @@ nonisolated func _GetProcessForPID(_ pid: pid_t, _ psn: UnsafeMutablePointer<Pro
 // MARK: - Dock 手勢事件（未公開的 CGEvent 類型與欄位）
 
 /// 四指滑動／捏合送給 Dock 的事件（`kCGSEventDockControl`）。類型與欄位編號沒有公開文件，
-/// 數值來自實機觀察（2026-11-24，macOS 27）並與 Mac Mouse Fix 等開源工具一致；
+/// 數值來自實機觀察（2026-11-24，macOS 27）；
 /// 讀不到預期值時呼叫端一律放行事件（等同功能停用）。
 nonisolated enum DockControlEvent {
     /// CGEventType 的原始值

@@ -25,6 +25,27 @@ nonisolated func _AXUIElementGetWindow(_ element: AXUIElement, _ windowID: Unsaf
 @_silgen_name("GetProcessForPID")
 nonisolated func _GetProcessForPID(_ pid: pid_t, _ psn: UnsafeMutablePointer<ProcessSerialNumber>) -> OSStatus
 
+// MARK: - Dock 手勢事件（未公開的 CGEvent 類型與欄位）
+
+/// 四指滑動／捏合送給 Dock 的事件（`kCGSEventDockControl`）。類型與欄位編號沒有公開文件，
+/// 數值來自實機觀察（2026-11-24，macOS 27）並與 Mac Mouse Fix 等開源工具一致；
+/// 讀不到預期值時呼叫端一律放行事件（等同功能停用）。
+nonisolated enum DockControlEvent {
+    /// CGEventType 的原始值
+    static let type: UInt32 = 30
+    /// 底層 HID 事件類型欄位；Dock 滑動為 23
+    static let hidTypeField = CGEventField(rawValue: 110)!
+    static let hidTypeDockSwipe: Int64 = 23
+    /// 手勢種類欄位：1 = 水平滑動（切換桌面）、2 = 垂直滑動（指揮中心）、3 = 捏合
+    static let motionField = CGEventField(rawValue: 123)!
+    static let motionHorizontal: Int64 = 1
+    /// 階段欄位：1 開始、2 進行中、4 結束、8 取消
+    static let phaseField = CGEventField(rawValue: 132)!
+    static let phaseBegan: Int64 = 1
+    static let phaseEnded: Int64 = 4
+    static let phaseCancelled: Int64 = 8
+}
+
 // MARK: - SkyLight（動態載入）
 
 /// SkyLight 私有函式的動態載入器。所有成員皆為 `nonisolated`，可在任何執行緒呼叫。

@@ -28,6 +28,7 @@ struct AppSettingsSyncTests {
         settingsProcess.columns = 9
         settingsProcess.compactMargins = true
         settingsProcess.showsRunningIndicator = true
+        settingsProcess.blocksSpaceSwipe = false
         settingsProcess.backgroundStyle = .preset
         settingsProcess.hotKey = nil
         settingsProcess.hiddenApps = ["/Applications/Chess.app"]
@@ -39,6 +40,7 @@ struct AppSettingsSyncTests {
         #expect(host.columns == 9)
         #expect(host.compactMargins)
         #expect(host.showsRunningIndicator)
+        #expect(!host.blocksSpaceSwipe)
         #expect(host.backgroundStyle == .preset)
         #expect(host.hotKey == nil)
         #expect(host.hiddenApps == ["/Applications/Chess.app"])

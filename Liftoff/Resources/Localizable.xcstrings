@@ -3084,6 +3084,89 @@
         }
       }
     },
+    "啟動台開著時不讓四指左右滑動切換桌面": {
+      "comment": "出現在 SettingsView.swift（英文：Block Four-Finger Swipe Between Desktops While Liftoff Is Open）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wischen mit vier Fingern zwischen Schreibtischen blockieren, solange Liftoff geöffnet ist"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Block Four-Finger Swipe Between Desktops While Liftoff Is Open"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloquear el deslizamiento con cuatro dedos entre escritorios mientras Liftoff está abierto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloquer le balayage à quatre doigts entre les bureaux quand Liftoff est ouvert"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blocca lo scorrimento a quattro dita tra le scrivanie quando Liftoff è aperto"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoffを開いている間、4本指の左右スワイプによるデスクトップ切り替えを無効にする"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff가 열려 있는 동안 네 손가락 좌우 쓸어넘기기로 데스크탑 전환 차단"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blokkeer vegen met vier vingers tussen bureaubladen terwijl Liftoff open is"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloquear o deslize com quatro dedos entre mesas enquanto o Liftoff está aberto"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Блокировать смахивание четырьмя пальцами между рабочими столами, пока открыт Liftoff"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff açıkken dört parmakla masaüstleri arasında kaydırmayı engelle"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liftoff 打开时，禁止四指左右轻扫切换桌面"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "啟動台開著時不讓四指左右滑動切換桌面"
+          }
+        }
+      }
+    },
     "回報問題…": {
       "comment": "出現在 SettingsView.swift, LiftoffApp.swift（英文：Report a Problem…）",
       "localizations": {
@@ -16526,6 +16609,89 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要「螢幕與系統錄音」權限才能顯示視窗縮圖。"
+          }
+        }
+      }
+    },
+    "需要「輔助使用」權限，沒有授權時不會生效。": {
+      "comment": "出現在 SettingsView.swift（英文：Requires Accessibility permission; has no effect without it.）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erfordert die Berechtigung „Bedienungshilfen“; ohne sie hat die Option keine Wirkung."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requires Accessibility permission; has no effect without it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requiere el permiso de Accesibilidad; sin él no tiene efecto."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nécessite l’autorisation Accessibilité ; sans elle, l’option est sans effet."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Richiede il permesso Accessibilità; senza non ha effetto."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「アクセシビリティ」の許可が必要です。許可がない場合は機能しません。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘손쉬운 사용’ 권한이 필요하며, 권한이 없으면 적용되지 않습니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vereist toegang via Toegankelijkheid; zonder die toegang heeft dit geen effect."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requer a permissão de Acessibilidade; sem ela, não tem efeito."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Требуется разрешение «Универсальный доступ»; без него настройка не действует."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erişilebilirlik izni gerekir; izin yoksa etkisi olmaz."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要“无障碍”权限，未授权时不会生效。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要「輔助使用」權限，沒有授權時不會生效。"
           }
         }
       }

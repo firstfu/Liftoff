@@ -211,6 +211,11 @@ private struct TriggerSettings: View {
                     Text("開啟時會自動關閉系統的捏合手勢（「App」），關閉或結束 Liftoff 時還原。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
+                Toggle("啟動台開著時不讓四指左右滑動切換桌面", isOn: $settings.blocksSpaceSwipe)
+                if settings.blocksSpaceSwipe {
+                    Text("需要「輔助使用」權限，沒有授權時不會生效。")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
             }
             Section("熱角") {
                 Picker("游標移到螢幕角落時打開", selection: $settings.hotCorner) {

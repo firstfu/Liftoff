@@ -43,6 +43,7 @@
 		6EAFEF67D02F7ED7FABE2BD5 /* BackgroundRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */; };
 		7040EB7E080CB8943600CEC5 /* SettingsProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD139C5EF21109B0CA1A824A /* SettingsProcess.swift */; };
 		7314B691E5FAB883644A0E90 /* AppSettingsSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8278001278164CA9471A71B0 /* AppSettingsSyncTests.swift */; };
+		73A259C626AEAACD92B6BB50 /* DockSwipeBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32E4804C6D12E8A2A0450A6 /* DockSwipeBlocker.swift */; };
 		7756455E33BEB6CD40E44F8A /* SearchIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDDB63B1795F23EC48EC634 /* SearchIndex.swift */; };
 		779DA7471A10C4E85DBEAEDF /* PinchRelease.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCD5F12A24F9E34CD50E9F8 /* PinchRelease.swift */; };
 		7867B174A31F7C0A73CDE7F0 /* LaunchpadWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB157D7C0983D63C77A0675 /* LaunchpadWindowController.swift */; };
@@ -172,6 +173,7 @@
 		DEDDB63B1795F23EC48EC634 /* SearchIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndex.swift; sourceTree = "<group>"; };
 		DF77B24B8606185953AA5FD6 /* Uninstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uninstaller.swift; sourceTree = "<group>"; };
 		E2A198A07C1B025351B68798 /* LocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationTests.swift; sourceTree = "<group>"; };
+		E32E4804C6D12E8A2A0450A6 /* DockSwipeBlocker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockSwipeBlocker.swift; sourceTree = "<group>"; };
 		E6FFDEB7A0B8C35C6FF4733A /* LaunchpadImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadImporter.swift; sourceTree = "<group>"; };
 		E99E7EF481E4A996961E78CB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		EA81520E776A01D94ED9B9B3 /* SelfTest+Demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfTest+Demo.swift"; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				A86E205A8525D72DFA65876C /* AppCatalog.swift */,
 				7C5A02512C1D12EA10EA793A /* AppInfo.swift */,
 				09C01447C02A7FDF764F2F84 /* BackgroundRenderer.swift */,
+				E32E4804C6D12E8A2A0450A6 /* DockSwipeBlocker.swift */,
 				FE3749034448766A416452E0 /* HotCornerService.swift */,
 				878DC2F83884EB8189CFA663 /* HotKeyService.swift */,
 				216237218CD1A6433B060B7A /* IconStore.swift */,
@@ -440,7 +443,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					8365070F76D9588F233DF0F2 = {
 						DevelopmentTeam = "";
@@ -538,6 +541,7 @@
 				038AE01DAA2C38143AE272E1 /* AppSettings.swift in Sources */,
 				6EAFEF67D02F7ED7FABE2BD5 /* BackgroundRenderer.swift in Sources */,
 				43DC4C6C9205E5A6BED5C50D /* DockHandoff.swift in Sources */,
+				73A259C626AEAACD92B6BB50 /* DockSwipeBlocker.swift in Sources */,
 				662600198B27F1F94E4DD495 /* FolderPanelView.swift in Sources */,
 				28BD6129D814F640A954123E /* GridLayers.swift in Sources */,
 				9746C3D4079623E4B0A9909F /* GridMetrics.swift in Sources */,

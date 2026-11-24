@@ -122,6 +122,8 @@ final class AppSettings {
     var hotCorner: HotCorner { didSet { save(hotCorner.rawValue, forKey: Key.hotCorner) } }
     /// 觸控板四/五指捏合開啟、張開關閉
     var pinchGesture: Bool { didSet { save(pinchGesture, forKey: Key.pinchGesture) } }
+    /// 啟動台顯示期間擋掉四指左右滑動切換桌面（issue #16；需要輔助使用權限）
+    var blocksSpaceSwipe: Bool { didSet { save(blocksSpaceSwipe, forKey: Key.blocksSpaceSwipe) } }
     var displayTarget: DisplayTarget { didSet { save(displayTarget.rawValue, forKey: Key.displayTarget) } }
 
     // MARK: 視窗縮圖預覽
@@ -189,14 +191,14 @@ final class AppSettings {
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
         static let hiddenApps = "hiddenApps", extraDirectories = "extraDirectories"
         static let autoChecksForUpdates = "autoChecksForUpdates", autoInstallsUpdates = "autoInstallsUpdates"
-        static let availableUpdateVersion = "availableUpdateVersion"
+        static let availableUpdateVersion = "availableUpdateVersion", blocksSpaceSwipe = "blocksSpaceSwipe"
         /// 跨 process 同步要觀察的 key（新增設定時記得加進來，並在 `reload()` 補上讀取）
         static let all = [
             columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins, showsRunningIndicator,
             backgroundStyle, blurRadius, dimming, customImagePath, presetWallpaper, coversDock, remembersPage,
             hotKey, hotCorner, pinchGesture, displayTarget, windowPreview, previewDelay, showsDockIcon,
             showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, autoInstallsUpdates,
-            availableUpdateVersion,
+            availableUpdateVersion, blocksSpaceSwipe,
         ]
     }
 
@@ -209,7 +211,7 @@ final class AppSettings {
             Key.compactMargins: false, Key.showsRunningIndicator: false, Key.backgroundStyle: BackgroundStyle.wallpaper.rawValue,
             Key.blurRadius: 45.0, Key.dimming: 0.22, Key.coversDock: true, Key.remembersPage: true,
             Key.presetWallpaper: WallpaperPreset.defaultID,
-            Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
+            Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.blocksSpaceSwipe: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
             Key.windowPreview: true, Key.previewDelay: 0.5, Key.showsDockIcon: true, Key.showsMenuBarIcon: true,
             Key.autoChecksForUpdates: true, Key.autoInstallsUpdates: true,
         ])
@@ -232,6 +234,7 @@ final class AppSettings {
         hotKey = Self.readHotKey(defaults)
         hotCorner = HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none
         pinchGesture = defaults.bool(forKey: Key.pinchGesture)
+        blocksSpaceSwipe = defaults.bool(forKey: Key.blocksSpaceSwipe)
         displayTarget = DisplayTarget(rawValue: defaults.string(forKey: Key.displayTarget) ?? "") ?? .mouse
         windowPreview = defaults.bool(forKey: Key.windowPreview)
         previewDelay = defaults.double(forKey: Key.previewDelay)
@@ -299,6 +302,7 @@ final class AppSettings {
         update(\.hotKey, Self.readHotKey(defaults))
         update(\.hotCorner, HotCorner(rawValue: defaults.string(forKey: Key.hotCorner) ?? "") ?? .none)
         update(\.pinchGesture, defaults.bool(forKey: Key.pinchGesture))
+        update(\.blocksSpaceSwipe, defaults.bool(forKey: Key.blocksSpaceSwipe))
         update(\.displayTarget, DisplayTarget(rawValue: defaults.string(forKey: Key.displayTarget) ?? "") ?? .mouse)
         update(\.windowPreview, defaults.bool(forKey: Key.windowPreview))
         update(\.previewDelay, defaults.double(forKey: Key.previewDelay))

@@ -31,6 +31,7 @@ final class AppCoordinator {
     let hotKeys = HotKeyService()
     let hotCorners = HotCornerService()
     private let multitouchWatcher = MultitouchDeviceWatcher()
+    private let swipeBlocker = DockSwipeBlocker()
 
     private(set) lazy var model = LaunchpadModel(
         settings: settings, catalog: catalog, layoutStore: layoutStore, icons: icons, running: running, usage: usage
@@ -227,6 +228,19 @@ final class AppCoordinator {
         hotCorners.onTrigger = { [weak self] screen in self?.toggle(screen: screen) }
         hotCorners.configure(settings.hotCorner)
         applyGesture()
+        applySwipeBlocker()
+    }
+
+    /// 啟動台顯示期間擋掉四指左右滑動切換桌面；設定關閉時整個移除攔截點。
+    private func applySwipeBlocker() {
+        guard settings.blocksSpaceSwipe else {
+            swipeBlocker.setActive(false)
+            swipeBlocker.teardown()
+            return
+        }
+        // 沒有輔助使用權限時建不起來；每次顯示都再試一次，使用者之後授權就會生效
+        swipeBlocker.prepare()
+        swipeBlocker.setActive(model.isShown)
     }
 
     private func applyGesture() {
@@ -327,6 +341,7 @@ final class AppCoordinator {
         }
         observe({ [settings] in settings.pinchGesture }) { [weak self] _ in self?.applyGesture() }
         observe({ [settings] in settings.showsDockIcon }) { [weak self] _ in self?.applyActivationPolicy() }
+        observe({ [settings, model] in [settings.blocksSpaceSwipe, model.isShown] }) { [weak self] _ in self?.applySwipeBlocker() }
         observe({ [settings] in settings.pageCapacity }) { [weak self] capacity in
             guard let self else { return }
             self.layoutStore.update { $0.normalize(capacity: capacity) }

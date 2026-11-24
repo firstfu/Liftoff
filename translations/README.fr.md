@@ -61,6 +61,8 @@ Le classement repose sur une table intégrée de plus de 1 000 apps Mac populair
 - **Glissez une app vers le Dock** directement depuis la grille — le panneau s’efface tout seul
 - **Importez l’ancienne disposition de votre Launchpad**, ou repartez de zéro avec l’Organisation intelligente
 - Ouvrez-le comme vous voulez : raccourci clavier (<kbd>⌃⌘L</kbd> par défaut), pincement pouce + trois doigts, un coin actif, l’icône du Dock ou `open liftoff://toggle`
+- **Plein écran ou fenêtre** : la grille classique en plein écran, ou une petite fenêtre en verre comme l’app « Apps » de macOS (suit Clair/Sombre, ou au choix)
+- Empêcher le balayage à quatre doigts de changer de bureau quand Liftoff est ouvert · masquer les points sous les apps ouvertes · masquer à la fois les icônes du Dock et de la barre des menus (cliquez sur l’icône de Liftoff dans Liftoff pour ouvrir les réglages)
 - Pages, dossiers (glissez pour fusionner), réorganisation par glisser-déposer, navigation au clavier
 - Fond d’écran flou ou net (le flou est le plus économe en énergie), flou en direct, dégradés et couleurs unies intégrés ou votre propre image ; taille des icônes, taille des légendes et couleurs réglables
 - Gestion de plusieurs moniteurs · masquage d’apps · désinstallation d’apps avec leurs fichiers résiduels · sauvegarde et restauration de votre disposition
@@ -84,7 +86,7 @@ Mesuré sur un vrai Mac par l’app elle-même (`scripts/selftest.sh` reproduit 
 Liftoff ne collecte ni n’envoie aucune donnée vous concernant. Les vignettes de fenêtres sont capturées et affichées localement et ne quittent jamais votre Mac.
 Sa seule connexion réseau sert aux mises à jour : une fois par semaine, il lit la liste des mises à jour sur GitHub Pages et, si une nouvelle version existe, la télécharge depuis GitHub Releases. Désactivez **Rechercher les mises à jour chaque semaine** dans les réglages et Liftoff ne se connectera plus, sauf si vous cliquez sur **Rechercher les mises à jour…**.
 
-Ne me croyez pas sur parole : le code qui utilise chaque autorisation se trouve dans [`Liftoff/Preview`](../Liftoff/Preview) (Enregistrement de l’écran : miniatures ; Accessibilité : liste des fenêtres et changement de fenêtre) et [`Liftoff/Services`](../Liftoff/Services) (raccourci clavier, coin actif, geste au trackpad, et la recherche de mises à jour dans `UpdateChecker.swift`). Little Snitch ou LuLu le confirmeront aussi.
+Ne me croyez pas sur parole : le code qui utilise chaque autorisation se trouve dans [`Liftoff/Preview`](../Liftoff/Preview) (Enregistrement de l’écran : miniatures ; Accessibilité : liste des fenêtres et changement de fenêtre) et [`Liftoff/Services`](../Liftoff/Services) (raccourci clavier, coin actif, geste au trackpad, blocage du balayage à quatre doigts, et la recherche de mises à jour dans `UpdateChecker.swift`). Little Snitch ou LuLu le confirmeront aussi.
 
 ### À propos des API privées
 
@@ -92,6 +94,8 @@ Deux fonctionnalités utilisent des API macOS non documentées, toutes deux char
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift) — SkyLight / HIServices, pour lister les fenêtres et passer de l’une à l’autre (même approche qu’AltTab et Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift) — MultitouchSupport, pour le geste de pincement (même approche que BetterTouchTool et MiddleClick)
+
+Le blocage du balayage à quatre doigts ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) utilise une interception d’événements standard mais lit des champs d’événement non documentés ; s’ils ne correspondent pas à ce qui est attendu, tous les événements passent sans modification.
 
 ## Installation
 
@@ -114,7 +118,7 @@ Liftoff se met à jour tout seul : par défaut, il vérifie chaque semaine, tél
 | Autorisation | Nécessaire ? | Pourquoi | Si vous l’ignorez |
 |---|---|---|---|
 | **Enregistrement de l’écran et des sons du système** | Uniquement pour les aperçus de fenêtres | Miniatures et titres des fenêtres (capturés et affichés uniquement sur votre Mac) | Pas d’aperçus de fenêtres ; Liftoff reste un lanceur à part entière |
-| **Accessibilité** | Facultative | Lister les fenêtres réduites et passer exactement à la fenêtre sur laquelle vous avez cliqué | Les fenêtres réduites ne sont pas listées ; le changement de fenêtre est moins précis |
+| **Accessibilité** | Facultative | Lister les fenêtres réduites, passer exactement à la fenêtre sur laquelle vous avez cliqué, et empêcher le balayage à quatre doigts de changer de bureau quand Liftoff est ouvert | Les fenêtres réduites ne sont pas listées ; le changement de fenêtre est moins précis ; le balayage à quatre doigts change toujours de bureau |
 
 Rien d’autre n’est demandé. Le lanceur lui-même ne nécessite aucune autorisation.
 

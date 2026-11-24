@@ -61,6 +61,8 @@ Funciona con una tabla integrada de más de 1.000 apps populares para Mac (inclu
 - **Arrastra una app al Dock** directamente desde la cuadrícula: el panel se aparta solo
 - **Importa tu antigua disposición del Launchpad**, o empieza de cero con la Organización inteligente
 - Ábrelo como prefieras: atajo de teclado (<kbd>⌃⌘L</kbd> por defecto), gesto de pellizco con el pulgar y tres dedos, una esquina activa, el icono del Dock o `open liftoff://toggle`
+- **Pantalla completa o ventana**: la cuadrícula clásica a pantalla completa, o una ventana de cristal compacta como la app «Apps» de macOS (sigue Claro/Oscuro, o eliges tú)
+- Evita que el deslizamiento con cuatro dedos cambie de escritorio mientras Liftoff está abierto · oculta los puntos bajo las apps abiertas · oculta a la vez los iconos del Dock y de la barra de menús (haz clic en el icono de Liftoff dentro de Liftoff para abrir los ajustes)
 - Páginas, carpetas (arrastra para combinar), arrastrar para reordenar y navegación con el teclado
 - Fondo de pantalla desenfocado o nítido (el desenfocado es el de menor consumo), desenfoque en vivo, degradados y colores sólidos integrados o tu propia imagen; tamaño de iconos, tamaño de etiquetas y colores ajustables
 - Compatible con varias pantallas · oculta apps · desinstala apps y sus archivos residuales · copia de seguridad y restauración de tu disposición
@@ -84,7 +86,7 @@ Medido por la propia app en un Mac real (`scripts/selftest.sh` reproduce las cif
 Liftoff no recopila ni envía ningún dato sobre ti. Las miniaturas de ventanas se capturan y muestran localmente y nunca salen de tu Mac.
 Su única conexión de red es para las actualizaciones: una vez por semana lee la lista de actualizaciones en GitHub Pages y, si hay una versión nueva, la descarga de GitHub Releases. Desactiva **Buscar actualizaciones cada semana** en los ajustes y Liftoff no se conectará a menos que hagas clic en **Buscar actualizaciones…**.
 
-No hace falta que me creas: el código que usa cada permiso está en [`Liftoff/Preview`](../Liftoff/Preview) (Grabación de pantalla: miniaturas; Accesibilidad: listar y cambiar de ventana) y en [`Liftoff/Services`](../Liftoff/Services) (atajo de teclado, esquina activa, gesto del trackpad y la búsqueda de actualizaciones en `UpdateChecker.swift`). Little Snitch o LuLu también te lo confirmarán.
+No hace falta que me creas: el código que usa cada permiso está en [`Liftoff/Preview`](../Liftoff/Preview) (Grabación de pantalla: miniaturas; Accesibilidad: listar y cambiar de ventana) y en [`Liftoff/Services`](../Liftoff/Services) (atajo de teclado, esquina activa, gesto del trackpad, bloqueo del deslizamiento con cuatro dedos y la búsqueda de actualizaciones en `UpdateChecker.swift`). Little Snitch o LuLu también te lo confirmarán.
 
 ### Nota sobre las API privadas
 
@@ -92,6 +94,8 @@ Dos funciones usan API no documentadas de macOS. Ambas se cargan de forma dinám
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift): SkyLight / HIServices, para enumerar y cambiar de ventana (el mismo enfoque que AltTab y Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, para el gesto de pellizco (el mismo enfoque que BetterTouchTool y MiddleClick)
+
+El bloqueo del deslizamiento con cuatro dedos ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) usa una intercepción de eventos estándar, pero lee campos de evento no documentados; si no tienen el aspecto esperado, todos los eventos pasan sin cambios.
 
 ## Instalación
 
@@ -114,7 +118,7 @@ Liftoff se actualiza solo: por defecto busca actualizaciones cada semana, descar
 | Permiso | ¿Necesario? | Para qué | Si lo omites |
 |---|---|---|---|
 | **Grabación de pantalla y del audio del sistema** | Solo para las vistas previas de ventanas | Miniaturas y títulos de ventanas (se capturan y se muestran solo en tu Mac) | Sin vistas previas de ventanas; Liftoff sigue siendo un lanzador |
-| **Accesibilidad** | Opcional | Listar ventanas minimizadas e ir exactamente a la ventana en la que hiciste clic | Las ventanas minimizadas no se listan; el cambio de ventana es menos preciso |
+| **Accesibilidad** | Opcional | Listar ventanas minimizadas, ir exactamente a la ventana en la que hiciste clic y evitar que el deslizamiento con cuatro dedos cambie de escritorio mientras Liftoff está abierto | Las ventanas minimizadas no se listan; el cambio de ventana es menos preciso; el deslizamiento con cuatro dedos sigue cambiando de escritorio |
 
 No se pide nada más. El lanzador en sí no necesita ningún permiso.
 

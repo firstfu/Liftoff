@@ -61,6 +61,8 @@ macOS 26 用“App”列表取代了经典的启动台网格。如果你喜欢�
 - **直接从网格把 App 拖进程序坞**，面板会自动收起让路
 - **导入旧的启动台排列**，或用智能整理重新开始
 - 随你喜欢的方式打开：快捷键（默认 <kbd>⌃⌘L</kbd>）、拇指加三指捏合、触发角、程序坞图标，或 `open liftoff://toggle`
+- **全屏幕或窗口**：经典的全屏格子，或像 macOS 自带“App”那样的玻璃小窗口（跟随浅色／深色，也可以自己选）
+- 启动台打开时不让四指左右轻扫切换桌面 · 可隐藏运行中 App 下方的小圆点 · 程序坞和菜单栏图标可以都关掉（在启动台里点 Liftoff 自己的图标就能打开设置）
 - 分页、文件夹（拖动即可合并）、拖动排序、键盘导航
 - 模糊或清晰壁纸（模糊最省电）、实时模糊、内置渐变与纯色，或你自己的图片；图标大小、标签大小和颜色都可调整
 - 支持多显示器 · 隐藏 App · 卸载 App 并清理残留文件 · 备份与还原排列
@@ -84,7 +86,7 @@ macOS 26 用“App”列表取代了经典的启动台网格。如果你喜欢�
 Liftoff 不会收集或发送任何关于你的数据。窗口缩略图只在你的 Mac 上捕获和显示，不会离开你的电脑。
 它唯一的联网是为了更新：每周读取一次 GitHub Pages 上的更新清单，有新版本时再从 GitHub Releases 下载。在设置中关闭 **每周自动检查更新** 后，除非你点按 **检查更新…**，Liftoff 不会联网。
 
-不必只听我说：每项权限对应的代码都摆在这里，见 [`Liftoff/Preview`](../Liftoff/Preview)（录屏：缩略图；无障碍：列出和切换窗口）与 [`Liftoff/Services`](../Liftoff/Services)（快捷键、触发角、触控板手势，以及 `UpdateChecker.swift` 中的检查更新）。用 Little Snitch 或 LuLu 也能验证。
+不必只听我说：每项权限对应的代码都摆在这里，见 [`Liftoff/Preview`](../Liftoff/Preview)（录屏：缩略图；无障碍：列出和切换窗口）与 [`Liftoff/Services`](../Liftoff/Services)（快捷键、触发角、触控板手势、拦截四指轻扫，以及 `UpdateChecker.swift` 中的检查更新）。用 Little Snitch 或 LuLu 也能验证。
 
 ### 关于私有 API
 
@@ -92,6 +94,8 @@ Liftoff 不会收集或发送任何关于你的数据。窗口缩略图只在你
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift)：SkyLight / HIServices，用于枚举和切换窗口（做法与 AltTab、Hammerspoon 相同）
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift)：MultitouchSupport，用于捏合手势（做法与 BetterTouchTool、MiddleClick 相同）
+
+拦截四指轻扫的功能（[`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)）使用的是普通的事件拦截，但会读取未公开的事件字段；读到的值不符合预期时，所有事件一律照常放行。
 
 ## 安装
 
@@ -114,7 +118,7 @@ Liftoff 会自动更新：默认每周检查一次，在后台下载新版本，
 | 权限 | 需要吗？ | 用途 | 不授予的话 |
 |---|---|---|---|
 | **录屏与系统录音** | 仅窗口预览需要 | 窗口缩略图和标题（只在你的 Mac 上截取和显示） | 没有窗口预览；Liftoff 仍然是个启动台 |
-| **无障碍** | 可选 | 列出已最小化的窗口，并精确跳转到你点按的那个窗口 | 不会列出已最小化的窗口；切换不够精确 |
+| **无障碍** | 可选 | 列出已最小化的窗口、精确跳转到你点按的那个窗口，并在启动台打开时拦截四指左右轻扫切换桌面 | 不会列出已最小化的窗口；切换不够精确；启动台打开时四指轻扫仍会切换桌面 |
 
 不会再请求其他权限。启动台本身完全不需要任何权限。
 

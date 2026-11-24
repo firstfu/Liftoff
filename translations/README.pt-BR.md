@@ -63,6 +63,8 @@ Ela usa uma tabela interna com mais de 1.000 apps populares de Mac (incluindo ap
 - **Arraste um app para o Dock** direto da grade; o painel sai da frente sozinho
 - **Importe o layout do seu antigo Launchpad** ou comece do zero com a Organização inteligente
 - Abra do jeito que preferir: atalho de teclado (<kbd>⌃⌘L</kbd> por padrão), pinça com o polegar e três dedos, um dos Cantos de Acesso Rápido, o ícone no Dock ou `open liftoff://toggle`
+- **Tela cheia ou janela**: a grade clássica em tela cheia, ou uma janela de vidro compacta como o app "Apps" do macOS (segue Claro/Escuro, ou você escolhe)
+- Impede que o gesto de passar com quatro dedos troque de mesa enquanto o Liftoff está aberto · oculta os pontos sob os apps abertos · oculta ao mesmo tempo os ícones do Dock e da barra de menus (clique no ícone do Liftoff dentro do Liftoff para abrir os ajustes)
 - Páginas, pastas (arraste para mesclar), arrastar para reordenar e navegação pelo teclado
 - Imagem de fundo desfocada ou nítida (a desfocada tem o menor consumo de energia), desfoque ao vivo, gradientes e cores sólidas integrados ou uma imagem sua; tamanho dos ícones, tamanho dos rótulos e cores ajustáveis
 - Compatível com várias telas · ocultar apps · desinstalar apps junto com os arquivos restantes · backup e restauração do layout
@@ -86,7 +88,7 @@ Medido pelo próprio app em um Mac de verdade (`scripts/selftest.sh` reproduz os
 O Liftoff não coleta nem envia nenhum dado sobre você. As miniaturas das janelas são capturadas e exibidas localmente e nunca saem do seu Mac.
 A única conexão de rede que ele faz é para atualizações: uma vez por semana ele lê a lista de atualizações no GitHub Pages e, se houver uma versão nova, a baixa do GitHub Releases. Desative **Verificar atualizações toda semana** nos Ajustes e o Liftoff só se conectará se você clicar em **Buscar Atualizações…**.
 
-Não precisa acreditar na minha palavra: o código que usa cada permissão está em [`Liftoff/Preview`](../Liftoff/Preview) (Gravação do Áudio do Sistema e da Tela: miniaturas; Acessibilidade: listar e alternar janelas) e em [`Liftoff/Services`](../Liftoff/Services) (atalho de teclado, canto ativo, gesto no trackpad e a busca de atualizações em `UpdateChecker.swift`). O Little Snitch ou o LuLu também confirmam.
+Não precisa acreditar na minha palavra: o código que usa cada permissão está em [`Liftoff/Preview`](../Liftoff/Preview) (Gravação do Áudio do Sistema e da Tela: miniaturas; Acessibilidade: listar e alternar janelas) e em [`Liftoff/Services`](../Liftoff/Services) (atalho de teclado, canto ativo, gesto no trackpad, bloqueio do gesto de passar com quatro dedos e a busca de atualizações em `UpdateChecker.swift`). O Little Snitch ou o LuLu também confirmam.
 
 ### Uma observação sobre APIs privadas
 
@@ -94,6 +96,8 @@ Dois recursos usam APIs não documentadas do macOS, ambas carregadas dinamicamen
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift): SkyLight / HIServices, para listar e alternar janelas (a mesma abordagem do AltTab e do Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, para o gesto de pinça (a mesma abordagem do BetterTouchTool e do MiddleClick)
+
+O bloqueio do gesto de passar com quatro dedos ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) usa uma interceptação de eventos padrão, mas lê campos de evento não documentados; se eles não forem como o esperado, todos os eventos passam sem alteração.
 
 ## Instalação
 
@@ -116,7 +120,7 @@ O Liftoff se atualiza sozinho: por padrão, ele verifica toda semana, baixa as n
 | Permissão | Necessária? | Para quê | Se você pular |
 |---|---|---|---|
 | **Gravação do Áudio do Sistema e da Tela** | Só para a pré-visualização de janelas | Miniaturas e títulos das janelas (capturados e exibidos apenas no seu Mac) | Sem pré-visualização de janelas; o Liftoff continua sendo um launcher |
-| **Acessibilidade** | Opcional | Listar janelas minimizadas e ir exatamente para a janela em que você clicou | Janelas minimizadas não aparecem; a troca fica menos precisa |
+| **Acessibilidade** | Opcional | Listar janelas minimizadas, ir exatamente para a janela em que você clicou e impedir que o gesto de passar com quatro dedos troque de mesa enquanto o Liftoff está aberto | Janelas minimizadas não aparecem; a troca fica menos precisa; o gesto de passar com quatro dedos continua trocando de mesa |
 
 Nenhuma outra permissão é solicitada. O launcher em si não precisa de nenhuma permissão.
 

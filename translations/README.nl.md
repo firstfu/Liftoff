@@ -63,6 +63,8 @@ Het werkt met een ingebouwde tabel van meer dan 1.000 populaire Mac-apps (waaron
 - **Sleep een app naar het Dock** rechtstreeks vanuit het raster. Het paneel gaat vanzelf opzij
 - **Importeer je oude Launchpad-indeling**, of begin met een schone lei en Slim ordenen
 - Open het zoals jij wilt: met een toetscombinatie (standaard <kbd>⌃⌘L</kbd>), door met duim en drie vingers te knijpen, via een interactieve hoek, via het symbool in het Dock of met `open liftoff://toggle`
+- **Schermvullend of in een venster**: het klassieke schermvullende raster, of een compact glazen venster zoals de eigen "Apps" van macOS (volgt Licht/Donker, of kies zelf)
+- Voorkom dat vegen met vier vingers van bureaublad wisselt zolang Liftoff open is · verberg de puntjes onder geopende apps · verberg zowel het symbool in het Dock als in de menubalk (klik op het symbool van Liftoff in Liftoff om de instellingen te openen)
 - Pagina's, mappen (sleep om samen te voegen), slepen om te herschikken, bediening met het toetsenbord
 - Vervaagde of scherpe achtergrond (vervaagd is het zuinigst), live vervaging, ingebouwde kleurverlopen en effen kleuren of je eigen afbeelding; instelbare symboolgrootte, labelgrootte en kleuren
 - Ondersteunt meerdere beeldschermen · apps verbergen · apps verwijderen inclusief overgebleven bestanden · je indeling back-uppen en terugzetten
@@ -86,7 +88,7 @@ Gemeten op een echte Mac door de app zelf (met `scripts/selftest.sh` reproduceer
 Liftoff verzamelt of verstuurt geen gegevens over jou. Venstervoorbeelden worden alleen op je Mac gemaakt en getoond en verlaten je Mac nooit.
 De enige netwerkverbinding is voor updates: één keer per week leest Liftoff de updatelijst op GitHub Pages en downloadt een nieuwe versie, als die er is, van GitHub Releases. Zet **Wekelijks op updates controleren** uit in de instellingen en Liftoff gaat alleen online als je op **Zoek naar updates…** klikt.
 
-Je hoeft me niet op mijn woord te geloven: de code die elke toegang gebruikt staat in [`Liftoff/Preview`](../Liftoff/Preview) (Schermopname: miniaturen; Toegankelijkheid: vensters opvragen en wisselen) en in [`Liftoff/Services`](../Liftoff/Services) (toetscombinatie, interactieve hoek, trackpadgebaar en de updatecontrole in `UpdateChecker.swift`). Ook Little Snitch of LuLu bevestigt het.
+Je hoeft me niet op mijn woord te geloven: de code die elke toegang gebruikt staat in [`Liftoff/Preview`](../Liftoff/Preview) (Schermopname: miniaturen; Toegankelijkheid: vensters opvragen en wisselen) en in [`Liftoff/Services`](../Liftoff/Services) (toetscombinatie, interactieve hoek, trackpadgebaar, blokkering van vegen met vier vingers en de updatecontrole in `UpdateChecker.swift`). Ook Little Snitch of LuLu bevestigt het.
 
 ### Een opmerking over privé-API's
 
@@ -94,6 +96,8 @@ Twee functies gebruiken ongedocumenteerde macOS-API's. Beide worden dynamisch ge
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift): SkyLight / HIServices, om vensters op te vragen en ertussen te wisselen (dezelfde aanpak als AltTab en Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, voor het knijpgebaar (dezelfde aanpak als BetterTouchTool en MiddleClick)
+
+De blokkering van vegen met vier vingers ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) gebruikt een gewone event tap, maar leest ongedocumenteerde gebeurtenisvelden; zien die er niet uit zoals verwacht, dan worden alle gebeurtenissen ongewijzigd doorgelaten.
 
 ## Installeren
 
@@ -116,7 +120,7 @@ Liftoff werkt zichzelf bij: standaard controleert het wekelijks, downloadt nieuw
 | Toegang | Nodig? | Waarom | Als je het overslaat |
 |---|---|---|---|
 | **Scherm- en systeemaudio-opname** | Alleen voor vensterweergaven | Miniaturen en titels van vensters (alleen op je Mac vastgelegd en getoond) | Geen vensterweergaven; Liftoff blijft gewoon een launcher |
-| **Toegankelijkheid** | Optioneel | Geminimaliseerde vensters opvragen en precies naar het venster springen waarop je klikte | Geminimaliseerde vensters worden niet getoond; wisselen is minder nauwkeurig |
+| **Toegankelijkheid** | Optioneel | Geminimaliseerde vensters opvragen, precies naar het venster springen waarop je klikte en voorkomen dat vegen met vier vingers van bureaublad wisselt zolang Liftoff open is | Geminimaliseerde vensters worden niet getoond; wisselen is minder nauwkeurig; vegen met vier vingers wisselt nog steeds van bureaublad |
 
 Er wordt niets anders gevraagd. De launcher zelf heeft helemaal geen toegang nodig.
 

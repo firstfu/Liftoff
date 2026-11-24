@@ -61,6 +61,8 @@ Grundlage ist eine eingebaute Tabelle mit über 1.000 beliebten Mac-Apps (darunt
 - **App ins Dock ziehen**, direkt aus dem Raster – das Fenster macht dabei automatisch Platz
 - **Alte Launchpad-Anordnung importieren** oder mit „Intelligent organisieren“ ganz neu starten
 - Öffne es, wie du willst: Tastenkurzbefehl (standardmäßig <kbd>⌃⌘L</kbd>), Zusammenziehen mit Daumen und drei Fingern, eine aktive Ecke, das Dock-Symbol oder `open liftoff://toggle`
+- **Vollbild oder Fenster**: das klassische Raster im Vollbild oder ein kompaktes Glasfenster wie die macOS-eigene App „Apps“ (folgt Hell/Dunkel oder fest eingestellt)
+- Verhindern, dass das Streichen mit vier Fingern den Schreibtisch wechselt, solange Liftoff offen ist · Punkte unter laufenden Apps ausblenden · Dock- und Menüleistensymbol beide ausblenden (ein Klick auf Liftoffs eigenes Symbol darin öffnet die Einstellungen)
 - Seiten, Ordner (zum Zusammenführen ziehen), Umsortieren per Drag-and-drop, Tastaturnavigation
 - Unscharfes oder scharfes Hintergrundbild (unscharf ist am sparsamsten), Live-Unschärfe, eingebaute Verläufe und Volltonfarben oder ein eigenes Bild; Symbolgröße, Beschriftungsgröße und Farben einstellbar
 - Mehrere Displays werden unterstützt · Apps ausblenden · Apps samt Restdateien deinstallieren · Anordnung sichern und wiederherstellen
@@ -84,7 +86,7 @@ Von der App selbst auf einem echten Mac gemessen (mit `scripts/selftest.sh` kann
 Liftoff sammelt und sendet keine Daten über dich. Fenstervorschauen werden nur auf deinem Mac erstellt und angezeigt und verlassen ihn nie.
 Die einzige Netzwerkverbindung dient Updates: Einmal pro Woche liest Liftoff die Update-Liste auf GitHub Pages und lädt eine neue Version, falls vorhanden, von GitHub Releases. Schaltest du in den Einstellungen **Wöchentlich nach Updates suchen** aus, geht Liftoff nur online, wenn du auf **Nach Updates suchen…** klickst.
 
-Du musst mir das nicht einfach glauben: Der Code, der die jeweilige Berechtigung nutzt, liegt in [`Liftoff/Preview`](../Liftoff/Preview) (Aufnahme von Bildschirm & Systemaudio: Miniaturen; Bedienungshilfen: Fenster auflisten und wechseln) und [`Liftoff/Services`](../Liftoff/Services) (Tastenkurzbefehl, aktive Ecke, Trackpad-Geste und die Update-Prüfung in `UpdateChecker.swift`). Auch Little Snitch oder LuLu bestätigen es dir.
+Du musst mir das nicht einfach glauben: Der Code, der die jeweilige Berechtigung nutzt, liegt in [`Liftoff/Preview`](../Liftoff/Preview) (Aufnahme von Bildschirm & Systemaudio: Miniaturen; Bedienungshilfen: Fenster auflisten und wechseln) und [`Liftoff/Services`](../Liftoff/Services) (Tastenkurzbefehl, aktive Ecke, Trackpad-Geste, Sperre für das Streichen mit vier Fingern und die Update-Prüfung in `UpdateChecker.swift`). Auch Little Snitch oder LuLu bestätigen es dir.
 
 ### Hinweis zu privaten APIs
 
@@ -92,6 +94,8 @@ Zwei Funktionen nutzen undokumentierte macOS-APIs. Beide werden dynamisch gelade
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift) – SkyLight / HIServices zum Auflisten und Wechseln von Fenstern (derselbe Ansatz wie bei AltTab und Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift) – MultitouchSupport für die Zusammenziehen-Geste (derselbe Ansatz wie bei BetterTouchTool und MiddleClick)
+
+Die Sperre für das Streichen mit vier Fingern ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) nutzt einen normalen Event-Tap, liest aber undokumentierte Ereignisfelder; sehen sie nicht wie erwartet aus, werden alle Ereignisse unverändert durchgelassen.
 
 ## Installation
 
@@ -114,7 +118,7 @@ Liftoff aktualisiert sich selbst: Standardmäßig sucht es wöchentlich nach Upd
 | Berechtigung | Nötig? | Wofür | Wenn du sie überspringst |
 |---|---|---|---|
 | **Aufnahme von Bildschirm & Systemaudio** | Nur für Fenstervorschauen | Fensterminiaturen und -titel (nur auf deinem Mac aufgenommen und angezeigt) | Keine Fenstervorschauen; Liftoff bleibt ein vollwertiger Launcher |
-| **Bedienungshilfen** | Optional | Minimierte Fenster auflisten und genau das angeklickte Fenster nach vorn holen | Minimierte Fenster werden nicht aufgelistet; das Wechseln ist weniger genau |
+| **Bedienungshilfen** | Optional | Minimierte Fenster auflisten, genau das angeklickte Fenster nach vorn holen und verhindern, dass das Streichen mit vier Fingern den Schreibtisch wechselt, solange Liftoff offen ist | Minimierte Fenster werden nicht aufgelistet; das Wechseln ist weniger genau; das Streichen mit vier Fingern wechselt weiterhin den Schreibtisch |
 
 Weitere Berechtigungen werden nicht angefragt. Der Launcher selbst braucht überhaupt keine Berechtigung.
 

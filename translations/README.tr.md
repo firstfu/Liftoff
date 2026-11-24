@@ -63,6 +63,8 @@ Tahmine değil, 1.000'den fazla popüler Mac uygulamasını (Çin, Japonya, Kore
 - **Bir uygulamayı doğrudan ızgaradan Dock'a sürükleyin.** Panel kendiliğinden yolunuzdan çekilir
 - **Eski Launchpad düzeninizi içe aktarın** ya da Akıllı Düzenleme ile sıfırdan başlayın
 - Dilediğiniz gibi açın: kısayol tuşu (varsayılan <kbd>⌃⌘L</kbd>), başparmak ve üç parmakla sıkıştırma, sıcak köşe, Dock simgesi ya da `open liftoff://toggle`
+- **Tam ekran ya da pencere**: klasik tam ekran ızgara ya da macOS'in kendi “Uygulamalar”ı gibi küçük bir cam pencere (Açık/Koyu görünümü izler ya da siz seçersiniz)
+- Liftoff açıkken dört parmakla kaydırmanın masaüstünü değiştirmesini engeller · çalışan uygulamaların altındaki noktaları gizler · Dock ve menü çubuğu simgelerinin ikisini birden gizleyebilirsiniz (ayarları açmak için Liftoff'un içindeki Liftoff simgesini tıklayın)
 - Sayfalar, klasörler (birleştirmek için sürükleyin), sürükleyerek sıralama, klavyeyle gezinme
 - Bulanık ya da net duvar kâğıdı (bulanık olan en az gücü tüketir), canlı bulanıklık, yerleşik renk geçişleri ve düz renkler ya da kendi görseliniz; ayarlanabilir simge boyutu, etiket boyutu ve renkler
 - Çoklu ekran desteği · uygulamaları gizleme · artıklarıyla birlikte uygulama silme · düzeni yedekleme ve geri yükleme
@@ -86,7 +88,7 @@ Uygulamanın kendisi tarafından gerçek bir Mac'te ölçüldü (`scripts/selfte
 Liftoff sizinle ilgili hiçbir veri toplamaz veya göndermez. Pencere küçük resimleri yalnızca Mac’inizde yakalanır ve gösterilir, asla dışarı çıkmaz.
 Yaptığı tek ağ bağlantısı güncellemeler içindir: haftada bir GitHub Pages’teki güncelleme listesini okur ve yeni bir sürüm varsa GitHub Releases’ten indirir. Ayarlar’da **Güncellemeleri haftalık denetle** seçeneğini kapatırsanız, **Güncellemeleri Denetle…** düğmesini tıklamadığınız sürece Liftoff internete bağlanmaz.
 
-Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`](../Liftoff/Preview) içinde (Ekran Kaydı: küçük resimler; Erişilebilirlik: pencereleri listeleme ve değiştirme) ve [`Liftoff/Services`](../Liftoff/Services) içinde (kısayol tuşu, sıcak köşe, izleme dörtgeni hareketi ve `UpdateChecker.swift` içindeki güncelleme denetimi). Little Snitch ya da LuLu da bunu doğrulayacaktır.
+Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`](../Liftoff/Preview) içinde (Ekran Kaydı: küçük resimler; Erişilebilirlik: pencereleri listeleme ve değiştirme) ve [`Liftoff/Services`](../Liftoff/Services) içinde (kısayol tuşu, sıcak köşe, izleme dörtgeni hareketi, dört parmakla kaydırma engeli ve `UpdateChecker.swift` içindeki güncelleme denetimi). Little Snitch ya da LuLu da bunu doğrulayacaktır.
 
 ### Özel API'ler hakkında bir not
 
@@ -94,6 +96,8 @@ Sözüme güvenmeyin: her izni kullanan kod açıkta duruyor. [`Liftoff/Preview`
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift): pencereleri listelemek ve aralarında geçiş yapmak için SkyLight / HIServices (AltTab ve Hammerspoon ile aynı yaklaşım)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): sıkıştırma hareketi için MultitouchSupport (BetterTouchTool ve MiddleClick ile aynı yaklaşım)
+
+Dört parmakla kaydırma engeli ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) standart bir olay yakalayıcı kullanır ama belgelenmemiş olay alanlarını okur; alanlar beklendiği gibi görünmezse tüm olaylar değiştirilmeden geçer.
 
 ## Kurulum
 
@@ -116,7 +120,7 @@ Liftoff kendini günceller: varsayılan olarak haftada bir denetler, yeni sürü
 | İzin | Gerekli mi? | Neden | Atlarsanız |
 |---|---|---|---|
 | **Ekran ve Sistem Sesi Kaydı** | Yalnızca pencere önizlemeleri için | Pencere küçük resimleri ve başlıkları (yalnızca Mac'inizde yakalanır ve gösterilir) | Pencere önizlemesi olmaz; Liftoff yine bir başlatıcıdır |
-| **Erişilebilirlik** | İsteğe bağlı | Küçültülmüş pencereleri listelemek ve tıkladığınız pencereye tam olarak geçmek | Küçültülmüş pencereler listelenmez; geçiş daha az isabetli olur |
+| **Erişilebilirlik** | İsteğe bağlı | Küçültülmüş pencereleri listelemek, tıkladığınız pencereye tam olarak geçmek ve Liftoff açıkken dört parmakla kaydırmanın masaüstünü değiştirmesini engellemek | Küçültülmüş pencereler listelenmez; geçiş daha az isabetli olur; dört parmakla kaydırma masaüstünü yine değiştirir |
 
 Başka hiçbir şey istenmez. Başlatıcının kendisi hiçbir izne ihtiyaç duymaz.
 

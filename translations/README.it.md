@@ -61,6 +61,8 @@ Funziona a partire da una tabella integrata con oltre 1.000 app Mac molto diffus
 - **Trascina un'app nel Dock** direttamente dalla griglia: il pannello si toglie di mezzo da solo
 - **Importa il layout del vecchio Launchpad**, oppure riparti da zero con l'Organizzazione smart
 - Aprilo come preferisci: scorciatoia da tastiera (<kbd>⌃⌘L</kbd> per impostazione predefinita), pizzico con pollice e tre dita, un angolo attivo, l'icona nel Dock oppure `open liftoff://toggle`
+- **Schermo intero o finestra**: la classica griglia a tutto schermo, oppure una finestra in vetro compatta come l'app «App» di macOS (segue Chiaro/Scuro, o scegli tu)
+- Impedisci che lo scorrimento a quattro dita cambi scrivania mentre Liftoff è aperto · nascondi i puntini sotto le app aperte · nascondi sia l'icona nel Dock sia quella nella barra dei menu (fai clic sull'icona di Liftoff dentro Liftoff per aprire le impostazioni)
 - Pagine, cartelle (trascina per unire), trascinamento per riordinare, navigazione da tastiera
 - Sfondo sfocato o nitido (quello sfocato ha il consumo minimo), sfocatura in tempo reale, sfumature e tinte unite integrate o un'immagine tua; dimensione di icone ed etichette e colori regolabili
 - Supporto multi-schermo · nascondi app · disinstalla app insieme ai file residui · backup e ripristino del layout
@@ -84,7 +86,7 @@ Misurate su un Mac reale dall'app stessa (`scripts/selftest.sh` riproduce i nume
 Liftoff non raccoglie né invia alcun dato su di te. Le miniature delle finestre vengono acquisite e mostrate in locale e non lasciano mai il tuo Mac.
 L’unica connessione di rete serve per gli aggiornamenti: una volta alla settimana legge l’elenco degli aggiornamenti su GitHub Pages e, se c’è una nuova versione, la scarica da GitHub Releases. Disattiva **Verifica aggiornamenti ogni settimana** nelle impostazioni e Liftoff non si connetterà a meno che tu non faccia clic su **Verifica aggiornamenti…**.
 
-Non fidarti sulla parola: il codice che usa ciascun permesso si trova in [`Liftoff/Preview`](../Liftoff/Preview) (Registrazione schermo e audio di sistema: miniature; Accessibilità: elenco e cambio delle finestre) e in [`Liftoff/Services`](../Liftoff/Services) (scorciatoia da tastiera, angolo attivo, gesto sul trackpad e la verifica degli aggiornamenti in `UpdateChecker.swift`). Anche Little Snitch o LuLu te lo confermeranno.
+Non fidarti sulla parola: il codice che usa ciascun permesso si trova in [`Liftoff/Preview`](../Liftoff/Preview) (Registrazione schermo e audio di sistema: miniature; Accessibilità: elenco e cambio delle finestre) e in [`Liftoff/Services`](../Liftoff/Services) (scorciatoia da tastiera, angolo attivo, gesto sul trackpad, blocco dello scorrimento a quattro dita e la verifica degli aggiornamenti in `UpdateChecker.swift`). Anche Little Snitch o LuLu te lo confermeranno.
 
 ### Una nota sulle API private
 
@@ -92,6 +94,8 @@ Due funzionalità usano API non documentate di macOS, entrambe caricate dinamica
 
 - [`Liftoff/Preview/PrivateAPI.swift`](../Liftoff/Preview/PrivateAPI.swift): SkyLight / HIServices, per elencare le finestre e passare dall'una all'altra (lo stesso approccio di AltTab e Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](../Liftoff/Services/TrackpadGesture.swift): MultitouchSupport, per il gesto di pizzico (lo stesso approccio di BetterTouchTool e MiddleClick)
+
+Il blocco dello scorrimento a quattro dita ([`Liftoff/Services/DockSwipeBlocker.swift`](../Liftoff/Services/DockSwipeBlocker.swift)) usa un normale intercettatore di eventi, ma legge campi degli eventi non documentati; se non sono come previsto, tutti gli eventi passano invariati.
 
 ## Installazione
 
@@ -114,7 +118,7 @@ Liftoff si aggiorna da solo: per impostazione predefinita controlla ogni settima
 | Permesso | Necessario? | Perché | Se lo salti |
 |---|---|---|---|
 | **Registrazione schermo e audio di sistema** | Solo per le anteprime delle finestre | Miniature e titoli delle finestre (catturati e mostrati solo sul tuo Mac) | Niente anteprime delle finestre; Liftoff resta comunque un launcher |
-| **Accessibilità** | Facoltativo | Elencare le finestre minimizzate e passare esattamente alla finestra su cui hai fatto clic | Le finestre minimizzate non vengono elencate; il cambio di finestra è meno preciso |
+| **Accessibilità** | Facoltativo | Elencare le finestre minimizzate, passare esattamente alla finestra su cui hai fatto clic e impedire che lo scorrimento a quattro dita cambi scrivania mentre Liftoff è aperto | Le finestre minimizzate non vengono elencate; il cambio di finestra è meno preciso; lo scorrimento a quattro dita cambia comunque scrivania |
 
 Non viene richiesto nient’altro. Il launcher in sé non richiede alcun permesso.
 

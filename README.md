@@ -63,6 +63,8 @@ It works from a built-in table of 1,000+ popular Mac apps (including apps popula
 - **Drag an app to the Dock** straight from the grid — the panel gets out of the way automatically
 - **Import your old Launchpad layout**, or start fresh with Smart Organize
 - Open it any way you like: hotkey (<kbd>⌃⌘L</kbd> by default), thumb-and-three-finger pinch, a hot corner, the Dock icon, or `open liftoff://toggle`
+- **Full screen or a window**: the classic full-screen grid, or a compact glass window like macOS's own Apps (follows Light/Dark, or pick one)
+- Keep the four-finger swipe from switching desktops while Liftoff is open · hide the dots under running apps · hide both the Dock and menu bar icons (click Liftoff's own icon inside it to open Settings)
 - Pages, folders (drag to merge), drag to reorder, keyboard navigation
 - Blurred or sharp wallpaper (blurred uses the least power), live blur, built-in gradients and solid colors, or your own image; adjustable icon size, label size and colors
 - Multi-display aware · hide apps · uninstall apps with leftovers · back up and restore your layout
@@ -86,7 +88,7 @@ Measured on a real Mac by the app itself (`scripts/selftest.sh` reproduces the n
 Liftoff doesn't collect or send any data about you. Window thumbnails are captured and shown locally and never leave your Mac.
 The only network connection it makes is for updates: once a week it reads the update feed on GitHub Pages and, if there's a new version, downloads it from GitHub Releases. Turn off **Check for updates weekly** in Settings and Liftoff won't go online unless you click **Check for Updates…**.
 
-Don't take my word for it: the code that uses each permission is in [`Liftoff/Preview`](Liftoff/Preview) (Screen Recording: thumbnails; Accessibility: listing and switching windows) and [`Liftoff/Services`](Liftoff/Services) (hotkey, hot corner, trackpad gesture, and the update check in `UpdateChecker.swift`). Little Snitch or LuLu will confirm it too.
+Don't take my word for it: the code that uses each permission is in [`Liftoff/Preview`](Liftoff/Preview) (Screen Recording: thumbnails; Accessibility: listing and switching windows) and [`Liftoff/Services`](Liftoff/Services) (hotkey, hot corner, trackpad gesture, four-finger swipe blocker, and the update check in `UpdateChecker.swift`). Little Snitch or LuLu will confirm it too.
 
 ### A note on private APIs
 
@@ -94,6 +96,8 @@ Two features use undocumented macOS APIs, both loaded dynamically with a fallbac
 
 - [`Liftoff/Preview/PrivateAPI.swift`](Liftoff/Preview/PrivateAPI.swift) — SkyLight / HIServices, for window enumeration and switching (the same approach as AltTab and Hammerspoon)
 - [`Liftoff/Services/TrackpadGesture.swift`](Liftoff/Services/TrackpadGesture.swift) — MultitouchSupport, for the pinch gesture (the same approach as BetterTouchTool and MiddleClick)
+
+The four-finger swipe blocker ([`Liftoff/Services/DockSwipeBlocker.swift`](Liftoff/Services/DockSwipeBlocker.swift)) uses a standard event tap but reads undocumented event fields; if they don't look as expected, every event passes through untouched.
 
 ## Install
 
@@ -118,7 +122,7 @@ Liftoff updates itself: by default it checks weekly, downloads new versions in t
 | Permission | Needed? | Why | If you skip it |
 |---|---|---|---|
 | **Screen Recording** | Only for window previews | Window thumbnails and titles (captured and shown on your Mac only) | No window previews; Liftoff is still a launcher |
-| **Accessibility** | Optional | List minimized windows and jump to exactly the window you clicked | Minimized windows aren't listed; switching is less precise |
+| **Accessibility** | Optional | List minimized windows, jump to exactly the window you clicked, and stop the four-finger swipe from switching desktops while Liftoff is open | Minimized windows aren't listed; switching is less precise; the four-finger swipe can still switch desktops while it's open |
 
 Nothing else is requested. The launcher itself needs no permission at all.
 

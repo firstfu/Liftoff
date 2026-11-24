@@ -139,8 +139,7 @@ final class BackgroundView: NSView {
     }
 
     /// 視窗模式：系統玻璃卡片。
-    func showGlass(cornerRadius: CGFloat, tint: NSColor? = nil) {
-        glass.tintColor = tint
+    func showGlass(cornerRadius: CGFloat) {
         if liveBlur.superview != nil { liveBlur.removeFromSuperview() }
         imageLayer.isHidden = true
         layer?.backgroundColor = NSColor.clear.cgColor
@@ -564,7 +563,8 @@ final class LaunchpadWindowController {
             case .dark: isLight = false
             }
             backgroundView.appearance = settings.windowAppearance == .system ? nil : NSAppearance(named: isLight ? .aqua : .darkAqua)
-            backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius, tint: WindowModeCard.glassTint(light: isLight))
+            // 不加淡染：實測同一背景上系統玻璃原色（#D2D3D6）已與內建「App」視窗（#D4D5D9）一致，加白色 55% 反而變成 #F6F6F7 太白
+            backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius)
             model.backgroundIsLight = isLight
             return
         }

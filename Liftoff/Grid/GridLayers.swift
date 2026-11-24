@@ -23,6 +23,15 @@ nonisolated class StaticLayer: CALayer {
     override class func defaultAction(forKey event: String) -> (any CAAction)? { NSNull() }
 }
 
+/// 資料夾方塊（與合併底板）的顏色：預設是深色背景上的白色半透明；
+/// 視窗模式的淺色玻璃上白色幾乎看不見，改用淡灰底加細框。
+nonisolated enum FolderTileStyle {
+    static func apply(to layer: CALayer, onLight: Bool) {
+        layer.backgroundColor = onLight ? CGColor(gray: 0, alpha: 0.07) : CGColor(gray: 1, alpha: 0.26)
+        layer.borderColor = onLight ? CGColor(gray: 0, alpha: 0.1) : CGColor(gray: 1, alpha: 0.35)
+    }
+}
+
 /// 圖示本體：App 圖示貼圖，或資料夾的半透明方塊 + 3×3 迷你圖示。
 nonisolated final class IconTileLayer: StaticLayer {
     private let tile = StaticLayer()
@@ -34,14 +43,21 @@ nonisolated final class IconTileLayer: StaticLayer {
         super.init()
         contentsGravity = .resizeAspect
         tile.isHidden = true
-        tile.backgroundColor = CGColor(gray: 1, alpha: 0.26)
-        tile.borderColor = CGColor(gray: 1, alpha: 0.35)
+        FolderTileStyle.apply(to: tile, onLight: false)
         tile.borderWidth = 0.75
         tile.cornerCurve = .continuous
         addSublayer(tile)
     }
 
     override init(layer: Any) { super.init(layer: layer) }
+
+    private var tileOnLight = false
+    /// 資料夾方塊是否放在淺色背景上（見 `FolderTileStyle`）
+    func setTileOnLight(_ onLight: Bool) {
+        guard onLight != tileOnLight else { return }
+        tileOnLight = onLight
+        FolderTileStyle.apply(to: tile, onLight: onLight)
+    }
 
     /// 顯示 App 圖示。
     func showApp(_ image: CGImage?) {
@@ -108,8 +124,7 @@ nonisolated final class CellLayer: StaticLayer {
         dot.cornerRadius = 2.5
         label.contentsGravity = .center
         // 外觀與資料夾方塊一致，合併完成時新資料夾才能無縫接上
-        plate.backgroundColor = CGColor(gray: 1, alpha: 0.26)
-        plate.borderColor = CGColor(gray: 1, alpha: 0.35)
+        FolderTileStyle.apply(to: plate, onLight: false)
         plate.borderWidth = 0.75
         plate.cornerCurve = .continuous
         plate.opacity = 0
@@ -121,6 +136,15 @@ nonisolated final class CellLayer: StaticLayer {
     }
 
     override init(layer: Any) { super.init(layer: layer) }
+
+    private var tileOnLight = false
+    /// 資料夾方塊與合併底板是否放在淺色背景上（見 `FolderTileStyle`）
+    func setTileOnLight(_ onLight: Bool) {
+        icon.setTileOnLight(onLight)
+        guard onLight != tileOnLight else { return }
+        tileOnLight = onLight
+        FolderTileStyle.apply(to: plate, onLight: onLight)
+    }
 
     /// 依格線尺寸擺放內部元件（格子大小、圖示大小改變時呼叫）。
     func layout(metrics: GridMetrics) {

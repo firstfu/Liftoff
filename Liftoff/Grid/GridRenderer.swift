@@ -177,6 +177,7 @@ final class GridRenderer {
                 pagesLayer.addSublayer(cell)
                 cells[item.id] = cell
             }
+            cell.setTileOnLight(tileOnLight)
             configureIcon(cell.icon, for: item)
             if metrics.showsLabels {
                 cell.setLabel(labels.image(for: model.title(for: item), dark: labelsDark, style: style), scale: backingScale)
@@ -228,11 +229,15 @@ final class GridRenderer {
     }
 
     /// 設定圖示內容：App 取自己的圖示，資料夾取前 9 個 App 的圖示。
+    /// 資料夾方塊放在淺色背景上：只有視窗模式的淺色玻璃（全螢幕維持原本的白色半透明，不受桌布深淺影響）
+    private var tileOnLight: Bool { model.settings.displayMode == .window && model.backgroundIsLight }
+
     private func configureIcon(_ layer: IconTileLayer, for item: LayoutItem) {
         switch item {
         case .app(let id):
             layer.showApp(model.icons.icon(for: id).cgImage ?? model.icons.placeholder)
         case .folder(let folder):
+            layer.setTileOnLight(tileOnLight)
             layer.showFolder(folder.apps.prefix(9).map { model.icons.icon(for: $0).cgImage ?? model.icons.placeholder })
         case .window(let hit):
             // 搜尋到的視窗：所屬 App 的圖示，名稱位置顯示視窗標題

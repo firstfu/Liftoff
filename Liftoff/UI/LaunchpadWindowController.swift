@@ -139,7 +139,8 @@ final class BackgroundView: NSView {
     }
 
     /// 視窗模式：系統玻璃卡片。
-    func showGlass(cornerRadius: CGFloat) {
+    func showGlass(cornerRadius: CGFloat, tint: NSColor? = nil) {
+        glass.tintColor = tint
         if liveBlur.superview != nil { liveBlur.removeFromSuperview() }
         imageLayer.isHidden = true
         layer?.backgroundColor = NSColor.clear.cgColor
@@ -555,11 +556,19 @@ final class LaunchpadWindowController {
 
     private func applyBackground(for screen: NSScreen) {
         if isWindowMode {
-            backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius)
-            // 玻璃跟著系統外觀：淺色模式用深色字，與內建「App」視窗一致
-            model.backgroundIsLight = NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+            // 玻璃預設跟著系統外觀（與內建「App」視窗一致），也可在設定固定淺色或深色；淺色時用深色字
+            let isLight: Bool
+            switch settings.windowAppearance {
+            case .system: isLight = NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua
+            case .light: isLight = true
+            case .dark: isLight = false
+            }
+            backgroundView.appearance = settings.windowAppearance == .system ? nil : NSAppearance(named: isLight ? .aqua : .darkAqua)
+            backgroundView.showGlass(cornerRadius: WindowModeCard.cornerRadius, tint: WindowModeCard.glassTint(light: isLight))
+            model.backgroundIsLight = isLight
             return
         }
+        backgroundView.appearance = nil
         if settings.backgroundStyle != .liveBlur, let cached = lastBackground[screen.displayID] {
             apply(cached)
             return

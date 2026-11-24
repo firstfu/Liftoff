@@ -342,7 +342,7 @@ final class AppCoordinator {
         observe({ [settings] in settings.pinchGesture }) { [weak self] _ in self?.applyGesture() }
         observe({ [settings] in settings.showsDockIcon }) { [weak self] _ in self?.applyActivationPolicy() }
         // 切換全螢幕／視窗後先在看不見時排版並建好玻璃，下一次打開不必付這筆一次性成本
-        observe({ [settings] in settings.displayMode }) { [weak self] _ in
+        observe({ [settings] in "\(settings.displayMode.rawValue)|\(settings.windowAppearance.rawValue)" }) { [weak self] _ in
             guard let self, !self.controller.isVisible, let screen = NSScreen.main else { return }
             self.controller.prewarm(on: screen)
         }

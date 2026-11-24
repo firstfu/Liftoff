@@ -7,7 +7,7 @@
 //  SwiftUI 也不必為了量尺寸多跑一輪 layout。
 //
 
-import CoreGraphics
+import AppKit
 
 /// 視窗模式（issue #17）的卡片尺寸與版面常數：照 macOS 內建「App」視窗——
 /// 上方一列大字搜尋、細分隔線、緊密的格線、圖示約 64pt，卡片大小由格線推算而不是佔螢幕的固定比例。
@@ -20,6 +20,11 @@ nonisolated enum WindowModeCard {
     /// 頁碼點那一列
     static let bottomMargin: CGFloat = 34
     static let cornerRadius: CGFloat = 26
+    /// 玻璃淡染：不加的話玻璃很透，後方視窗的文字清楚透出、畫面雜亂；
+    /// 內建「App」視窗是霧白（淺色）／霧黑（深色），後方只剩模糊色塊
+    static func glassTint(light: Bool) -> NSColor {
+        light ? NSColor.white.withAlphaComponent(0.55) : NSColor.black.withAlphaComponent(0.35)
+    }
     /// 標準格子：圖示 64pt 時的格寬與「圖示區」高度
     private static let cellWidth: CGFloat = 110
     private static let iconAreaHeight: CGFloat = 80

@@ -331,6 +331,13 @@ private struct AppearanceSettings: View {
                     Text("視窗").tag(DisplayMode.window)
                 }
                 .pickerStyle(.segmented)
+                if settings.displayMode == .window {
+                    Picker("視窗外觀", selection: $settings.windowAppearance) {
+                        Text("跟隨系統").tag(IconAppearance.system)
+                        Text("淺色").tag(IconAppearance.light)
+                        Text("深色").tag(IconAppearance.dark)
+                    }
+                }
             }
             Section("格線") {
                 Stepper("每頁欄數：\(settings.columns)", value: $settings.columns, in: 4...12)

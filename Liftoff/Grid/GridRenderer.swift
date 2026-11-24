@@ -141,7 +141,8 @@ final class GridRenderer {
         let metrics = model.metrics
         let items = model.cellItems
         let placements = model.placements
-        let running = model.running.ids
+        let showsRunning = model.settings.showsRunningIndicator
+        let running = showsRunning ? model.running.ids : []
         let selection = model.selection
         let drag = model.drag
         let draggedID = drag?.itemID
@@ -204,7 +205,7 @@ final class GridRenderer {
                 isPressed: pressed == item.id,
                 isDragged: draggedID == item.id,
                 isMergeTarget: mergeTarget == item.id,
-                isRunning: item.appID.map(running.contains) ?? (item.windowHit != nil)
+                isRunning: item.appID.map(running.contains) ?? (showsRunning && item.windowHit != nil)
             )
             if state != cell.state || metricsChanged {
                 cell.apply(state, labelsDark: labelsDark, animated: model.isShown)

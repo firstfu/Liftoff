@@ -27,15 +27,18 @@ struct AppSettingsSyncTests {
 
         settingsProcess.columns = 9
         settingsProcess.compactMargins = true
+        settingsProcess.showsRunningIndicator = true
         settingsProcess.backgroundStyle = .preset
         settingsProcess.hotKey = nil
         settingsProcess.hiddenApps = ["/Applications/Chess.app"]
         settingsProcess.extraDirectories = ["/Volumes/External/Apps"]
         #expect(host.columns == 7)
 
+        #expect(!host.showsRunningIndicator)
         host.reload()
         #expect(host.columns == 9)
         #expect(host.compactMargins)
+        #expect(host.showsRunningIndicator)
         #expect(host.backgroundStyle == .preset)
         #expect(host.hotKey == nil)
         #expect(host.hiddenApps == ["/Applications/Chess.app"])

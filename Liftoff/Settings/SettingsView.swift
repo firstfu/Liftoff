@@ -326,6 +326,7 @@ private struct AppearanceSettings: View {
                         .labelsHidden()
                 }
                 Toggle("緊湊版面（減少四周留白）", isOn: $settings.compactMargins)
+                Toggle("為打開的應用程式顯示指示燈", isOn: $settings.showsRunningIndicator)
             }
             Section("App 名稱") {
                 Toggle("顯示名稱", isOn: $settings.showsLabels)

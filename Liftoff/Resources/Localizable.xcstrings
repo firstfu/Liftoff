@@ -10388,6 +10388,89 @@
         }
       }
     },
+    "為打開的應用程式顯示指示燈": {
+      "comment": "出現在 SettingsView.swift（英文：Show Indicators for Open Applications；用語同 macOS Dock 設定）",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anzeige für geöffnete Programme einblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Indicators for Open Applications"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar indicadores en las aplicaciones abiertas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher les indicateurs des applications ouvertes"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra indicatori per le applicazioni aperte"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "起動済みのアプリケーションにインジケータを表示"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "열려 있는 응용 프로그램에 대한 표시 보기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toon aanduidingen voor geopende apps"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar indicadores para aplicativos abertos"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показывать индикаторы открытых программ"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık uygulamalar için göstergeleri göster"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "为打开的应用程序显示指示灯"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "為打開的應用程式顯示指示燈"
+          }
+        }
+      }
+    },
     "無法移除：%@": {
       "comment": "出現在 LaunchpadModel.swift（英文：Couldn’t remove: %@）",
       "localizations": {

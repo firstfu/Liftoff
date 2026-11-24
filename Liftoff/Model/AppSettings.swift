@@ -91,6 +91,8 @@ final class AppSettings {
     var iconAppearance: IconAppearance { didSet { save(iconAppearance.rawValue, forKey: Key.iconAppearance) } }
     /// 緊湊模式：縮小頁面四周留白
     var compactMargins: Bool { didSet { save(compactMargins, forKey: Key.compactMargins) } }
+    /// 在執行中 App 的圖示下方顯示小圓點（issue #15）
+    var showsRunningIndicator: Bool { didSet { save(showsRunningIndicator, forKey: Key.showsRunningIndicator) } }
 
     var backgroundStyle: BackgroundStyle { didSet { save(backgroundStyle.rawValue, forKey: Key.backgroundStyle) } }
     /// 背景模糊半徑（0–100）
@@ -181,7 +183,7 @@ final class AppSettings {
         static let showsLabels = "showsLabels", labelColor = "labelColor", iconAppearance = "iconAppearance"
         static let compactMargins = "compactMargins", backgroundStyle = "backgroundStyle", blurRadius = "blurRadius"
         static let dimming = "dimming", customImagePath = "customImagePath", coversDock = "coversDock"
-        static let presetWallpaper = "presetWallpaper"
+        static let presetWallpaper = "presetWallpaper", showsRunningIndicator = "showsRunningIndicator"
         static let remembersPage = "remembersPage", hotKey = "hotKey", hotCorner = "hotCorner"
         static let pinchGesture = "pinchGesture", displayTarget = "displayTarget", windowPreview = "windowPreview"
         static let previewDelay = "previewDelay", showsDockIcon = "showsDockIcon", showsMenuBarIcon = "showsMenuBarIcon"
@@ -190,7 +192,7 @@ final class AppSettings {
         static let availableUpdateVersion = "availableUpdateVersion"
         /// 跨 process 同步要觀察的 key（新增設定時記得加進來，並在 `reload()` 補上讀取）
         static let all = [
-            columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins,
+            columns, rows, iconScale, labelFontSize, showsLabels, labelColor, iconAppearance, compactMargins, showsRunningIndicator,
             backgroundStyle, blurRadius, dimming, customImagePath, presetWallpaper, coversDock, remembersPage,
             hotKey, hotCorner, pinchGesture, displayTarget, windowPreview, previewDelay, showsDockIcon,
             showsMenuBarIcon, hiddenApps, extraDirectories, autoChecksForUpdates, autoInstallsUpdates,
@@ -204,7 +206,7 @@ final class AppSettings {
         defaults.register(defaults: [
             Key.columns: 7, Key.rows: 5, Key.iconScale: 1.0, Key.labelFontSize: 13.0, Key.showsLabels: true,
             Key.labelColor: LabelColorMode.auto.rawValue, Key.iconAppearance: IconAppearance.system.rawValue,
-            Key.compactMargins: false, Key.backgroundStyle: BackgroundStyle.wallpaper.rawValue,
+            Key.compactMargins: false, Key.showsRunningIndicator: false, Key.backgroundStyle: BackgroundStyle.wallpaper.rawValue,
             Key.blurRadius: 45.0, Key.dimming: 0.22, Key.coversDock: true, Key.remembersPage: true,
             Key.presetWallpaper: WallpaperPreset.defaultID,
             Key.hotCorner: HotCorner.none.rawValue, Key.pinchGesture: true, Key.displayTarget: DisplayTarget.mouse.rawValue,
@@ -219,6 +221,7 @@ final class AppSettings {
         labelColor = LabelColorMode(rawValue: defaults.string(forKey: Key.labelColor) ?? "") ?? .auto
         iconAppearance = IconAppearance(rawValue: defaults.string(forKey: Key.iconAppearance) ?? "") ?? .system
         compactMargins = defaults.bool(forKey: Key.compactMargins)
+        showsRunningIndicator = defaults.bool(forKey: Key.showsRunningIndicator)
         backgroundStyle = BackgroundStyle(rawValue: defaults.string(forKey: Key.backgroundStyle) ?? "") ?? .wallpaper
         blurRadius = defaults.double(forKey: Key.blurRadius)
         dimming = defaults.double(forKey: Key.dimming)
@@ -285,6 +288,7 @@ final class AppSettings {
         update(\.labelColor, LabelColorMode(rawValue: defaults.string(forKey: Key.labelColor) ?? "") ?? .auto)
         update(\.iconAppearance, IconAppearance(rawValue: defaults.string(forKey: Key.iconAppearance) ?? "") ?? .system)
         update(\.compactMargins, defaults.bool(forKey: Key.compactMargins))
+        update(\.showsRunningIndicator, defaults.bool(forKey: Key.showsRunningIndicator))
         update(\.backgroundStyle, BackgroundStyle(rawValue: defaults.string(forKey: Key.backgroundStyle) ?? "") ?? .wallpaper)
         update(\.blurRadius, defaults.double(forKey: Key.blurRadius))
         update(\.dimming, defaults.double(forKey: Key.dimming))
@@ -316,7 +320,7 @@ final class AppSettings {
     /// 還原外觀相關設定為預設值。
     func resetAppearance() {
         columns = 7; rows = 5; iconScale = 1.0; labelFontSize = 13; showsLabels = true
-        labelColor = .auto; iconAppearance = .system; compactMargins = false
+        labelColor = .auto; iconAppearance = .system; compactMargins = false; showsRunningIndicator = false
         backgroundStyle = .wallpaper; blurRadius = 45; dimming = 0.22; coversDock = true
     }
 }

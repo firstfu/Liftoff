@@ -84,10 +84,30 @@ struct GridMetricsTests {
         #expect(metrics.insertionIndex(at: metrics.cellCenter(3), count: 10) == 3)
     }
 
-    @Test func mergeZoneIsTheIconCenter() {
+    @Test func mergeZoneCoversTheWholeIcon() {
         let center = metrics.iconCenter(5)
         #expect(metrics.isOverIconCenter(center, index: 5))
-        #expect(!metrics.isOverIconCenter(CGPoint(x: center.x + metrics.iconSize * 0.45, y: center.y), index: 5))
+        // 整個圖示本體都算合併區（issue #18：只有中央一小塊時，慢慢靠近會先觸發換位把目標擠走）
+        #expect(metrics.isOverIconCenter(CGPoint(x: center.x + metrics.iconSize * 0.45, y: center.y), index: 5))
+        #expect(metrics.isOverIconCenter(CGPoint(x: center.x, y: center.y - metrics.iconSize * 0.45), index: 5))
+        // 圖示之外、格子兩側的空隙仍是「插入」
+        #expect(!metrics.isOverIconCenter(CGPoint(x: center.x + metrics.iconSize * 0.55, y: center.y), index: 5))
+    }
+
+    @Test func mergeZoneIsStickyOnceEntered() {
+        let center = metrics.iconCenter(5)
+        let justOutside = CGPoint(x: center.x + metrics.iconSize * 0.55, y: center.y)
+        #expect(metrics.isOverIconCenter(justOutside, index: 5, sticky: true))
+        #expect(!metrics.isOverIconCenter(CGPoint(x: center.x + metrics.iconSize * 0.7, y: center.y), index: 5, sticky: true))
+    }
+
+    @Test func mergeZoneLeavesInsertionGapsWithHugeIcons() {
+        let huge = GridMetrics(containerSize: CGSize(width: 1920, height: 1080), columns: 7, rows: 5,
+                               iconScale: 1.9, labelFontSize: 13, showsLabels: true, compact: false)
+        let frame = huge.cellFrame(5)
+        let center = huge.iconCenter(5)
+        #expect(!huge.isOverIconCenter(CGPoint(x: frame.minX + frame.width * 0.1, y: center.y), index: 5))
+        #expect(!huge.isOverIconCenter(CGPoint(x: frame.maxX - frame.width * 0.1, y: center.y), index: 5))
     }
 
     @Test func iconScaleChangesIconSize() {

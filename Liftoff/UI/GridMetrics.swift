@@ -191,10 +191,19 @@ nonisolated struct GridMetrics: Equatable, Sendable {
         return min(row * columns + column, count)
     }
 
-    /// 游標是否落在某格圖示的「中心區」（放開會合併成資料夾，而不是插入）。
-    func isOverIconCenter(_ point: CGPoint, index: Int) -> Bool {
+    /// 被拖曳圖示的中心是否落在某格圖示的「合併區」（放開會合併成資料夾，而不是插入）。
+    ///
+    /// 合併區是整個圖示本體；格子左右兩側留給「插入」的空隙各至少佔格寬 14%（圖示放得很大時合併區跟著收窄）。
+    /// 區域太小時，使用者慢慢靠近目標會先在外圈觸發換位，目標被擠走而永遠放不進去（issue #18）。
+    /// - Parameters:
+    ///   - point: 被拖曳圖示的中心（頁面座標）
+    ///   - index: 目標格
+    ///   - sticky: 這一格已經是合併候選：離開的範圍比進入大一圈，手抖不會在合併與換位之間來回跳
+    func isOverIconCenter(_ point: CGPoint, index: Int, sticky: Bool = false) -> Bool {
         let center = iconCenter(index)
-        let radius = iconSize * 0.34
-        return abs(point.x - center.x) < radius && abs(point.y - center.y) < radius
+        let slack = sticky ? iconSize * 0.15 : 0
+        let radiusX = min(iconSize * 0.5, cellSize.width * 0.36) + slack
+        let radiusY = min(iconSize * 0.5, cellSize.height * 0.4) + slack
+        return abs(point.x - center.x) < radiusX && abs(point.y - center.y) < radiusY
     }
 }

@@ -301,9 +301,8 @@ enum SelfTest {
     ///   - onRelease: 放開後 90ms 呼叫（截取放開動畫進行中的畫面）
     @MainActor
     private static func drag(from start: CGPoint, to end: CGPoint, hold: Duration, controller: LaunchpadWindowController,
-                             onHold: () -> Void = {}, onRelease: () -> Void = {}) async {
+                             steps: Int = 30, onHold: () -> Void = {}, onRelease: () -> Void = {}) async {
         mouse(.leftMouseDown, at: start, controller: controller)
-        let steps = 30
         for step in 1...steps {
             let t = CGFloat(step) / CGFloat(steps)
             mouse(.leftMouseDragged, at: CGPoint(x: start.x + (end.x - start.x) * t, y: start.y + (end.y - start.y) * t), controller: controller)
@@ -376,6 +375,27 @@ enum SelfTest {
         }
         store.replace(with: original)
         try? await Task.sleep(for: .milliseconds(300))
+
+        // (b2) 慢慢拖進既有資料夾、不停留就放開（issue #18）：靠近途中資料夾不能被擠走，放開就要收進去
+        var prepared = store.layout
+        if prepared.merge(appID: bID, into: page[apps[0]].id, folderName: "selftest") != nil {
+            store.replace(with: prepared)
+            try? await Task.sleep(for: .milliseconds(300))
+            let key = prepared.pages[0].first(where: { $0.folder != nil && $0.folder?.apps.contains(bID) == true })?.id
+            if let key, let folderIndex = store.layout.position(of: key)?.index,
+               let fromIndex = store.layout.position(of: aID)?.index {
+                // 約 1.6 秒走完：經過目標格子外圈的時間遠超過換位的 150ms
+                await drag(from: metrics.iconCenter(fromIndex), to: metrics.iconCenter(folderIndex), hold: .milliseconds(0),
+                           controller: controller, steps: 200)
+                let stayed = store.layout.position(of: key)?.index == folderIndex
+                let inside = store.layout.pages.flatMap({ $0 }).first(where: { $0.id == key })?.folder?.apps.contains(aID) == true
+                results["slowDropIntoFolder"] = stayed && inside ? "ok" : "失敗：資料夾留在原位=\(stayed) 已收進資料夾=\(inside)"
+            } else {
+                results["slowDropIntoFolder"] = "失敗：找不到準備好的資料夾"
+            }
+            store.replace(with: original)
+            try? await Task.sleep(for: .milliseconds(300))
+        }
 
         // (c) 拖曳中按 Esc：版面還原
         mouse(.leftMouseDown, at: metrics.iconCenter(a), controller: controller)

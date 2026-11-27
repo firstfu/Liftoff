@@ -135,6 +135,8 @@ final class LaunchpadModel {
     @ObservationIgnored private var edgeTask: Task<Void, Never>?
     @ObservationIgnored private var reorderTask: Task<Void, Never>?
     @ObservationIgnored private var pendingReorder: ItemPosition?
+    /// 換位計時開始時被拖曳圖示的中心；移動超過幾點就重新計時
+    @ObservationIgnored private var reorderAnchor: CGPoint = .zero
     /// 自我測試用：記錄要開啟的 App 但不真的開（避免測試過程開啟使用者的 App）
     @ObservationIgnored var suppressLaunches = false
     @ObservationIgnored private(set) var lastLaunchRequest: String?
@@ -740,7 +742,14 @@ final class LaunchpadModel {
             layoutStore.update { $0.move(itemID: drag.itemID, to: pending, capacity: capacity) }
         }
         pendingReorder = nil
-        if let target = drag.mergeTargetID, case .app(let appID) = drag.item {
+        // 直接放在既有資料夾上：不必等它亮起就算放進去
+        var mergeTarget = drag.mergeTargetID
+        if mergeTarget == nil, let candidate = mergeCandidate,
+           layoutStore.layout.position(of: candidate).flatMap({ layoutStore.layout.item(at: $0) })?.folder != nil {
+            mergeTarget = candidate
+        }
+        mergeCandidate = nil
+        if let target = mergeTarget, case .app(let appID) = drag.item {
             let name = FolderNaming.name(target: catalog.entry(target), dragged: catalog.entry(appID))
             withAnimation(.smooth(duration: 0.3)) {
                 layoutStore.update { _ = $0.merge(appID: appID, into: target, folderName: name) }
@@ -760,6 +769,7 @@ final class LaunchpadModel {
         edgeTask?.cancel()
         reorderTask?.cancel()
         pendingReorder = nil
+        mergeCandidate = nil
         edgeDirection = 0
         // 取消後放開滑鼠不能被當成「點擊」而開啟 App
         press = nil
@@ -814,15 +824,17 @@ final class LaunchpadModel {
 
         // 停在另一個圖示中心：準備合併成資料夾（資料夾本身不能再放進資料夾）
         if drag.item.appID != nil, hovered < pageItems.count, pageItems[hovered].id != drag.itemID,
-           metrics.isOverIconCenter(center, index: hovered) {
+           metrics.isOverIconCenter(center, index: hovered, sticky: mergeCandidate == pageItems[hovered].id) {
             let targetID = pageItems[hovered].id
             pendingReorder = nil
             reorderTask?.cancel()
             if mergeCandidate != targetID {
                 mergeCandidate = targetID
                 mergeTask?.cancel()
+                // 既有資料夾是明確的目標，很快就亮起；兩個 App 合併成新資料夾要停久一點，免得排序時誤觸
+                let dwell = pageItems[hovered].folder != nil ? 120 : 320
                 mergeTask = Task { [weak self, weak drag] in
-                    try? await Task.sleep(for: .milliseconds(320))
+                    try? await Task.sleep(for: .milliseconds(dwell))
                     guard let self, let drag, !Task.isCancelled, self.mergeCandidate == targetID else { return }
                     withAnimation(.smooth(duration: 0.2)) { drag.mergeTargetID = targetID }
                 }
@@ -846,8 +858,11 @@ final class LaunchpadModel {
             reorderTask?.cancel()
             return
         }
-        guard pendingReorder != target else { return }
+        // 游標還在移動就重新計時：只有「停下來」才換位。否則慢慢靠近目標圖示時，
+        // 光是經過它格子的外圈就超過 150ms，目標被擠走，使用者永遠追不上（issue #18）
+        if pendingReorder == target, hypot(center.x - reorderAnchor.x, center.y - reorderAnchor.y) < 6 { return }
         pendingReorder = target
+        reorderAnchor = center
         reorderTask?.cancel()
         reorderTask = Task { [weak self, weak drag] in
             try? await Task.sleep(for: .milliseconds(150))

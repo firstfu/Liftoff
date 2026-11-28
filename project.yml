@@ -34,8 +34,8 @@ targets:
       path: Liftoff/Resources/Info.plist
       properties:
         CFBundleDisplayName: Liftoff
-        CFBundleShortVersionString: "1.5.1"
-        CFBundleVersion: "19"
+        CFBundleShortVersionString: "1.5.2"
+        CFBundleVersion: "20"
         CFBundleDevelopmentRegion: en
         CFBundleAllowMixedLocalizations: true
         LSApplicationCategoryType: public.app-category.productivity

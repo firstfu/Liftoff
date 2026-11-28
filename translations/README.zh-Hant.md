@@ -44,7 +44,7 @@ macOS 26 把經典的啟動台格線換成了「App」清單。如果你和我�
 
 ### App 和視窗一次找齊的搜尋
 
-打幾個字就好。Liftoff 會比對 App 名稱、縮寫（`vsc` → Visual Studio Code）、中文名稱的拼音，以及你已開啟視窗的標題。
+打幾個字就好。Liftoff 會比對 App 名稱、縮寫（`vsc` → Visual Studio Code）、中文名稱的拼音，以及你已開啟視窗的標題。用拼音輸入法時不必先選字，邊打拼音就會出結果。
 
 <img src="../assets/search.jpg" width="780" alt="在搜尋欄輸入文字，即時篩選 App 與視窗">
 

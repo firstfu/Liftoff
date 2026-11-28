@@ -44,7 +44,7 @@ Lass den Zeiger auf einer laufenden App ruhen (oder drücke darauf die <kbd>Leer
 
 ### Eine Suche, die Apps *und* Fenster findet
 
-Tipp ein paar Buchstaben. Liftoff findet App-Namen, Initialen (`vsc` → Visual Studio Code), Pinyin bei chinesischen Namen und die Titel deiner geöffneten Fenster.
+Tipp ein paar Buchstaben. Liftoff findet App-Namen, Initialen (`vsc` → Visual Studio Code), Pinyin bei chinesischen Namen und die Titel deiner geöffneten Fenster. Mit einer Pinyin-Eingabemethode erscheinen die Treffer schon beim Tippen – du musst nicht erst einen Kandidaten auswählen.
 
 <img src="../assets/search.jpg" width="780" alt="Die Eingabe im Suchfeld filtert Apps und Fenster">
 

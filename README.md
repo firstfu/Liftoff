@@ -46,7 +46,7 @@ Rest the pointer on a running app (or press <kbd>Space</kbd> on it) and its wind
 
 ### Search that finds apps *and* windows
 
-Type a few letters. Liftoff matches app names, initials (`vsc` → Visual Studio Code), pinyin for Chinese names, and the titles of your open windows.
+Type a few letters. Liftoff matches app names, initials (`vsc` → Visual Studio Code), pinyin for Chinese names, and the titles of your open windows. With a pinyin input method, results appear while you're still typing — no need to pick a candidate first.
 
 <img src="assets/search.jpg" width="780" alt="Typing in the search field filters apps and windows">
 

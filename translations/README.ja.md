@@ -44,7 +44,7 @@ macOS 26 では、おなじみの Launchpad のグリッドが「App」リスト
 
 ### App もウインドウも見つかる検索
 
-数文字入力するだけです。Liftoff は App 名、頭文字（`vsc` → Visual Studio Code）、中国語名のピンイン、そして開いているウインドウのタイトルに一致させます。
+数文字入力するだけです。Liftoff は App 名、頭文字（`vsc` → Visual Studio Code）、中国語名のピンイン、そして開いているウインドウのタイトルに一致させます。ピンイン入力では、候補を確定する前の入力中から結果が表示されます。
 
 <img src="../assets/search.jpg" width="780" alt="検索フィールドに入力すると、App とウインドウが絞り込まれる">
 

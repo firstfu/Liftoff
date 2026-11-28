@@ -44,7 +44,7 @@ Laissez le pointeur sur une app ouverte (ou appuyez sur <kbd>Espace</kbd>) et se
 
 ### Une recherche qui trouve les apps *et* les fenêtres
 
-Tapez quelques lettres. Liftoff reconnaît les noms d’apps, les initiales (`vsc` → Visual Studio Code), le pinyin pour les noms chinois, ainsi que les titres de vos fenêtres ouvertes.
+Tapez quelques lettres. Liftoff reconnaît les noms d’apps, les initiales (`vsc` → Visual Studio Code), le pinyin pour les noms chinois, ainsi que les titres de vos fenêtres ouvertes. Avec une méthode de saisie pinyin, les résultats s’affichent pendant la frappe, sans avoir à choisir un candidat au préalable.
 
 <img src="../assets/search.jpg" width="780" alt="La saisie dans le champ de recherche filtre les apps et les fenêtres">
 

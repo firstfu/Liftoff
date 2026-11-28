@@ -46,7 +46,7 @@ Sonra orijinalinde hiç olmayan özellikleri ekliyor.
 
 ### Uygulamaları *ve* pencereleri bulan arama
 
-Birkaç harf yazmanız yeterli. Liftoff uygulama adlarını, baş harfleri (`vsc` → Visual Studio Code), Çince adlar için pinyin'i ve açık pencerelerinizin başlıklarını eşleştirir.
+Birkaç harf yazmanız yeterli. Liftoff uygulama adlarını, baş harfleri (`vsc` → Visual Studio Code), Çince adlar için pinyin'i ve açık pencerelerinizin başlıklarını eşleştirir. Pinyin giriş yöntemiyle sonuçlar siz yazarken görünür; önce bir aday seçmeniz gerekmez.
 
 <img src="../assets/search.jpg" width="780" alt="Arama alanına yazdıkça uygulamalar ve pencereler süzülür">
 

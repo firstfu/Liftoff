@@ -44,7 +44,7 @@ macOS 26 用“App”列表取代了经典的启动台网格。如果你喜欢�
 
 ### 同时搜索 App 和窗口
 
-随手敲几个字母。Liftoff 会匹配 App 名称、首字母缩写（`vsc` → Visual Studio Code）、中文名称的拼音，以及你已打开窗口的标题。
+随手敲几个字母。Liftoff 会匹配 App 名称、首字母缩写（`vsc` → Visual Studio Code）、中文名称的拼音，以及你已打开窗口的标题。用拼音输入法时，不用先选字，边打拼音就会出结果。
 
 <img src="../assets/search.jpg" width="780" alt="在搜索栏中输入文字，实时筛选 App 和窗口">
 

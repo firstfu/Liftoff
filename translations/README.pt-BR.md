@@ -46,7 +46,7 @@ Deixe o cursor parado sobre um app aberto (ou pressione <kbd>Espaço</kbd> nele)
 
 ### Busca que encontra apps *e* janelas
 
-Digite algumas letras. O Liftoff encontra pelo nome do app, pelas iniciais (`vsc` → Visual Studio Code), pelo pinyin de nomes em chinês e pelos títulos das suas janelas abertas.
+Digite algumas letras. O Liftoff encontra pelo nome do app, pelas iniciais (`vsc` → Visual Studio Code), pelo pinyin de nomes em chinês e pelos títulos das suas janelas abertas. Com um método de entrada pinyin, os resultados aparecem enquanto você digita, sem precisar escolher um candidato antes.
 
 <img src="../assets/search.jpg" width="780" alt="Ao digitar no campo de busca, apps e janelas são filtrados">
 

@@ -46,7 +46,7 @@ Houd de aanwijzer boven een geopende app (of druk op <kbd>Spatiebalk</kbd> terwi
 
 ### Zoeken naar apps *en* vensters
 
-Typ een paar letters. Liftoff vindt apps op naam, op beginletters (`vsc` → Visual Studio Code), op pinyin voor Chinese namen en op de titels van je geopende vensters.
+Typ een paar letters. Liftoff vindt apps op naam, op beginletters (`vsc` → Visual Studio Code), op pinyin voor Chinese namen en op de titels van je geopende vensters. Met een pinyin-invoermethode verschijnen de resultaten al tijdens het typen; je hoeft niet eerst een kandidaat te kiezen.
 
 <img src="../assets/search.jpg" width="780" alt="Typen in het zoekveld filtert apps en vensters">
 

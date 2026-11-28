@@ -44,7 +44,7 @@ Fermati con il puntatore su un'app in esecuzione (oppure premi <kbd>Spazio</kbd>
 
 ### Una ricerca che trova app *e* finestre
 
-Scrivi poche lettere. Liftoff cerca tra i nomi delle app, le iniziali (`vsc` → Visual Studio Code), il pinyin per i nomi cinesi e i titoli delle finestre che hai aperto.
+Scrivi poche lettere. Liftoff cerca tra i nomi delle app, le iniziali (`vsc` → Visual Studio Code), il pinyin per i nomi cinesi e i titoli delle finestre che hai aperto. Con un metodo di input pinyin i risultati compaiono mentre scrivi, senza dover prima scegliere un candidato.
 
 <img src="../assets/search.jpg" width="780" alt="Scrivendo nel campo di ricerca, app e finestre vengono filtrate">
 

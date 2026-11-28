@@ -456,6 +456,46 @@ enum SelfTest {
         model.selection = nil
         try? await Task.sleep(for: .milliseconds(300))
 
+        // (d2b) 輸入法組字中：拼音還沒選字就開始搜尋，注音組字不搜尋（issue #19）
+        model.focusRequest += 1
+        try? await Task.sleep(for: .milliseconds(80))
+        if let editor = controller.panel.firstResponder as? NSTextView {
+            let none = NSRange(location: NSNotFound, length: 0)
+            editor.setMarkedText("sa f", selectedRange: NSRange(location: 4, length: 0), replacementRange: none)
+            // 內容變動是排到下一輪主執行緒才讀的（見 SearchBarView.observeEditorStorage）
+            try? await Task.sleep(for: .milliseconds(50))
+            let pinyin = model.searchText
+            let pinyinHits = model.searchResults.count
+            editor.setMarkedText("ㄙㄚ", selectedRange: NSRange(location: 2, length: 0), replacementRange: none)
+            try? await Task.sleep(for: .milliseconds(50))
+            let zhuyin = model.searchText
+            editor.setMarkedText("", selectedRange: NSRange(location: 0, length: 0), replacementRange: none)
+            editor.unmarkText()
+            editor.string = ""
+            try? await Task.sleep(for: .milliseconds(50))
+            model.searchText = ""
+            results["composingSearch"] = pinyin == "sa f" && zhuyin == "sa f"
+                ? "ok（拼音組字結果數：\(pinyinHits)）" : "失敗：拼音組字=「\(pinyin)」、注音組字=「\(zhuyin)」"
+        } else {
+            results["composingSearch"] = "失敗：搜尋框沒有取得焦點"
+        }
+        try? await Task.sleep(for: .milliseconds(200))
+
+        // (d2c) 視窗模式：點卡片內的空白處不收起（issue #19）；全螢幕點空白處會收起，這裡不測
+        if model.settings.displayMode == .window {
+            let blank = CGPoint(x: metrics.gridRect.minX + metrics.cellSize.width, y: metrics.iconCenter(0).y)
+            if metrics.cellIndex(atHotPoint: blank) == nil {
+                mouse(.leftMouseDown, at: blank, controller: controller)
+                mouse(.leftMouseUp, at: blank, controller: controller)
+                try? await Task.sleep(for: .milliseconds(300))
+                results["windowBlankClick"] = controller.isVisible && model.isShown ? "ok" : "失敗：點卡片內空白處後收起了"
+            } else {
+                results["windowBlankClick"] = "skipped（格子間沒有空白）"
+            }
+        } else {
+            results["windowBlankClick"] = "skipped（全螢幕模式）"
+        }
+
         // (d3) 調整欄數：格子重新排列（量主執行緒同步時間），之後還原
         let columns = model.settings.columns
         let resizeStart = ContinuousClock.now

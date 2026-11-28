@@ -467,9 +467,11 @@ final class LaunchpadModel {
     }
 
     /// 點擊空白處：資料夾開著就關資料夾，否則收起啟動台（與經典啟動台相同）。
+    /// 視窗模式例外：卡片內的空白處不收起，點卡片外才收（由控制器攔下）——一般視窗的習慣（issue #19）。
     func backgroundClicked() {
         if confirmation != nil { confirmation = nil; return }
         if openFolderID != nil { closeFolder(); return }
+        guard settings.displayMode != .window else { return }
         requestDismiss?(.user)
     }
 

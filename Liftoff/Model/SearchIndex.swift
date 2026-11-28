@@ -119,6 +119,11 @@ nonisolated struct SearchIndex: Sendable {
         if key.compact.starts(with: q.compact) { return 860 - Double(min(key.compactLength - q.compactLength, 50)) }
         if key.words.contains(where: { $0.starts(with: q.text) }) { return 800 }
         if q.compactLength >= 2, key.initials.starts(with: q.compact) { return 760 }
+        // 連續幾個單字各打一段字首（"ten x"／"tenx" → teng xun hui yi、"vis stu" → Visual Studio Code）：
+        // 拼音輸入法組字中的字串就是這個形狀（issue #19）
+        if q.compactLength >= 2, key.words.count >= 2, let start = wordPrefixChainStart(q.compact, in: key.words) {
+            return start == 0 ? 740 : 700
+        }
         if let position = firstOccurrence(of: q.text, in: key.text) {
             // 位置以字元計；名稱全是單一 scalar 的字元時（絕大多數）scalar 索引就是字元索引
             let characters = key.textLength == key.text.count ? position : characterCount(key.text[..<position])
@@ -154,6 +159,30 @@ nonisolated struct SearchIndex: Sendable {
         }
     }
 
+    /// 查詢能否拆成「連續幾個單字各自的字首」（每個單字至少用到一個字、中間不跳過單字）。
+    /// - Returns: 從第幾個單字開始對上；對不上時為 nil
+    static func wordPrefixChainStart(_ query: Scalars, in words: [Scalars]) -> Int? {
+        guard let first = query.first else { return nil }
+        for start in words.indices where words[start].first == first {
+            if chainMatches(query, from: 0, words: words, at: start) { return start }
+        }
+        return nil
+    }
+
+    private static func chainMatches(_ query: Scalars, from offset: Int, words: [Scalars], at index: Int) -> Bool {
+        if offset == query.count { return true }
+        guard index < words.count else { return false }
+        let word = words[index]
+        var length = 0
+        while length < word.count, offset + length < query.count, word[length] == query[offset + length] { length += 1 }
+        // 先讓這個單字吃最多，後面接不上再少吃一個字（"anan" 對 an / na… 這類要回頭）
+        while length > 0 {
+            if chainMatches(query, from: offset + length, words: words, at: index + 1) { return true }
+            length -= 1
+        }
+        return false
+    }
+
     /// 模糊子序列比對：查詢的每個字元都依序出現在目標中時，回傳中間跳過的字元數（越小越相關）。
     static func subsequenceGaps(_ query: Scalars, in text: Scalars) -> Int? {
         var gaps = 0
@@ -170,6 +199,35 @@ nonisolated struct SearchIndex: Sendable {
             if !matched { return nil }
         }
         return gaps
+    }
+
+    // MARK: - 輸入法組字
+
+    /// 輸入法組字中（還沒選字）要拿去搜尋的字串。
+    /// 組字內容是拉丁字母（拼音）時，連同前後已確認的文字一起搜尋，音節間的分隔（空白、撇號）一律當空白；
+    /// 注音、倉頡、假名、韓文等組字內容對不上任何名稱，回傳 nil 表示這次不搜尋。
+    /// - Parameters:
+    ///   - text: 輸入框目前的完整內容（含組字）
+    ///   - markedRange: 組字範圍（UTF-16）
+    static func composingQuery(_ text: String, markedRange: NSRange) -> String? {
+        let string = text as NSString
+        guard markedRange.location != NSNotFound, markedRange.length > 0, NSMaxRange(markedRange) <= string.length else { return nil }
+        var marked = String.UnicodeScalarView()
+        var hasLetter = false
+        for scalar in string.substring(with: markedRange).unicodeScalars {
+            switch scalar {
+            case "a"..."z", "A"..."Z":
+                hasLetter = true
+                marked.append(scalar)
+            case "'", "\u{2019}":
+                marked.append(" ")
+            default:
+                guard scalar.properties.isWhitespace else { return nil }
+                marked.append(" ")
+            }
+        }
+        guard hasLetter else { return nil }
+        return string.replacingCharacters(in: markedRange, with: String(marked))
     }
 
     // MARK: - 正規化

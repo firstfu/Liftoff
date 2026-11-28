@@ -47,6 +47,44 @@ struct SearchIndexTests {
         #expect(index.search("jsj").first == "calc")
     }
 
+    /// 拼音輸入法組字中的字串：各音節只打一段字首（issue #19 的「ten x」→ 腾讯会议）
+    @Test func pinyinSyllablePrefixes() {
+        let index = SearchIndex(apps: [
+            app("meeting", "腾讯会议"), app("tenx", "Tenxcloud Extra"), app("wechat", "微信"), app("docs", "腾讯文档"),
+        ])
+        // 名稱本身就以 tenx 開頭的排最前面，接著才是拼音各音節字首相符的
+        #expect(index.search("ten x") == ["tenx", "meeting", "docs"] || index.search("ten x") == ["tenx", "docs", "meeting"])
+        #expect(index.search("ten x h").first == "meeting")
+        #expect(index.search("tenxh").first == "meeting")
+        #expect(index.search("wei x").first == "wechat")
+        #expect(!index.search("ten h").contains("wechat"))
+    }
+
+    @Test func wordPrefixChain() {
+        let words = SearchIndex.splitWords("teng xun hui yi").map(SearchIndex.scalars)
+        #expect(SearchIndex.wordPrefixChainStart(SearchIndex.scalars("tenx"), in: words) == 0)
+        #expect(SearchIndex.wordPrefixChainStart(SearchIndex.scalars("xunhy"), in: words) == 1)
+        // 不能跳過中間的單字
+        #expect(SearchIndex.wordPrefixChainStart(SearchIndex.scalars("tenhui"), in: words) == nil)
+        // 第一個單字吃太多時要回頭：an 吃完 "an" 後 "a" 接不上 na，退成只吃 "a"、"n" 接 na
+        let tricky = ["an", "na"].map(SearchIndex.scalars)
+        #expect(SearchIndex.wordPrefixChainStart(SearchIndex.scalars("ana"), in: tricky) == 0)
+    }
+
+    @Test func composingQueryOnlyForLatin() {
+        // 拼音組字：連同已確認的文字一起搜尋，撇號當空白
+        #expect(SearchIndex.composingQuery("ten x", markedRange: NSRange(location: 0, length: 5)) == "ten x")
+        #expect(SearchIndex.composingQuery("ten'x", markedRange: NSRange(location: 0, length: 5)) == "ten x")
+        #expect(SearchIndex.composingQuery("腾讯hui y", markedRange: NSRange(location: 2, length: 5)) == "腾讯hui y")
+        // 注音、假名、倉頡字根：不搜尋
+        #expect(SearchIndex.composingQuery("ㄙㄚ", markedRange: NSRange(location: 0, length: 2)) == nil)
+        #expect(SearchIndex.composingQuery("さふ", markedRange: NSRange(location: 0, length: 2)) == nil)
+        #expect(SearchIndex.composingQuery("日月", markedRange: NSRange(location: 0, length: 2)) == nil)
+        // 沒有組字或範圍不合法
+        #expect(SearchIndex.composingQuery("abc", markedRange: NSRange(location: NSNotFound, length: 0)) == nil)
+        #expect(SearchIndex.composingQuery("abc", markedRange: NSRange(location: 2, length: 5)) == nil)
+    }
+
     @Test func fuzzySubsequence() {
         #expect(index.search("shzm").contains("shazam"))
     }
@@ -70,7 +108,8 @@ struct SearchIndexTests {
         #expect(SearchIndex.splitWords("Visual Studio Code") == ["Visual", "Studio", "Code"])
     }
 
-    /// 計分改成比對 scalar 陣列後，分數必須與原本的 String 版完全相同（參考實作是改寫前的原始碼）。
+    /// 計分改成比對 scalar 陣列後，分數必須與原本的 String 版完全相同
+    /// （參考實作是改寫前的原始碼，另加上後來新增的「單字字首接龍」規則）。
     @Test func scalarScoringMatchesStringReference() {
         let names = [
             "Safari", "Visual Studio Code", "PhotoBooth", "計算機", "ji suan ji", "系統設定", "System Settings",
@@ -105,6 +144,10 @@ struct SearchIndexTests {
         if compact.hasPrefix(compactQuery) { return 860 - Double(min(compact.count - compactQuery.count, 50)) }
         if words.contains(where: { $0.hasPrefix(q) }) { return 800 }
         if compactQuery.count >= 2, initials.hasPrefix(compactQuery) { return 760 }
+        if compactQuery.count >= 2, words.count >= 2,
+           let start = SearchIndex.wordPrefixChainStart(SearchIndex.scalars(compactQuery), in: words.map(SearchIndex.scalars)) {
+            return start == 0 ? 740 : 700
+        }
         if let range = text.range(of: q) {
             return 600 - Double(min(text.distance(from: text.startIndex, to: range.lowerBound), 100))
         }

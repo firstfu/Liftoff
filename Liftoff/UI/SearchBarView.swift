@@ -32,6 +32,10 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
     private let clearButton = NSButton()
     /// 輸入框與圖示的容器：膠囊樣式時放在玻璃裡，視窗模式時直接放在本 view
     private let content = NSView()
+    /// 目前監聽內容變動的欄位編輯器文字儲存區（見 `observeEditorStorage`）
+    private weak var observedStorage: NSTextStorage?
+    private var storageObserver: NSObjectProtocol?
+    private var textCheckScheduled = false
     private var loops: [RenderLoop] = []
     private var lastFocusRequest = 0
 
@@ -174,12 +178,14 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
         guard let window, !isHidden else { return }
         window.makeFirstResponder(field)
         disableTextServices()
+        observeEditorStorage()
         if let editor = field.currentEditor() {
             editor.selectedRange = NSRange(location: (field.stringValue as NSString).length, length: 0)
         }
     }
 
-    /// 中文輸入法選字中（有未確認的組字）：組字中的注音/拼音不拿去搜尋，也不能被程式覆蓋。
+    /// 中文輸入法選字中（有未確認的組字）：輸入框不能被程式覆蓋。
+    /// 組字中要不要搜尋由 `SearchIndex.composingQuery` 決定（拼音搜、注音等不搜）。
     private var isComposing: Bool {
         (field.currentEditor() as? NSTextView)?.hasMarkedText() ?? false
     }
@@ -189,6 +195,30 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
     /// 使用者直接點進輸入框（沒經過 `focus()`）時，在第一個字送進來時補做設定。
     func controlTextDidBeginEditing(_ notification: Notification) {
         disableTextServices()
+        observeEditorStorage()
+    }
+
+    /// 監聽欄位編輯器的內容變動，補上 `controlTextDidChange` 收不到的情況：
+    /// 輸入法更新組字（`setMarkedText`）只改文字儲存區，不保證送出文字變動通知（實測直接呼叫時不會送）。
+    /// 通知是在編輯進行中送出的，那時組字範圍還沒更新，所以排到下一輪主執行緒再讀。
+    private func observeEditorStorage() {
+        guard let storage = (field.currentEditor() as? NSTextView)?.textStorage, storage !== observedStorage else { return }
+        if let storageObserver { NotificationCenter.default.removeObserver(storageObserver) }
+        observedStorage = storage
+        storageObserver = NotificationCenter.default.addObserver(
+            forName: NSTextStorage.didProcessEditingNotification, object: storage, queue: nil
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, !self.textCheckScheduled else { return }
+                self.textCheckScheduled = true
+                DispatchQueue.main.async {
+                    self.textCheckScheduled = false
+                    // 欄位編輯器是整個視窗共用的：正在編輯別的欄位（資料夾改名）時不是我們的內容
+                    guard self.field.currentEditor() != nil else { return }
+                    self.textChanged()
+                }
+            }
+        }
     }
 
     /// 關掉欄位編輯器（整個視窗共用的 NSTextView）上搜尋用不到的文字服務。
@@ -211,8 +241,19 @@ final class SearchBarView: NSView, NSTextFieldDelegate {
     }
 
     func controlTextDidChange(_ notification: Notification) {
-        guard !isComposing else { return }
-        let text = field.stringValue
+        textChanged()
+    }
+
+    /// 輸入框內容變了（打字、輸入法組字或選字）：寫回 model 觸發搜尋。內容沒變時不做事，可重複呼叫。
+    private func textChanged() {
+        let text: String
+        if let editor = field.currentEditor() as? NSTextView, editor.hasMarkedText() {
+            // 拼音還沒選字就先用拼音搜尋（issue #19）；注音等其他組字維持不搜尋
+            guard let query = SearchIndex.composingQuery(editor.string, markedRange: editor.markedRange()) else { return }
+            text = query
+        } else {
+            text = field.stringValue
+        }
         if model.searchText != text { model.searchText = text }
         clearButton.isHidden = text.isEmpty
     }
